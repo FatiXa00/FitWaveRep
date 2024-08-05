@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.35)', // Optional: overlay to darken the background
+    backgroundColor: 'rgba(0, 0, 0, 0.3)', // Optional: overlay to darken the background
   },
   content: {
     marginTop:50,
@@ -60,7 +60,8 @@ const styles = StyleSheet.create({
   },
   button: {
     marginTop: 30,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)', // Transparent background
+    backgroundColor: 'rgba(255, 255, 255, 0.3)', // Transparent background
+    //hehehe
     paddingVertical: 12,
     paddingHorizontal: 25,
     borderRadius: 100,
