@@ -50,22 +50,10 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
     elevation: 5,
   },
-
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 10,
-    color:'pink' //this is  TEST 
-  },
-  subtitle: {
-
-    fontSize: 16,
-    marginBottom: 20,
  
   subtitle: {
     fontSize: 18,
     marginBottom: 18,
-
     textAlign: 'center',
     color: 'white',
     fontWeight: 'bold',
