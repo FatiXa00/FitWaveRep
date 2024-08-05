@@ -27,7 +27,7 @@ export default function Onboarding1() {
   );
 }
 
-const styles = StyleSheet.create(////////////////////////
+const styles = StyleSheet.create({
   background: {
     flex: 1,
     resizeMode: 'cover', // Cover the entire screen with the image
@@ -36,8 +36,11 @@ const styles = StyleSheet.create(////////////////////////
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.35)', // Optional: overlay to darken the background
-  },
+    backgroundColor: 'rgba(0, 0, 0, 0.3)', // Optional: overlay to darken the background
+    paddingVertical: 100, // Increased padding to make the button larger
+    paddingHorizontal: 100, // Increased padding to make the button larger
+    
+},
   content: {
     marginTop:50,
     alignItems: 'center',
@@ -65,24 +68,24 @@ const styles = StyleSheet.create(////////////////////////
   subtitle: {
     fontSize: 18,
     marginBottom: 18,
-
     textAlign: 'center',
     color: 'white',
     fontWeight: 'bold',
   },
   button: {
     marginTop: 30,
-    backgroundColor: 'rgba(255, 255, 255, 0.2)', // Transparent background
-    paddingVertical: 12,
-    paddingHorizontal: 25,
-    borderRadius: 100,
+    backgroundColor: 'rgba(255, 255, 255, 0.15)', // Transparent background
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.5)', // Semi-transparent border
-    shadowColor: '#000',
+    borderColor: 'rgba(255, 255, 255, 0.3)', // Semi-transparent border
+    //shadowColor: '#FFFFFF',
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
+    shadowOpacity: 0.2,
     shadowRadius: 3,
     elevation: 5, // Elevation for Android shadow
+    paddingVertical: 10, // Increased padding to make the button larger
+    paddingHorizontal: 70, // Increased padding to make the button larger
+    borderRadius: 100, // Keep the borderRadius proportional to the button size
+  
   },
   buttonText: {
     color: 'white',
