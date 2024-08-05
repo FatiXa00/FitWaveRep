@@ -27,7 +27,7 @@ export default function Onboarding1() {
   );
 }
 
-const styles = StyleSheet.create({
+const styles = StyleSheet.create(////////////////////////
   background: {
     flex: 1,
     resizeMode: 'cover', // Cover the entire screen with the image
