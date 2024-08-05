@@ -53,6 +53,17 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
     elevation: 5,
   },
+
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    color:'pink' //this is  TEST 2
+  },
+  subtitle: {
+
+    fontSize: 16,
+    marginBottom: 20,
  
   subtitle: {
     fontSize: 18,
