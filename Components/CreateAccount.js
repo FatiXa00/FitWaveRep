@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import Icon from 'react-native-vector-icons/Ionicons';
-
 
 export default function CreateAccount() {
   const navigation = useNavigation();
@@ -12,20 +10,15 @@ export default function CreateAccount() {
   const [confirmPassword, setConfirmPassword] = useState('');
 
   const handleSignUp = () => {
-    navigation.navigate('ForgottenPassword');   };
+    // Handle sign-up logic here
+  };
 
   const handleLogin = () => {
     navigation.navigate('Logging'); 
   };
   return (
     <View style={styles.container}>
-     <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-          <Text style={styles.arrow}>{'<'}</Text>
-        </TouchableOpacity>
-        <Text style={styles.title}>Create Account</Text>
-      </View>
-
+      <Text style={styles.title}>Create Account</Text>
       <Text style={styles.subtitle}>Let's Start!</Text>
 
       <View style={styles.inputContainer}>
@@ -77,6 +70,7 @@ export default function CreateAccount() {
         <Text style={styles.link}>Privacy Policy</Text>.
       </Text>
       </View>
+
       <TouchableOpacity style={styles.signUpButton} onPress={handleSignUp}>
         <Text style={styles.signUpButtonText}>Sign Up</Text>
       </TouchableOpacity>
@@ -108,22 +102,9 @@ const styles = StyleSheet.create({
     padding: 30,
     backgroundColor: '#141824',
   },
-  header: {
-    flexDirection: "row",
-    alignItems: 'center',
-  },
-  backButton: {
-    marginTop: 25,
-    marginLeft:5,
-
-  },
-  arrow: {
-    fontSize: 30,
-    color: '#FD6639',
-  },
+  
   title: {
     marginTop:45,
-    marginLeft:75,
     fontSize: 24,
     fontWeight: 'bold',
     color: '#FD6639',
@@ -161,14 +142,11 @@ const styles = StyleSheet.create({
     color: '#FD6639',
   },
   signUpButton: {
-    marginTop:50,
     backgroundColor: '#FD6639',
-    paddingVertical: 12,
+    paddingVertical: 15,
     paddingHorizontal:5,
     borderRadius: 25,
     marginVertical: 20,
-    width:180,
-    marginHorizontal:80,
   },
   signUpButtonText: {
     color: '#ffffff',
