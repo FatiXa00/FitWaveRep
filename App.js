@@ -26,7 +26,7 @@ export default function App() {
         <Stack.Screen
           name="Logging"
           component={Logging}
-          options={{ headerShown: true }} // Show header for Logging screen
+          options={{ headerShown: false }} // Show header for Logging screen
         />
       </Stack.Navigator>
       <StatusBar style="auto" />

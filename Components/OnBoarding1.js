@@ -1,24 +1,25 @@
 import React from 'react';
-import { View, Text, StyleSheet, ImageBackground, TouchableOpacity } from 'react-native';
+import { View, Image, Text, StyleSheet, ImageBackground, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+
 
 export default function Onboarding1() {
   const navigation = useNavigation();
 
   const handleButtonPress = () => {
-    // Navigate to the next screen, e.g., 'OnBoarding2'
-    navigation.navigate('OnBoarding2');
+    navigation.navigate('Logging');
   };
 
   return (
     <ImageBackground
-      source={require('../assets/images/OnBoarding1.png')} // Path to your background image
+      source={require('../assets/images/OnBoarding1.png')}
       style={styles.background}
     >
       <View style={styles.overlay}>
         <View style={styles.content}>
           <Text style={styles.subtitle}>Start Your Fitness Adventure</Text>
         </View>
+
         <TouchableOpacity style={styles.button} onPress={handleButtonPress}>
           <Text style={styles.buttonText}>Next</Text>
         </TouchableOpacity>
@@ -36,60 +37,46 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.3)', // Optional: overlay to darken the background
-    paddingVertical: 100, // Increased padding to make the button larger
-    paddingHorizontal: 100, // Increased padding to make the button larger
-    
-},
+    backgroundColor: 'rgba(0, 0, 0, 0.3)', // Semi-transparent overlay
+  },
   content: {
-    marginTop:50,
+    width: '100%', // Adjust width to 80% of the screen width
+    maxWidth: 500, // Max width constraint
+    height: 150, // Fixed height to prevent resizing
+    marginTop: 20, // Adjust marginTop to fit your design
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 50,
+    padding: 30, // Adjust padding to fit your design
     backgroundColor: '#7E8385',
-    shadowColor: '#7E8385',
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.8,
     shadowRadius: 2,
     elevation: 5,
   },
-
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 10,
-    color:'pink' //this is  TEST 2
-  },
   subtitle: {
-
-    fontSize: 16,
-    marginBottom: 20,
- 
-  subtitle: {
-    fontSize: 18,
-    marginBottom: 18,
+    fontSize: 20,
     textAlign: 'center',
     color: 'white',
     fontWeight: 'bold',
   },
   button: {
-    marginTop: 30,
+    marginTop: 30, // Adjust marginTop to fit your design
     backgroundColor: 'rgba(255, 255, 255, 0.15)', // Transparent background
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.3)', // Semi-transparent border
-    //shadowColor: '#FFFFFF',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 3,
     elevation: 5, // Elevation for Android shadow
-    paddingVertical: 10, // Increased padding to make the button larger
-    paddingHorizontal: 70, // Increased padding to make the button larger
+    paddingVertical: 10, // Padding to make the button larger
+    paddingHorizontal: 70, // Padding to make the button larger
     borderRadius: 100, // Keep the borderRadius proportional to the button size
-  
   },
   buttonText: {
     color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
   },
+
 });
