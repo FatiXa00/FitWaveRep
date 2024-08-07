@@ -8,6 +8,7 @@ import Logging from './Components/Logging'; // Ensure you have a Logging screen
 import Onboarding1 from './Components/OnBoarding1';
 import Onboarding2 from './Components/OnBoarding2';
 import Onboarding3 from './Components/OnBoarding3';
+import CreateAccount from './Components/CreateAccount';
 
 const Stack = createStackNavigator();
 
@@ -41,6 +42,12 @@ export default function App() {
           component={Logging}
           options={{ headerShown: false }} // Show header for Logging screen
         />
+               <Stack.Screen
+          name="CreateAccount"
+          component={CreateAccount}
+          options={{ headerShown: false }} // Show header for Logging screen
+        />
+      
       </Stack.Navigator>
       <StatusBar style="auto" />
     </NavigationContainer>
