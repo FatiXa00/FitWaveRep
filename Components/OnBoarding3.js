@@ -9,7 +9,7 @@ export default function Onboarding3() {
   const navigation = useNavigation();
 
   const handleButtonPress = () => {
-    navigation.navigate('Logging');
+    navigation.navigate('CreateAccount');
   };
 
   return (
