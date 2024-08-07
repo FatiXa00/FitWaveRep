@@ -1,31 +1,43 @@
-import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import React, {useState} from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image} from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 
+   
 const Logging = ({ navigation }) => {
-  const handleLogin = () => {
+   const [usernameOrEmail, setususernameOrEmail] = useState('');
+   const [password, setPassword] = useState('');
+
+   const handleLogin = () => {
     navigation.navigate('Home'); // Replace 'Home' with the next screen after login
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Log p                            In</Text>
-      <Text style={styles.welcome}>Welcome</Text>
+      <Text style={styles.title}>Log In</Text>
+      <Text style={styles.subtitle}>Welcome</Text>
 
-      <TextInput
+      <View style={styles.inputContainer}>
+      <Text
+        style={styles.label}>Username or email</Text>
+        <TextInput
         style={styles.input}
-        placeholder="Username or email"
-        placeholderTextColor="#888"
-        keyboardType="email-address"
-        autoCapitalize="none"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        placeholderTextColor="#888"
-        secureTextEntry
-        autoCapitalize="none"
-      />
+         placeholder="Enter Your Username or Email"
+        value={usernameOrEmail}
+        onChangeText={setususernameOrEmail}
+        />
+      </View>
+
+      <View style={styles.inputContainer}>
+        <Text style={styles.label}>Password</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="************"
+          secureTextEntry
+          value={password}
+          onChangeText={setPassword}
+        />
+      </View>
+
       <TouchableOpacity onPress={() => { /* Navigate to forgot password screen */ }}>
         <Text style={styles.forgotPassword}>Forgot Password?</Text>
       </TouchableOpacity>
@@ -36,21 +48,28 @@ const Logging = ({ navigation }) => {
 
       <Text style={styles.orSignUpWith}>or sign up with</Text>
 
-      <View style={styles.socialContainer}>
-        <TouchableOpacity style={styles.socialButton}>
-          <FontAwesome name="apple" size={24} color="#fff" />
+      <View style={styles.socialButtons}>
+        <TouchableOpacity>
+          <Image source={require('../assets/icons/IconApple.png')} style={styles.socialIcon} />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.socialButton}>
-          <FontAwesome name="google" size={24} color="#fff" />
+        <TouchableOpacity>
+          <Image source={require('../assets/icons/IconGoogle.png')} style={styles.socialIcon} />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.socialButton}>
-          <FontAwesome name="facebook" size={24} color="#fff" />
+        <TouchableOpacity>
+          <Image source={require('../assets/icons/IconFacebook.png')} style={styles.socialIcon} />
         </TouchableOpacity>
       </View>
 
-      <TouchableOpacity onPress={() => { /* Navigate to sign up screen */ }}>
-        <Text style={styles.signUp}>Don't have an account? Sign Up as User or Doctor</Text>
-      </TouchableOpacity>
+      <Text style={styles.signUp}>Don't have an account? Sign Up as</Text>
+      <View style={styles.signUpRow}>
+        <TouchableOpacity onPress={() => {   navigation.navigate('CreateAccount');  }}>
+          <Text style={styles.signUpUser}> User</Text>
+        </TouchableOpacity>
+        <Text style={styles.signUp}> or</Text>
+        <TouchableOpacity onPress={() => { /* Navigate to sign up screen */ }}>
+          <Text style={styles.signUpUser}> Doctor</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 };
@@ -58,65 +77,92 @@ const Logging = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#1A1A1A',
-    padding: 20,
-    justifyContent: 'center',
+    padding: 30,
+    backgroundColor: '#141824',
   },
+
   title: {
+    marginTop:45,
     fontSize: 24,
-    color: '#ff6f00',
-    alignSelf: 'center',
-    marginBottom: 10,
+    fontWeight: 'bold',
+    color: '#FD6639',
+    textAlign: 'center',
+    marginVertical: 20,
   },
-  welcome: {
-    fontSize: 20,
-    color: '#fff',
-    alignSelf: 'center',
-    marginBottom: 20,
+
+  subtitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#ffffff',
+    textAlign: 'center',
+    marginBottom: 50,
+    marginTop:50,
   },
+
+  inputContainer: {
+     marginBottom: 20,
+  },
+
+  label: {
+    fontSize: 16,
+    color: '#ffffff',
+    marginBottom: 5,
+  },
+
   input: {
-    backgroundColor: '#333',
-    color: '#fff',
-    borderRadius: 5,
-    paddingHorizontal: 15,
+    backgroundColor: '#ffffff',
+    borderRadius: 15,
+    paddingHorizontal: 20,
     paddingVertical: 10,
-    marginBottom: 10,
+    fontSize: 16,
   },
+
   forgotPassword: {
-    color: '#ff6f00',
+    color: '#FD6639',
     alignSelf: 'flex-end',
     marginBottom: 20,
   },
+
   loginButton: {
-    backgroundColor: '#ff6f00',
-    borderRadius: 5,
-    paddingVertical: 10,
-    alignItems: 'center',
-    marginBottom: 20,
+    backgroundColor: '#FD6639',
+    paddingVertical: 15,
+    paddingHorizontal:5,
+    borderRadius: 25,
+    marginVertical: 20,
   },
   loginButtonText: {
-    color: '#fff',
+    color: '#ffffff',
+    textAlign: 'center',
     fontSize: 16,
+    fontWeight: 'bold',
   },
   orSignUpWith: {
-    color: '#888',
-    alignSelf: 'center',
-    marginBottom: 10,
+    color: '#888888',
+    textAlign: 'center',
+    marginVertical: 10,
   },
-  socialContainer: {
+   
+  socialButtons: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginBottom: 20,
+    marginVertical: 20,
   },
-  socialButton: {
-    backgroundColor: '#333',
-    borderRadius: 5,
-    padding: 10,
+  socialIcon: {
+    width: 40,
+    height: 40,
     marginHorizontal: 10,
   },
   signUp: {
     color: '#fff',
     alignSelf: 'center',
+  },
+  signUpUser: {
+    color: '#FD6639',
+  },
+  signUpRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

@@ -8,7 +8,7 @@ export default function Onboarding3() {
   const navigation = useNavigation();
 
   const handleButtonPress = () => {
-    navigation.navigate('CreateAccount');
+    navigation.navigate('Logging');
   };
 
   return (
