@@ -1,22 +1,20 @@
 import React, { useEffect } from 'react';
 import { View, StyleSheet, TouchableWithoutFeedback } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import FitWaveLogo from './FitWaveLogo'; // Ensure this path is correct
+import FitWaveLogo from './FitWaveLogo'; 
 
 export default function Launch() {
   const navigation = useNavigation();
 
   useEffect(() => {
-    // Set a timer to navigate to the 'Logging' screen after 3 seconds
+   
     const timer = setTimeout(() => {
       navigation.navigate('OnBoarding1');
-    }, 3000); // 3000 milliseconds = 3 seconds
-
-    // Clean up the timer if the component unmounts
+    }, 3000); 
     return () => clearTimeout(timer);
   }, [navigation]);
 
-  // Handle navigation on screen touch
+
   const handlePress = () => {
     navigation.navigate('OnBoarding1');
   };

@@ -8,7 +8,7 @@ export default function Logging({ navigation }) {
       <Text style={styles.title}>Logging Screen</Text>
       <Button
         title="Go Back to Launch"
-        onPress={() => navigation.goBack()} // Go back to the previous screen
+        onPress={() => navigation.goBack()} 
       />
     </View>
   );

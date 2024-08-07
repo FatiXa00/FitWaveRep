@@ -6,6 +6,8 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Launch from './Components/Launch'; // Ensure this path is correct
 import Logging from './Components/Logging'; // Ensure you have a Logging screen
 import Onboarding1 from './Components/OnBoarding1';
+import Onboarding2 from './Components/OnBoarding2';
+import Onboarding3 from './Components/OnBoarding3';
 
 const Stack = createStackNavigator();
 
@@ -23,6 +25,17 @@ export default function App() {
           component={Onboarding1}
           options={{ headerShown: false }} // Show header for Logging screen
         />
+            <Stack.Screen
+          name="OnBoarding2"
+          component={Onboarding2}
+          options={{ headerShown: false }} // Show header for Logging screen
+        />
+            <Stack.Screen
+          name="OnBoarding3"
+          component={Onboarding3}
+          options={{ headerShown: false }} // Show header for Logging screen
+        />
+      
         <Stack.Screen
           name="Logging"
           component={Logging}
