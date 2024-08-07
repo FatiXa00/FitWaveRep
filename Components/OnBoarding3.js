@@ -4,28 +4,27 @@ import { useNavigation } from '@react-navigation/native';
 
 const { width } = Dimensions.get('window'); // Get the screen width for responsive design
 
-
-export default function Onboarding1() {
+export default function Onboarding3() {
   const navigation = useNavigation();
 
   const handleButtonPress = () => {
-    navigation.navigate('OnBoarding2');
+    navigation.navigate('Logging');
   };
 
   return (
     <ImageBackground
-      source={require('../assets/images/OnBoarding1.png')}
+      source={require('../assets/images/OnBoarding3.png')}
       style={styles.background}
     >
       <View style={styles.overlay}>
         <View style={styles.content}>
-          <Image source={require('../assets/icons/IconBoarding1.png')} style={styles.icon} />
-          <Text style={styles.subtitle}>Start Your Fitness Adventure</Text>
+          <Image source={require('../assets/icons/IconBoarding3.png')} style={styles.icon} />
+          <Text style={styles.subtitle}>Book Your Medical Appointments to Stay Healthy</Text>
 
         </View>
-      
+
         <TouchableOpacity style={styles.button} onPress={handleButtonPress}>
-          <Text style={styles.buttonText}>Next</Text>
+          <Text style={styles.buttonText}>Get Started</Text>
         </TouchableOpacity>
       </View>
     </ImageBackground>
@@ -35,22 +34,22 @@ export default function Onboarding1() {
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-    resizeMode: 'cover', 
+    resizeMode: 'cover', // Cover the entire screen with the image
   },
   overlay: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.3)', 
+    backgroundColor: 'rgba(0, 0, 0, 0.3)', // Semi-transparent overlay
   },
   content: {
-    width: '100%', 
-    maxWidth: 500,
-    height: 150,
-    marginTop: 20, 
+    width: '100%', // Adjust width to 80% of the screen width
+    maxWidth: 500, // Max width constraint
+    height: 150, // Fixed height to prevent resizing
+    marginTop: 20, // Adjust marginTop to fit your design
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 30, 
+    padding: 30, // Adjust padding to fit your design
     backgroundColor: '#7E8385',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -65,17 +64,17 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   button: {
-    marginTop: 30, 
-    backgroundColor: 'rgba(255, 255, 255, 0.15)', 
+    marginTop: 30, // Adjust marginTop to fit your design
+    backgroundColor: 'rgba(255, 255, 255, 0.15)', // Transparent background
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.3)', 
+    borderColor: 'rgba(255, 255, 255, 0.3)', // Semi-transparent border
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 3,
-    elevation: 5, 
-    paddingVertical: 10, 
-    paddingHorizontal: 70, 
-    borderRadius: 100, 
+    elevation: 5, // Elevation for Android shadow
+    paddingVertical: 10, // Padding to make the button larger
+    paddingHorizontal: 70, // Padding to make the button larger
+    borderRadius: 100, // Keep the borderRadius proportional to the button size
   },
   buttonText: {
     color: 'white',
