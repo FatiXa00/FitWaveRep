@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Image, Text, StyleSheet, ImageBackground, TouchableOpacity,Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-const { width } = Dimensions.get('window'); // Get the screen width for responsive design
+const { width } = Dimensions.get('window'); 
 
 
 export default function Onboarding1() {

@@ -1,3 +1,6 @@
+
+
+
 import React, {useState} from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image} from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
@@ -10,6 +13,7 @@ const Logging = ({ navigation }) => {
    const handleLogin = () => {
     navigation.navigate('Home'); // Replace 'Home' with the next screen after login
   };
+
 
   return (
     <View style={styles.container}>
