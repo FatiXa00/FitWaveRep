@@ -1,9 +1,9 @@
 import React from 'react';
 import { View, Image, Text, StyleSheet, ImageBackground, TouchableOpacity,Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import StepIndicator from './StepIndicator';
 
 const { width } = Dimensions.get('window'); 
+
 
 export default function Onboarding1() {
   const navigation = useNavigation();

@@ -1,7 +1,6 @@
 import React from 'react';
 import { View, Image, Text, StyleSheet, ImageBackground, TouchableOpacity,Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import StepIndicator from './StepIndicator';
 
 const { width } = Dimensions.get('window'); // Get the screen width for responsive design
 
@@ -9,7 +8,7 @@ export default function Onboarding3() {
   const navigation = useNavigation();
 
   const handleButtonPress = () => {
-    navigation.navigate('CreateAccount');
+    navigation.navigate('Logging');
   };
 
   return (
