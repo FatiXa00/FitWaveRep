@@ -39,7 +39,7 @@ const styles = StyleSheet.create({
       },
       backButton: {
         marginTop: 25,
-    
+
       },
       arrow: {
         fontSize: 30,
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         fontSize: 16,
         marginBottom: 50,
-    
+
       },
       button: {
         backgroundColor: '#FD6639',
@@ -97,4 +97,4 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
       },
     });
-    
+

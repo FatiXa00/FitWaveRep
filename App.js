@@ -11,6 +11,9 @@ import Onboarding3 from './Components/OnBoarding3';
 import CreateAccount from './Components/CreateAccount';
 import ForgottenPassword from './Components/ForgottenPassword';
 import SetPassword from './Components/SetPassword';
+import SetUp from './Components/SetUp';
+import GenderSelection from './Components/GenderSelection';
+import HowOld from './Components/HowOld';
 
 const Stack = createStackNavigator();
 
@@ -57,6 +60,21 @@ export default function App() {
         <Stack.Screen
           name="SetPassword"
           component={SetPassword}
+          options={{ headerShown: false }} // Show header for Logging screen
+        />
+              <Stack.Screen
+          name="SetUp"
+          component={SetUp}
+          options={{ headerShown: false }} // Show header for Logging screen
+        />
+               <Stack.Screen
+          name="GenderSelection"
+          component={GenderSelection}
+          options={{ headerShown: false }} // Show header for Logging screen
+        />
+                  <Stack.Screen
+          name="HowOld"
+          component={HowOld}
           options={{ headerShown: false }} // Show header for Logging screen
         />
       

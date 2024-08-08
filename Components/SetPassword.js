@@ -1,3 +1,4 @@
+ 
 import React from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
@@ -49,7 +50,7 @@ const styles = StyleSheet.create({
       },
       backButton: {
         marginTop: 25,
-    
+
       },
       arrow: {
         fontSize: 30,
@@ -66,7 +67,7 @@ const styles = StyleSheet.create({
         marginVertical: 20,
 
       },
-      
+
       div:{
         marginTop:100,
       },
@@ -74,7 +75,7 @@ const styles = StyleSheet.create({
         margin:10,
         fontSize: 16,
         color: 'white',
-        
+
       },
       input: {
         marginLeft:5,
@@ -102,5 +103,3 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
       },
     });
-  
-

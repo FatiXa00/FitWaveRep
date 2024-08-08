@@ -9,7 +9,7 @@ const Logging = ({ navigation }) => {
    const [password, setPassword] = useState('');
 
    const handleLogin = () => {
-    navigation.navigate('Home'); // Replace 'Home' with the next screen after login
+    navigation.navigate('SetUp'); 
   };
 
 
