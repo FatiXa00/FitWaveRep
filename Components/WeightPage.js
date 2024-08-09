@@ -15,59 +15,80 @@ const { width } = Dimensions.get('screen');
 
 const minWeightKg = 20;
 const maxWeightKg = 200;
-const segmentWidth = 2;
-const segmentSpacing = 20;
-const snapSegment = segmentWidth + segmentSpacing;
-const spacerWidth = (width - segmentWidth) / 2;
-const rulerWidth = spacerWidth * 2 + (maxWeightKg - minWeightKg) * snapSegment;
-const indicatorWidth = 100;
-const indicatorHeight = 80;
 
 const kgToLbs = kg => kg * 2.20462;
 const lbsToKg = lbs => lbs / 2.20462;
 
-const data = [...Array(maxWeightKg - minWeightKg + 1).keys()].map(i => i + minWeightKg);
+const minWeightLbs = Math.round(kgToLbs(minWeightKg));
+const maxWeightLbs = Math.round(kgToLbs(maxWeightKg));
 
-const Ruler = ({ scrollX }) => (
-  <View style={styles.ruler}>
-    <View style={{ width: spacerWidth }} />
-    {data.map(i => {
-      const inputRange = [
-        (i - 1) * snapSegment,
-        i * snapSegment,
-        (i + 1) * snapSegment,
-      ];
+const segmentWidth = 2;
+const segmentSpacing = 20;
+const snapSegment = segmentWidth + segmentSpacing;
+const spacerWidth = (width - segmentWidth) / 2;
 
-      const scale = scrollX.interpolate({
-        inputRange,
-        outputRange: [0.8, 1.5, 0.8],
-        extrapolate: 'clamp',
-      });
+const rulerWidthKg = spacerWidth * 2 + (maxWeightKg - minWeightKg) * snapSegment;
+const rulerWidthLbs = spacerWidth * 2 + (maxWeightLbs - minWeightLbs) * snapSegment;
 
-      const color = scrollX.interpolate({
-        inputRange,
-        outputRange: ['#999', '#FFFFFF', '#999'],
-        extrapolate: 'clamp',
-      });
+const indicatorWidth = 100;
+const indicatorHeight = 80;
 
-      return (
-        <Animated.View
-          key={i}
-          style={[
-            styles.segment,
-            {
-              backgroundColor: color,
-              height: i % 10 === 0 ? 40 : 20,
-              marginRight: i === data.length - 1 ? 0 : segmentSpacing,
-              transform: [{ scale }],
-            },
-          ]}
-        />
-      );
-    })}
-    <View style={{ width: spacerWidth }} />
-  </View>
-);
+const Ruler = ({ scrollX, unit }) => {
+  const dataKg = [...Array(maxWeightKg - minWeightKg + 1).keys()].map(i => i + minWeightKg);
+  const dataLbs = [...Array(maxWeightLbs - minWeightLbs + 1).keys()].map(i => i + minWeightLbs);
+
+  const data = unit === 'kg' ? dataKg : dataLbs;
+
+  return (
+    <View style={styles.ruler}>
+        <View style={styles.spacerd} />
+      <View style={{ width: spacerWidth }} />
+      {data.map(i => {
+        const inputRange = [
+          (i - 1) * snapSegment,
+          i * snapSegment,
+          (i + 1) * snapSegment,
+        ];
+
+        const scale = scrollX.interpolate({
+          inputRange,
+          outputRange: [0.8, 1.5, 0.8],
+          extrapolate: 'clamp',
+        });
+
+        const color = scrollX.interpolate({
+          inputRange,
+          outputRange: ['#999', '#FFFFFF', '#999'],
+          extrapolate: 'clamp',
+        });
+
+        return (
+          <Animated.View
+            key={i}
+            style={[
+              styles.segment,
+              {
+                backgroundColor: color,
+                height: i % 10 === 0 ? 40 : 20,
+                marginRight: i === data.length - 1 ? 0 : segmentSpacing,
+                transform: [{ scale }],
+              },
+            ]}
+          >
+            <Animated.Text style={[styles.label, { color }]}>
+              {i}
+            </Animated.Text>
+          </Animated.View>
+        );
+        
+      })}
+      <View style={styles.spacerd} />
+      <View style={{ width: spacerWidth }} />
+
+    </View>
+    
+  );
+};
 
 export default function SelectWeight() {
   const navigation = useNavigation();
@@ -91,7 +112,7 @@ export default function SelectWeight() {
     const scrollToInitialWeight = () => {
       if (scrollViewRef.current) {
         scrollViewRef.current.scrollTo({
-          x: (initialWeight - minWeightKg) * snapSegment - (width / 2 - segmentWidth / 2),
+          x: (initialWeight - (unit === 'kg' ? minWeightKg : minWeightLbs)) * snapSegment - (width / 2 - segmentWidth / 2),
           y: 0,
           animated: true,
         });
@@ -99,18 +120,18 @@ export default function SelectWeight() {
     };
 
     scrollToInitialWeight();
-  }, [initialWeight]);
+  }, [initialWeight, unit]);
 
   useEffect(() => {
     scrollX.addListener(({ value }) => {
-      const currentIndex = Math.round((value - snapSegment / 2) / snapSegment) + minWeightKg;
+      const currentIndex = Math.round((value - snapSegment / 2) / snapSegment) + (unit === 'kg' ? minWeightKg : minWeightLbs);
       if (textInputRef.current) {
         textInputRef.current.setNativeProps({
           text: `${currentIndex}`,
         });
       }
     });
-  }, [scrollX]);
+  }, [scrollX, unit]);
 
   const handleUnitChange = newUnit => {
     if (newUnit !== unit) {
@@ -122,7 +143,7 @@ export default function SelectWeight() {
       setTimeout(() => {
         if (scrollViewRef.current) {
           scrollViewRef.current.scrollTo({
-            x: (Math.round(convertedWeight) - minWeightKg) * snapSegment - (width / 2 - segmentWidth / 2),
+            x: (Math.round(convertedWeight) - (newUnit === 'kg' ? minWeightKg : minWeightLbs)) * snapSegment - (width / 2 - segmentWidth / 2),
             y: 0,
             animated: true,
           });
@@ -179,20 +200,20 @@ export default function SelectWeight() {
           { useNativeDriver: true }
         )}
       >
-        <Ruler scrollX={scrollX} />
+        <Ruler scrollX={scrollX} unit={unit} />
       </Animated.ScrollView>
 
       <View style={styles.indicatorWrapper}>
         <TextInput
           ref={textInputRef}
           style={styles.weightTextStyle}
-          value={initialWeight.toString()} // Use value instead of defaultValue
+          value={initialWeight.toString()}
           editable={false}
         />
         <Text style={styles.unitTextStyle}>{unit}</Text>
-        <View style={[styles.segment, styles.segmentIndicator]} />
       </View>
 
+      <View style={styles.arrowIndicator} />  
       <TouchableOpacity style={styles.continueButton} onPress={handleContinuePress}>
         <Text style={styles.continueButtonText}>Continue</Text>
       </TouchableOpacity>
@@ -213,6 +234,18 @@ const styles = StyleSheet.create({
     color: '#FD6639',
     fontSize: 18,
   },
+    numberRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    marginBottom: 10, // Adjust to control space between numbers and ruler
+  },
+  numberContainer: {
+    alignItems: 'center',
+  },
+  numberText: {
+    fontSize: 14,
+    color: '#FFFFFF', // Adjust color to your preference
+  },
   titleContainer: {
     alignItems: 'center',
     marginTop: 80,
@@ -229,8 +262,8 @@ const styles = StyleSheet.create({
     marginTop: 40,
   },
   unitButton: {
-    paddingVertical: 15, // Increased padding for better touch area
-    paddingHorizontal: 30, // Increased padding for better touch area
+    paddingVertical: 15,
+    paddingHorizontal: 30,
     backgroundColor: 'transparent',
     borderColor: '#FD6639',
     borderWidth: 1,
@@ -259,7 +292,6 @@ const styles = StyleSheet.create({
   },
   ruler: {
     backgroundColor: '#FD6639',
-    width: rulerWidth,
     alignItems: 'center',
     justifyContent: 'flex-end',
     flexDirection: 'row',
@@ -276,15 +308,40 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
     left: 25,
   },
+  label: {
+    position: 'absolute',
+    top: -45, 
+    fontSize: 12,
+  },
+  spacerd: {
+    backgroundColor: 'transparent',
+  },
   weightTextStyle: {
     fontSize: 42,
     color: '#FFFFFF',
-    marginTop: 80,
+    textAlign: 'center',
+    top:350,
+    },
+    unitTextStyle: {
+    color: '#7E8385',
+    fontSize: 18,
+    top:320,
+    left:50,
   },
-  unitTextStyle: {
-    fontSize: 20,
-    color: '#FFFFFF',
-    marginTop: 10,
+
+  arrowIndicator: {
+    position: 'absolute',
+    width: 0,
+    height: 0,
+    left: width / 2 - 15,
+    borderLeftWidth: 15,
+    borderRightWidth: 15,
+    borderBottomWidth: 24,
+    borderLeftColor: 'transparent',
+    borderRightColor: 'transparent',
+    borderBottomColor: '#ffff',
+    borderRadius: 5,
+    bottom:290,
   },
   continueButton: {
     backgroundColor: '#FD6639',
@@ -300,6 +357,6 @@ const styles = StyleSheet.create({
     color: '#ffffff',
     textAlign: 'center',
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight:'bold'
   },
 });

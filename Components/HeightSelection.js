@@ -7,6 +7,7 @@ import {
   View,
   TouchableOpacity,
   Text,
+  ScrollView
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
@@ -49,13 +50,11 @@ const Ruler = ({ scrollY }) => (
             styles.segment,
             {
               backgroundColor: color,
-              width: i % 10 === 0 ? 40 : 20,
-              marginTop: i === data.length - 1 ? 0 : segmentSpacing,
               transform: [{ scale }],
             },
           ]}
         >
-          <Text style={[styles.number, { color: color }]}>
+          <Text style={[styles.number, { color }]}>
             {i}
           </Text>
         </Animated.View>
@@ -144,6 +143,7 @@ export default function SelectHeight() {
   );
 }
 
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -152,6 +152,7 @@ const styles = StyleSheet.create({
   },
   backButton: {
     marginTop: 30,
+    marginLeft: 20,
   },
   backButtonText: {
     color: '#FD6639',
@@ -159,7 +160,7 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     alignItems: 'center',
-    marginTop: 80,
+    marginTop: 40,
   },
   title: {
     fontSize: 24,
@@ -178,14 +179,18 @@ const styles = StyleSheet.create({
   segmentIndicator: {
     width: 100,
     backgroundColor: '#FD6639',
+    height: 2,
   },
   ruler: {
     backgroundColor: '#FD6639',
-    width: '100%',
+    width: '30%',
     height: rulerHeight,
     alignItems: 'center',
     justifyContent: 'flex-end',
     flexDirection: 'column',
+    borderRadius:15,
+    height:400,
+    top:55,
   },
   segment: {
     height: segmentHeight,

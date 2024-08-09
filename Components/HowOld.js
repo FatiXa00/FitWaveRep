@@ -157,7 +157,7 @@ export default class HowOld extends React.Component {
             defaultValue={this.state.initialAge.toString()}
             editable={false}
           />
-          <View style={[styles.segment, styles.segmentIndicator]} />
+          <View style={styles.arrowIndicator} />
         </View>
         <TouchableOpacity style={styles.continueButton} onPress={this.handleContinuePress}>
           <Text style={styles.continueButtonText}>Continue</Text>
@@ -193,6 +193,20 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
    
   },
+  arrowIndicator: {
+    position: 'absolute',
+    width: 0,
+    height: 0,
+    borderLeftWidth: 15,
+    borderRightWidth: 15,
+    borderBottomWidth: 24,
+    borderLeftColor: 'transparent',
+    borderRightColor: 'transparent',
+    borderBottomColor: '#ffff',
+    borderRadius: 5,
+    marginLeft:22,
+    top:70,
+  },
   indicatorWrapper: {
     position: 'absolute',
     left: (width - indicatorWidth) / 2,
@@ -211,10 +225,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'flex-end',
     flexDirection: 'row',
-    height: 130,
+    height: 120,
     alignSelf: 'center',
     maxWidth:rulerWidth,
-    bottom:50,
+    bottom:30,
   },
   segment: {
     width: segmentWidth,
@@ -228,11 +242,12 @@ const styles = StyleSheet.create({
   label: {
     position: 'absolute',
     top: -45, 
-    fontSize: 12,
+    fontSize: 10,
   },
   ageTextStyle: {
     fontSize: 42,
     color: '#FFFFFF',
+    
   },
   spacer: {
     width: spacerWidth,
