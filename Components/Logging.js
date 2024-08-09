@@ -68,7 +68,7 @@ const Logging = ({ navigation }) => {
           <Text style={styles.signUpUser}> User</Text>
         </TouchableOpacity>
         <Text style={styles.signUp}> or</Text>
-        <TouchableOpacity onPress={() => { /* Navigate to sign up screen */ }}>
+        <TouchableOpacity onPress={() => { navigation.navigate('CreateDoctor'); }}>
           <Text style={styles.signUpUser}> Doctor</Text>
         </TouchableOpacity>
       </View>
