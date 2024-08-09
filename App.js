@@ -15,7 +15,6 @@ import SetPassword from './Components/SetPassword';
 import SetUp from './Components/SetUp';
 import GenderSelection from './Components/GenderSelection';
 import HowOld from './Components/HowOld';
-import CreateDoctor2 from './Components/CreateDoctor2';
 
 const Stack = createStackNavigator();
 
@@ -59,11 +58,7 @@ export default function App() {
           component={CreateDoctor}
           options={{ headerShown: false }} // Show header for Logging screen
         />
-        <Stack.Screen
-          name="CreateDoctor2"
-          component={CreateDoctor2}
-          options={{ headerShown: false }} // Show header for Logging screen
-        />
+        
         <Stack.Screen
           name="ForgottenPassword"
           component={ForgottenPassword}

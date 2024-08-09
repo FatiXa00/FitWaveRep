@@ -79,7 +79,7 @@ export default function CreateDoctor() {
       </Text>
       </View>
 
-      <TouchableOpacity style={styles.signUpButton} onPress={() => { navigation.navigate('CreateDoctor2');  }}>
+      <TouchableOpacity style={styles.signUpButton} onPress={() => { navigation.navigate('CreateAccount');  }}>
         <Text style={styles.signUpButtonText}>Continue</Text>
       </TouchableOpacity>
 
