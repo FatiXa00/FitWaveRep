@@ -9,11 +9,13 @@ import Onboarding1 from './Components/OnBoarding1';
 import Onboarding2 from './Components/OnBoarding2';
 import Onboarding3 from './Components/OnBoarding3';
 import CreateAccount from './Components/CreateAccount';
+import CreateDoctor from './Components/CreateDoctor';
 import ForgottenPassword from './Components/ForgottenPassword';
 import SetPassword from './Components/SetPassword';
 import SetUp from './Components/SetUp';
 import GenderSelection from './Components/GenderSelection';
 import HowOld from './Components/HowOld';
+import CreateDoctor2 from './Components/CreateDoctor2';
 
 const Stack = createStackNavigator();
 
@@ -50,6 +52,16 @@ export default function App() {
         <Stack.Screen
           name="CreateAccount"
           component={CreateAccount}
+          options={{ headerShown: false }} // Show header for Logging screen
+        />
+        <Stack.Screen
+          name="CreateDoctor"
+          component={CreateDoctor}
+          options={{ headerShown: false }} // Show header for Logging screen
+        />
+        <Stack.Screen
+          name="CreateDoctor2"
+          component={CreateDoctor2}
           options={{ headerShown: false }} // Show header for Logging screen
         />
         <Stack.Screen

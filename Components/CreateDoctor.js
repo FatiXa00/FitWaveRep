@@ -4,12 +4,12 @@ import { useNavigation } from '@react-navigation/native';
 import ForgottenPassword from './ForgottenPassword';
 import SetPassword from './SetPassword';
 
-export default function CreateAccount() {
+export default function CreateDoctor() {
   const navigation = useNavigation();
   const [fullName, setFullName] = useState('');
-  const [emailOrMobile, setEmailOrMobile] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+  const [email, setEmail] = useState('');
+  const [Contact, setConcatc] = useState('');
+  const [Address, setAdress] = useState('');
 
   const handleSignUp = () => {
     navigation.navigate('ForgottenPassword');   
@@ -20,19 +20,20 @@ export default function CreateAccount() {
   };
   return (
     <View style={styles.container}>
-    <View style={styles.header}>
-    <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+        <View style={styles.header}>
+        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
         <Text style={styles.backButtonText}>{'<'} Back</Text>
       </TouchableOpacity>
-        <Text style={styles.title}>Create Account</Text>
-      </View>
+
+            <Text style={styles.title}>Create Account</Text>
+        </View>
       <Text style={styles.subtitle}>Let's Start!</Text>
       
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Full name</Text>
         <TextInput
           style={styles.input}
-          placeholder="example"
+          placeholder="Enter Full Name"
           value={fullName}
           onChangeText={setFullName}
         />
@@ -42,33 +43,33 @@ export default function CreateAccount() {
         <Text style={styles.label}>Email or Mobile Number</Text>
         <TextInput
           style={styles.input}
-          placeholder="+212625739588"
-          value={emailOrMobile}
-          onChangeText={setEmailOrMobile}
+          placeholder="Enter Email"
+          value={email}
+          onChangeText={setEmail}
         />
       </View>
 
       <View style={styles.inputContainer}>
-        <Text style={styles.label}>Password</Text>
+        <Text style={styles.label}>Contact</Text>
         <TextInput
           style={styles.input}
-          placeholder="************"
-          secureTextEntry
-          value={password}
-          onChangeText={setPassword}
+          placeholder="Enter Phone Number"
+          value={Contact}
+          onChangeText={setConcatc}
         />
       </View>
 
       <View style={styles.inputContainer}>
-        <Text style={styles.label}>Confirm Password</Text>
+        <Text style={styles.label}>Address</Text>
         <TextInput
           style={styles.input}
-          placeholder="************"
-          secureTextEntry
-          value={confirmPassword}
-          onChangeText={setConfirmPassword}
+          placeholder="Enter Adress"
+          value={Address}
+          onChangeText={setAdress}
         />
       </View>
+
+
 
       <View style={styles.policy}>
       <Text style={styles.terms}>By continuing, you agree to</Text>
@@ -78,23 +79,9 @@ export default function CreateAccount() {
       </Text>
       </View>
 
-      <TouchableOpacity style={styles.signUpButton} onPress={handleSignUp}>
-        <Text style={styles.signUpButtonText}>Sign Up</Text>
+      <TouchableOpacity style={styles.signUpButton} onPress={() => { navigation.navigate('CreateDoctor2');  }}>
+        <Text style={styles.signUpButtonText}>Continue</Text>
       </TouchableOpacity>
-
-      <Text style={styles.orText}>or sign up with</Text>
-
-      <View style={styles.socialButtons}>
-        <TouchableOpacity>
-          <Image source={require('../assets/icons/IconApple.png')} style={styles.socialIcon} />
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Image source={require('../assets/icons/IconGoogle.png')} style={styles.socialIcon} />
-        </TouchableOpacity>
-        <TouchableOpacity>
-          <Image source={require('../assets/icons/IconFacebook.png')} style={styles.socialIcon} />
-        </TouchableOpacity>
-      </View>
 
       <TouchableOpacity onPress={handleLogin}>
         <Text style={styles.loginText}>Already have an account? <Text style={styles.loginLink}>Log in</Text></Text>
@@ -104,7 +91,7 @@ export default function CreateAccount() {
 }
 
 const styles = StyleSheet.create({
-  container: {
+    container: {
     flex: 1,
     padding: 30,
     backgroundColor: '#141824',
