@@ -40,7 +40,7 @@ const Logging = ({ navigation }) => {
         />
       </View>
 
-      <TouchableOpacity onPress={() => { /* Navigate to forgot password screen */ }}>
+      <TouchableOpacity onPress={() => {navigation.navigate('ForgottenPassword')}}>
         <Text style={styles.forgotPassword}>Forgot Password?</Text>
       </TouchableOpacity>
 

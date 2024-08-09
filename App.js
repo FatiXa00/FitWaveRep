@@ -15,6 +15,11 @@ import SetPassword from './Components/SetPassword';
 import SetUp from './Components/SetUp';
 import GenderSelection from './Components/GenderSelection';
 import HowOld from './Components/HowOld';
+import WeightPage from './Components/WeightPage';
+import SelectHeight from './Components/HeightSelection';
+import SelectWeight from './Components/WeightPage';
+import CreateDoctor2 from './Components/CreateDoctor2';
+
 
 const Stack = createStackNavigator();
 
@@ -58,7 +63,11 @@ export default function App() {
           component={CreateDoctor}
           options={{ headerShown: false }} // Show header for Logging screen
         />
-        
+       <Stack.Screen
+        name="CreateDoctor2"
+        component={CreateDoctor2}
+        options={{ headerShown: false }} // Show header for Logging screen
+      />
         <Stack.Screen
           name="ForgottenPassword"
           component={ForgottenPassword}
@@ -84,7 +93,16 @@ export default function App() {
           component={HowOld}
           options={{ headerShown: false }} // Show header for Logging screen
         />
-      
+               <Stack.Screen
+          name="WeightPage"
+          component={SelectWeight}
+          options={{ headerShown: false }} // Show header for Logging screen
+        />
+                 <Stack.Screen
+          name="HeightSelection"
+          component={SelectHeight}
+          options={{ headerShown: false }} // Show header for Logging screen
+        />
       </Stack.Navigator>
       <StatusBar style="auto" />
     </NavigationContainer>

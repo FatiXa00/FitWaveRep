@@ -8,7 +8,7 @@ export default function CreateDoctor() {
   const navigation = useNavigation();
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
-  const [Contact, setConcatc] = useState('');
+  const [Contact, setContact] = useState('');
   const [Address, setAdress] = useState('');
 
   const handleSignUp = () => {
@@ -55,7 +55,7 @@ export default function CreateDoctor() {
           style={styles.input}
           placeholder="Enter Phone Number"
           value={Contact}
-          onChangeText={setConcatc}
+          onChangeText={setContact}
         />
       </View>
 
@@ -79,7 +79,7 @@ export default function CreateDoctor() {
       </Text>
       </View>
 
-      <TouchableOpacity style={styles.signUpButton} onPress={() => { navigation.navigate('CreateAccount');  }}>
+      <TouchableOpacity style={styles.signUpButton} onPress={() => { navigation.navigate('CreateDoctor2');  }}>
         <Text style={styles.signUpButtonText}>Continue</Text>
       </TouchableOpacity>
 
