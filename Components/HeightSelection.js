@@ -19,7 +19,7 @@ const maxHeightCm = 250;
 const segmentWidth = 2;
 const segmentSpacing = 20;
 const snapSegment = segmentWidth + segmentSpacing;
-const spacerHeight = (height - segmentWidth) / 2;
+const spacerHeight = 80;
 
 const rulerHeightCm = spacerHeight * 2 + (maxHeightCm - minHeightCm) * snapSegment;
 
@@ -65,9 +65,7 @@ const VerticalRuler = ({ scrollY }) => {
               },
             ]}
           >
-            <Animated.Text style={[styles.label, { color }]}>
-              {i}
-            </Animated.Text>
+           
           </Animated.View>
         );
       })}
@@ -82,7 +80,7 @@ export default function SelectHeight() {
   const scrollViewRef = useRef(null);
   const textInputRef = useRef(null);
 
-  const [initialHeight, setInitialHeight] = useState(170); // Default to a valid height
+  const [initialHeight, setInitialHeight] = useState(minHeightCm); 
 
 useEffect(() => {
     const scrollToInitialHeight = () => {
@@ -110,7 +108,7 @@ useEffect(() => {
   }, [scrollY]);
 
   const handleContinuePress = () => {
-    navigation.navigate('NextScreen'); // Replace 'NextScreen' with the next screen in your navigation flow
+    navigation.navigate('Home'); // Replace 'NextScreen' with the next screen in your navigation flow
   };
 
   return (
@@ -122,7 +120,7 @@ useEffect(() => {
       <View style={styles.titleContainer}>
         <Text style={styles.title}>Select Your Height</Text>
       </View>
-
+    <View style={styles.new}>
       <Animated.ScrollView
         ref={scrollViewRef}
         contentContainerStyle={styles.scrollViewContainerStyle}
@@ -143,7 +141,7 @@ useEffect(() => {
       >
         <VerticalRuler scrollY={scrollY} />
       </Animated.ScrollView>
-
+    </View>
       <View style={styles.indicatorWrapper}>
         <TextInput
           ref={textInputRef}
@@ -169,15 +167,20 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   backButton: {
-    marginTop: 30,
-  },
+    marginTop: -20,
+    marginLeft:2
+    },
+    
   backButtonText: {
     color: '#FD6639',
     fontSize: 18,
+    top: 20,
+    left:15
+    
   },
   titleContainer: {
     alignItems: 'center',
-    marginTop: 80,
+    marginTop: 50,
   },
   title: {
     fontSize: 24,
@@ -185,10 +188,17 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: 'bold',
   },
+  new:{
+    marginTop: 55,
+    height:400,
+    margin:15,
+    bottom:-30,
+
+  },
   indicatorWrapper: {
     position: 'absolute',
     left: 50,
-    top: (height - indicatorHeight) / 2,
+    top: 410,
     alignItems: 'center',
     justifyContent: 'center',
     height: indicatorHeight,
@@ -204,7 +214,12 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     width: 120,
     alignSelf: 'center',
-    marginTop: 50,
+    marginTop: 25,
+    borderRadius:35,
+    marginBottom: 220,
+    bottom:-50,
+
+
   },
   segment: {
     height: segmentWidth,
@@ -215,33 +230,26 @@ const styles = StyleSheet.create({
   scrollViewContainerStyle: {
     justifyContent: 'flex-end',
     left: 40,
-    bottom:230,
+    top:100,
   },
-  label: {
-    position: 'absolute',
-    left: -50,
-    fontSize: 13,
-    color:'white',
 
-  },
   heightTextStyle: {
     fontSize: 42,
     color: '#FFFFFF',
     textAlign: 'center',
-        color:'white',
+    color:'white',
 
   },
   unitTextStyle: {
     color: '#7E8385',
-    fontSize: 18,
-    top: 10,
-    
+    fontSize: 18,    
   },
+
   arrowIndicator: {
     position: 'absolute',
     width: 0,
     height: 0,
-    top: height / 2 - 15,
+    top: height / 2 ,
     right: 50, 
     borderTopWidth: 15,
     borderBottomWidth: 15,
@@ -261,6 +269,7 @@ const styles = StyleSheet.create({
     width: '50%',
     alignSelf: 'center',
     marginBottom: 60,
+    top:50,
   },
   continueButtonText: {
     color: '#ffffff',

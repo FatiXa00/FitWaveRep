@@ -31,8 +31,9 @@ export default function GenderSelection() {
       <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
         <Text style={styles.backButtonText}>{'<'} Back</Text>
       </TouchableOpacity>
-
+      <View style={styles.titleContainer}>
       <Text style={styles.title}>What's Your Gender</Text>
+      </View>
 
       <View style={styles.genderContainer}>
         <TouchableOpacity
@@ -70,7 +71,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#141824',
-    padding: 20,
+    position: 'relative',
   },
   backButton: {
     marginTop: 30,
@@ -79,13 +80,21 @@ const styles = StyleSheet.create({
   backButtonText: {
     color: '#FD6639',
     fontSize: 18,
+    top: 30,
+    left: 10,
+  },
+
+  titleContainer: {
+    marginBottom: 30,
+    alignItems: 'center',
   },
   title: {
+    top: 40,
     fontSize: 24,
-    fontWeight: 'bold',
     color: '#FFFFFF',
     textAlign: 'center',
-    marginBottom: 40,
+    fontWeight: 'bold',
+   
   },
   genderContainer: {
     flex: 1,

@@ -7,10 +7,10 @@ export default function ForgottenPassword() {
 
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-          <Text style={styles.arrow}>{'\u003C'}</Text>
-        </TouchableOpacity>
+        <View style={styles.header}>
+                <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+                    <Text style={styles.backButtonText}>{'<'} Back</Text>
+                </TouchableOpacity>
         <Text style={styles.title}>Forgotten Password</Text>
       </View>
       <Text style={styles.subtitle}>Forgot Password?</Text>
@@ -34,27 +34,30 @@ const styles = StyleSheet.create({
         backgroundColor: '#141824',
       },
       header: {
-        flexDirection: "row",
+        flexDirection: 'row',
         alignItems: 'center',
-      },
-      backButton: {
-        marginTop: 25,
-
-      },
-      arrow: {
-        fontSize: 30,
+    },
+    backButton: {
+        marginTop: -20,
+        marginLeft:1
+        },
+        
+      backButtonText: {
         color: '#FD6639',
+        fontSize: 18,
+        top: -2,
+        left:-10
       },
-
-      title: {
-        marginTop:45,
-        marginLeft:55,
+      
+    title: {
+        top: 50,
         fontSize: 24,
         fontWeight: 'bold',
         color: '#FD6639',
         textAlign: 'center',
         marginVertical: 20,
-      },
+        alignSelf:'center'
+    },
 
       subtitle: {
         marginTop:90,

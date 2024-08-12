@@ -103,18 +103,16 @@ const styles = StyleSheet.create({
       },
 
   backButton: {
-    marginTop: 25,
+    marginTop: -20,
     marginLeft:1
     },
     
-    backButtonText: {
-      color: '#FD6639',
-     fontSize: 18,
-      },
   
   backButtonText: {
     color: '#FD6639',
     fontSize: 18,
+    top: -2,
+    left:-10
   },
 
   arrow: {

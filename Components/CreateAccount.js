@@ -12,7 +12,7 @@ export default function CreateAccount() {
   const [confirmPassword, setConfirmPassword] = useState('');
 
   const handleSignUp = () => {
-    navigation.navigate('ForgottenPassword');   
+    navigation.navigate('Logging');   
   };
 
   const handleLogin = () => {
@@ -116,18 +116,18 @@ const styles = StyleSheet.create({
       },
 
   backButton: {
-    marginTop: 25,
+    marginTop: -20,
     marginLeft:1
+
     },
     
-    backButtonText: {
-      color: '#FD6639',
-     fontSize: 18,
-      },
   
   backButtonText: {
     color: '#FD6639',
     fontSize: 18,
+    top: -2,
+    left:-10
+
   },
 
   arrow: {

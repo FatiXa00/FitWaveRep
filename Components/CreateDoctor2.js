@@ -124,13 +124,17 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     backButton: {
-        marginTop: 25,
-        marginLeft: 1,
-    },
-    backButtonText: {
+        marginTop: -20,
+        marginLeft:1
+        },
+        
+      
+      backButtonText: {
         color: '#FD6639',
         fontSize: 18,
-    },
+        top: -2,
+        left:-10
+      },
     title: {
         marginTop: 45,
         marginLeft: 25,

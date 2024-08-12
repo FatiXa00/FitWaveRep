@@ -21,99 +21,128 @@ import SelectHeight from './Components/HeightSelection';
 import SelectWeight from './Components/WeightPage';
 import CreateDoctor2 from './Components/CreateDoctor2';
 import Paginator from './Components/Paginator'; 
-
-
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Home from './Components/Home';
+import BottomTabNavigator from './Components/BottomTabNavigator'
+import Settings from './Components/Settings';
+import Profile from './Components/Profile';
 const Stack = createStackNavigator();
+const Tab = createBottomTabNavigator();
 
 export default function App() {
   return (
     <NavigationContainer>
+      
       <Stack.Navigator initialRouteName="Launch">
         <Stack.Screen
           name="Launch"
           component={Launch}
-          options={{ headerShown: false }} // Hide header for the Launch screen
+          options={{ headerShown: false }} 
         />
+
          <Stack.Screen
           name="OnBoarding1"
           component={Onboarding1}
-          options={{ headerShown: false }} // Show header for Logging screen
+          options={{ headerShown: false }} 
         />
             <Stack.Screen
           name="OnBoarding2"
           component={Onboarding2}
-          options={{ headerShown: false }} // Show header for Logging screen
+          options={{ headerShown: false }} 
         />
             <Stack.Screen
           name="OnBoarding3"
           component={Onboarding3}
-          options={{ headerShown: false }} // Show header for Logging screen
+          options={{ headerShown: false }} 
         />
             <Stack.Screen
-          name="Paginator"
-          component={Paginator}
-          options={{ headerShown: false }} // Show header for Logging screen
+          name="BottomTabNavigator"
+          component={BottomTabNavigator}
+          options={{ headerShown: false }} 
         />
         <Stack.Screen
           name="Logging"
           component={Logging}
-          options={{ headerShown: false }} // Show header for Logging screen
+          options={{ headerShown: false }} 
         />
         <Stack.Screen
           name="CreateAccount"
           component={CreateAccount}
-          options={{ headerShown: false }} // Show header for Logging screen
+          options={{ headerShown: false }} 
         />
         <Stack.Screen
           name="CreateDoctor"
           component={CreateDoctor}
-          options={{ headerShown: false }} // Show header for Logging screen
+          options={{ headerShown: false }} 
         />
        <Stack.Screen
         name="CreateDoctor2"
         component={CreateDoctor2}
-        options={{ headerShown: false }} // Show header for Logging screen
+        options={{ headerShown: false }} 
       />
         <Stack.Screen
           name="ForgottenPassword"
           component={ForgottenPassword}
-          options={{ headerShown: false }} // Show header for Logging screen
+          options={{ headerShown: false }} 
         />
         <Stack.Screen
           name="SetPassword"
           component={SetPassword}
-          options={{ headerShown: false }} // Show header for Logging screen
+          options={{ headerShown: false }} 
         />
         <Stack.Screen
           name="ResetPassword"
           component={ResetPassword}
-          options={{ headerShown: false }} // Show header for Logging screen
+          options={{ headerShown: false }} 
         />
               <Stack.Screen
           name="SetUp"
           component={SetUp}
-          options={{ headerShown: false }} // Show header for Logging screen
+          options={{ headerShown: false }} 
         />
                <Stack.Screen
           name="GenderSelection"
           component={GenderSelection}
-          options={{ headerShown: false }} // Show header for Logging screen
+          options={{ headerShown: false }} 
         />
                   <Stack.Screen
           name="HowOld"
           component={HowOld}
-          options={{ headerShown: false }} // Show header for Logging screen
+          options={{ headerShown: false }} 
         />
                <Stack.Screen
           name="WeightPage"
           component={SelectWeight}
-          options={{ headerShown: false }} // Show header for Logging screen
+          options={{ headerShown: false }} 
         />
                  <Stack.Screen
           name="HeightSelection"
           component={SelectHeight}
-          options={{ headerShown: false }} // Show header for Logging screen
+          options={{ headerShown: false }} 
         />
+                  <Stack.Screen
+          name="Home"
+          component={Home}
+          options={{ headerShown: false }}
+        /> 
+           <Stack.Screen
+          name="Main"
+          component={BottomTabNavigator}
+          options={{ headerShown: false }} 
+        />
+
+<Stack.Screen
+          name="Profile"
+          component={Profile}
+          options={{ headerShown: false }}
+        />
+
+<Stack.Screen
+          name="Settings"
+          component={Settings}
+          options={{ headerShown: false }}
+        />
+     
       </Stack.Navigator>
       <StatusBar style="auto" />
     </NavigationContainer>

@@ -83,7 +83,7 @@ export default class HowOld extends React.Component {
 
     this.state = {
       scrollX: new Animated.Value(0),
-      initialAge: 35,
+      initialAge: 10,
     };
 
     // Update scrollX listener to align the age correctly
@@ -124,6 +124,7 @@ export default class HowOld extends React.Component {
         <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
         <Text style={styles.backButtonText}>{'<'} Back</Text>
       </TouchableOpacity>
+
         <View style={styles.titleContainer}>
           <Text style={styles.title}>How Old Are You?</Text>
         </View>
@@ -174,24 +175,27 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   backButton: {
-    marginTop: 30,
-    marginBottom: 50,
-  },
+    marginTop: -20,
+    marginLeft:2
+    },
+    
   backButtonText: {
     color: '#FD6639',
     fontSize: 18,
+    top: 20,
+    left:15
+    
   },
-
   titleContainer: {
-    marginBottom: 30,
+    marginBottom: 230,
     alignItems: 'center',
   },
   title: {
+    top:50,
     fontSize: 24,
     color: '#FFFFFF',
     textAlign: 'center',
     fontWeight: 'bold',
-   
   },
   arrowIndicator: {
     position: 'absolute',

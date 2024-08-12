@@ -96,7 +96,7 @@ export default function SelectWeight() {
   const scrollViewRef = useRef(null);
   const textInputRef = useRef(null);
 
-  const [initialWeight, setInitialWeight] = useState(70); // Default to a valid weight
+  const [initialWeight, setInitialWeight] = useState(minWeightKg); 
   const [unit, setUnit] = useState('kg');
 
   const convertWeight = (weight, fromUnit, toUnit) => {
@@ -228,11 +228,26 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   backButton: {
-    marginTop: 30,
-  },
+    marginTop: -20,
+    marginLeft:2
+    },
+    
   backButtonText: {
     color: '#FD6639',
     fontSize: 18,
+    top: 20,
+    left:15
+    
+  },
+  titleContainer: {
+    alignItems: 'center',
+  },
+  title: {
+    top:50,
+    fontSize: 24,
+    color: '#FFFFFF',
+    textAlign: 'center',
+    fontWeight: 'bold',
   },
     numberRow: {
     flexDirection: 'row',
@@ -312,6 +327,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: -45, 
     fontSize: 12,
+    
   },
   spacerd: {
     backgroundColor: 'transparent',
