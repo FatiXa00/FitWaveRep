@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, handleContinuePress,useEffect } from 'react';
 import {
   TextInput,
   SafeAreaView,
@@ -12,6 +12,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 
 const { height } = Dimensions.get('screen');
+
 
 const minHeightCm = 100;
 const maxHeightCm = 250;
@@ -27,12 +28,11 @@ const indicatorWidth = 200;
 const indicatorHeight = 80;
 
 const VerticalRuler = ({ scrollY }) => {
-  // Generate an array of numbers for height in cm
   const dataCm = [...Array(maxHeightCm - minHeightCm + 1).keys()].map(i => i + minHeightCm);
 
   return (
     <View style={styles.ruler}>
-      <View style={{ height: spacerHeight - 40 }} /> 
+      <View style={{ height: spacerHeight - 40 }} />
       {dataCm.map(i => {
         const inputRange = [
           (i - 1) * snapSegment,
@@ -45,13 +45,13 @@ const VerticalRuler = ({ scrollY }) => {
           outputRange: ['#999', '#FFFFFF', '#999'],
           extrapolate: 'clamp',
         });
-        
+
         const scale = scrollY.interpolate({
           inputRange,
           outputRange: [0.8, 1.5, 0.8],
           extrapolate: 'clamp',
         });
-        
+
         return (
           <Animated.View
             key={i}
@@ -82,9 +82,9 @@ export default function SelectHeight() {
   const scrollViewRef = useRef(null);
   const textInputRef = useRef(null);
 
-  const [initialHeight, setInitialHeight] = useState(170); // Default to a valid height
+  const [initialHeight, setInitialHeight] = useState(170);
 
-useEffect(() => {
+  useEffect(() => {
     const scrollToInitialHeight = () => {
       if (scrollViewRef.current) {
         scrollViewRef.current.scrollTo({
@@ -94,10 +94,14 @@ useEffect(() => {
         });
       }
     };
+    
 
     scrollToInitialHeight();
   }, [initialHeight]);
-
+  const handleContinuePress = () => {
+    navigation.navigate('Goal'); // Replace 'NextScreen' with the next screen in your navigation flow
+  };
+    
   useEffect(() => {
     scrollY.addListener(({ value }) => {
       const currentIndex = Math.round(value / snapSegment) + minHeightCm;
@@ -109,10 +113,8 @@ useEffect(() => {
     });
   }, [scrollY]);
 
-  const handleContinuePress = () => {
-    navigation.navigate('NextScreen'); // Replace 'NextScreen' with the next screen in your navigation flow
-  };
-
+  // Move the handleContinuePress function inside the component
+   
   return (
     <SafeAreaView style={styles.container}>
       <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
@@ -154,7 +156,7 @@ useEffect(() => {
         <Text style={styles.unitTextStyle}>cm</Text>
       </View>
 
-      <View style={styles.arrowIndicator} />  
+      <View style={styles.arrowIndicator} />
       <TouchableOpacity style={styles.continueButton} onPress={handleContinuePress}>
         <Text style={styles.continueButtonText}>Continue</Text>
       </TouchableOpacity>
@@ -210,39 +212,35 @@ const styles = StyleSheet.create({
     height: segmentWidth,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: segmentSpacing / 2, 
+    marginBottom: segmentSpacing / 2,
   },
   scrollViewContainerStyle: {
     justifyContent: 'flex-end',
     left: 40,
-    bottom:230,
+    bottom: 230,
   },
   label: {
     position: 'absolute',
     left: -50,
     fontSize: 13,
-    color:'white',
-
+    color: 'white',
   },
   heightTextStyle: {
     fontSize: 42,
     color: '#FFFFFF',
     textAlign: 'center',
-        color:'white',
-
   },
   unitTextStyle: {
     color: '#7E8385',
     fontSize: 18,
     top: 10,
-    
   },
   arrowIndicator: {
     position: 'absolute',
     width: 0,
     height: 0,
     top: height / 2 - 15,
-    right: 50, 
+    right: 50,
     borderTopWidth: 15,
     borderBottomWidth: 15,
     borderRightWidth: 24,
@@ -250,8 +248,7 @@ const styles = StyleSheet.create({
     borderBottomColor: 'transparent',
     borderRightColor: '#FFFFFF',
     borderRadius: 5,
-},
-
+  },
   continueButton: {
     backgroundColor: '#FD6639',
     paddingVertical: 12,
@@ -268,4 +265,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
-});
+})
+;

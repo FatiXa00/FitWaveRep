@@ -21,7 +21,8 @@ import SelectHeight from './Components/HeightSelection';
 import SelectWeight from './Components/WeightPage';
 import CreateDoctor2 from './Components/CreateDoctor2';
 import Paginator from './Components/Paginator'; 
-
+import Goal from './Components/Goal';
+import PhysicalActivityLevel from './Components/PhysicalActivityLevel';
 
 const Stack = createStackNavigator();
 
@@ -114,6 +115,17 @@ export default function App() {
           component={SelectHeight}
           options={{ headerShown: false }} // Show header for Logging screen
         />
+        <Stack.Screen
+          name="Goal"
+          component={Goal}
+          options={{ headerShown: false }} // Show header for Logging screen
+        />
+        <Stack.Screen
+          name="PhysicalActivityLevel"
+          component={PhysicalActivityLevel}
+          options={{ headerShown: false }} // Show header for Logging screen
+        />
+         
       </Stack.Navigator>
       <StatusBar style="auto" />
     </NavigationContainer>
