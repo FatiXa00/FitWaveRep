@@ -20,7 +20,7 @@ export default function ForgottenPassword() {
         placeholder="example@example.com"
         placeholderTextColor="#999"
       />
-      <TouchableOpacity style={styles.button} onPress={() => {navigation.navigate('SetPassword');}}>
+      <TouchableOpacity style={styles.button} onPress={() => {navigation.navigate('ResetPassword');}}>
         <Text style={styles.buttonText}>Continue</Text>
       </TouchableOpacity>
     </View>

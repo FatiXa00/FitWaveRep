@@ -32,7 +32,7 @@ export default function SetPassword() {
       </View>
 
       <TouchableOpacity style={styles.button} onPress={() => {navigation.navigate('Logging');}}>
-        <Text style={styles.buttonText}>Set Password</Text>
+        <Text style={styles.buttonText}>Reset Password</Text>
       </TouchableOpacity>
     </View>
   );
