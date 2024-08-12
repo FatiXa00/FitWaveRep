@@ -12,6 +12,9 @@ export default function CreateDoctor2() {
     const [batchYear, setBatchYear] = useState('');
     const [curriculumVitae, setCurriculumVitae] = useState(null);
     const [uploadMessage, setUploadMessage] = useState('');
+    const handleLogin = () => {
+        navigation.navigate('Logging'); 
+      };
 
     const handleDocumentPicker = async () => {
         try {
@@ -99,14 +102,14 @@ export default function CreateDoctor2() {
                 )}
             </View>
 
-            <TouchableOpacity style={styles.signUpButton} onPress={handleSignUp}>
-                <Text style={styles.signUpButtonText}>Continue</Text>
-            </TouchableOpacity>
+            <TouchableOpacity style={styles.continueButton} onPress={() => {navigation.navigate('SetPassword');}}>
+        <Text style={styles.continueButtonText}>Continue</Text>
+      </TouchableOpacity>
 
-            <TouchableOpacity onPress={handleLogin}>
-                <Text style={styles.loginText}>Already have an account? <Text style={styles.loginLink}>Log in</Text></Text>
-            </TouchableOpacity>
-        </View>
+      <TouchableOpacity onPress={handleLogin}>
+        <Text style={styles.loginText}>Already have an account? <Text style={styles.loginLink}>Log in</Text></Text>
+      </TouchableOpacity>
+    </View>
     );
 }
 
@@ -192,7 +195,7 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: 'bold',
     },
-    signUpButton: {
+    continueButton: {
         marginTop: 50,
         backgroundColor: '#FD6639',
         paddingVertical: 12,
@@ -202,7 +205,7 @@ const styles = StyleSheet.create({
         width: '50%',
         alignSelf: 'center',
     },
-    signUpButtonText: {
+    continueButtonText: {
         color: '#ffffff',
         textAlign: 'center',
         fontSize: 16,

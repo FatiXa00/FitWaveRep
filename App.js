@@ -12,6 +12,7 @@ import CreateAccount from './Components/CreateAccount';
 import CreateDoctor from './Components/CreateDoctor';
 import ForgottenPassword from './Components/ForgottenPassword';
 import SetPassword from './Components/SetPassword';
+import ResetPassword from './Components/ResetPassword';
 import SetUp from './Components/SetUp';
 import GenderSelection from './Components/GenderSelection';
 import HowOld from './Components/HowOld';
@@ -81,6 +82,11 @@ export default function App() {
         <Stack.Screen
           name="SetPassword"
           component={SetPassword}
+          options={{ headerShown: false }} // Show header for Logging screen
+        />
+        <Stack.Screen
+          name="ResetPassword"
+          component={ResetPassword}
           options={{ headerShown: false }} // Show header for Logging screen
         />
               <Stack.Screen
