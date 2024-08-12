@@ -19,6 +19,7 @@ import WeightPage from './Components/WeightPage';
 import SelectHeight from './Components/HeightSelection';
 import SelectWeight from './Components/WeightPage';
 import CreateDoctor2 from './Components/CreateDoctor2';
+import Paginator from './Components/Paginator'; 
 
 
 const Stack = createStackNavigator();
@@ -47,7 +48,11 @@ export default function App() {
           component={Onboarding3}
           options={{ headerShown: false }} // Show header for Logging screen
         />
-      
+            <Stack.Screen
+          name="Paginator"
+          component={Paginator}
+          options={{ headerShown: false }} // Show header for Logging screen
+        />
         <Stack.Screen
           name="Logging"
           component={Logging}

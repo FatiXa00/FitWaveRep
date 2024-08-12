@@ -1,11 +1,14 @@
-import React from 'react';
-import { View, Image, Text, StyleSheet, ImageBackground, TouchableOpacity,Dimensions } from 'react-native';
+import {React,useRef} from 'react';
+import { View, Image, Text, StyleSheet, ImageBackground, TouchableOpacity, Dimensions, Animated } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import Paginator from './Paginator'; 
 
-const { width } = Dimensions.get('window'); // Get the screen width for responsive design
+const { width } = Dimensions.get('window'); 
 
 export default function Onboarding3() {
   const navigation = useNavigation();
+
+  const scrollX = useRef(new Animated.Value(0)).current;
 
   const handleButtonPress = () => {
     navigation.navigate('Logging');
@@ -16,6 +19,7 @@ export default function Onboarding3() {
       source={require('../assets/images/OnBoarding3.png')}
       style={styles.background}
     >
+
       <View style={styles.overlay}>
         <View style={styles.content}>
           <Image source={require('../assets/icons/IconBoarding3.png')} style={styles.icon} />
@@ -34,22 +38,23 @@ export default function Onboarding3() {
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-    resizeMode: 'cover', // Cover the entire screen with the image
+    resizeMode: 'cover', 
   },
+
   overlay: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.3)', // Semi-transparent overlay
+    backgroundColor: 'rgba(0, 0, 0, 0.3)', 
   },
   content: {
-    width: '100%', // Adjust width to 80% of the screen width
-    maxWidth: 500, // Max width constraint
-    height: 150, // Fixed height to prevent resizing
-    marginTop: 20, // Adjust marginTop to fit your design
+    width: '100%', 
+    maxWidth: 500, 
+    height: 150, 
+    marginTop: 20, 
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 30, // Adjust padding to fit your design
+    padding: 30, 
     backgroundColor: '#7E8385',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },

@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import {
+  TextInput,
   SafeAreaView,
   Animated,
   Dimensions,
@@ -7,73 +8,88 @@ import {
   View,
   TouchableOpacity,
   Text,
-  ScrollView
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
 const { height } = Dimensions.get('screen');
 
-const minHeightCm = 50;
+const minHeightCm = 100;
 const maxHeightCm = 250;
-const segmentHeight = 2;
+
+const segmentWidth = 2;
 const segmentSpacing = 20;
-const snapSegment = segmentHeight + segmentSpacing;
-const rulerHeight = (maxHeightCm - minHeightCm) * snapSegment;
+const snapSegment = segmentWidth + segmentSpacing;
+const spacerHeight = (height - segmentWidth) / 2;
 
-const data = [...Array(maxHeightCm - minHeightCm + 1).keys()].map(i => i + minHeightCm);
+const rulerHeightCm = spacerHeight * 2 + (maxHeightCm - minHeightCm) * snapSegment;
 
-const Ruler = ({ scrollY }) => (
-  <View style={styles.ruler}>
-    {data.map(i => {
-      const inputRange = [
-        (i - 1) * snapSegment,
-        i * snapSegment,
-        (i + 1) * snapSegment,
-      ];
+const indicatorWidth = 200;
+const indicatorHeight = 80;
 
-      const scale = scrollY.interpolate({
-        inputRange,
-        outputRange: [0.8, 1.5, 0.8],
-        extrapolate: 'clamp',
-      });
+const VerticalRuler = ({ scrollY }) => {
+  // Generate an array of numbers for height in cm
+  const dataCm = [...Array(maxHeightCm - minHeightCm + 1).keys()].map(i => i + minHeightCm);
 
-      const color = scrollY.interpolate({
-        inputRange,
-        outputRange: ['#999', '#FFFFFF', '#999'],
-        extrapolate: 'clamp',
-      });
+  return (
+    <View style={styles.ruler}>
+      <View style={{ height: spacerHeight - 40 }} /> 
+      {dataCm.map(i => {
+        const inputRange = [
+          (i - 1) * snapSegment,
+          i * snapSegment,
+          (i + 1) * snapSegment,
+        ];
 
-      return (
-        <Animated.View
-          key={i}
-          style={[
-            styles.segment,
-            {
-              backgroundColor: color,
-              transform: [{ scale }],
-            },
-          ]}
-        >
-          <Text style={[styles.number, { color }]}>
-            {i}
-          </Text>
-        </Animated.View>
-      );
-    })}
-  </View>
-);
+        const color = scrollY.interpolate({
+          inputRange,
+          outputRange: ['#999', '#FFFFFF', '#999'],
+          extrapolate: 'clamp',
+        });
+        
+        const scale = scrollY.interpolate({
+          inputRange,
+          outputRange: [0.8, 1.5, 0.8],
+          extrapolate: 'clamp',
+        });
+        
+        return (
+          <Animated.View
+            key={i}
+            style={[
+              styles.segment,
+              {
+                backgroundColor: color,
+                width: i % 10 === 0 ? 40 : 20,
+                marginBottom: segmentSpacing,
+                transform: [{ scale }],
+              },
+            ]}
+          >
+            <Animated.Text style={[styles.label, { color }]}>
+              {i}
+            </Animated.Text>
+          </Animated.View>
+        );
+      })}
+      <View style={{ height: spacerHeight }} />
+    </View>
+  );
+};
 
 export default function SelectHeight() {
   const navigation = useNavigation();
   const scrollY = useRef(new Animated.Value(0)).current;
   const scrollViewRef = useRef(null);
+  const textInputRef = useRef(null);
+
   const [initialHeight, setInitialHeight] = useState(170); // Default to a valid height
 
-  useEffect(() => {
+useEffect(() => {
     const scrollToInitialHeight = () => {
       if (scrollViewRef.current) {
         scrollViewRef.current.scrollTo({
-          y: (initialHeight - minHeightCm) * snapSegment - (height / 2 - segmentHeight / 2),
+          y: (initialHeight - minHeightCm) * snapSegment - spacerHeight,
+          x: 0,
           animated: true,
         });
       }
@@ -83,18 +99,18 @@ export default function SelectHeight() {
   }, [initialHeight]);
 
   useEffect(() => {
-    const listenerId = scrollY.addListener(({ value }) => {
-      const currentIndex = Math.round((value - snapSegment / 2) / snapSegment) + minHeightCm;
-      setInitialHeight(currentIndex); // Update state with new height
+    scrollY.addListener(({ value }) => {
+      const currentIndex = Math.round(value / snapSegment) + minHeightCm;
+      if (textInputRef.current) {
+        textInputRef.current.setNativeProps({
+          text: `${currentIndex}`,
+        });
+      }
     });
-
-    return () => {
-      scrollY.removeListener(listenerId); // Clean up listener
-    };
   }, [scrollY]);
 
   const handleContinuePress = () => {
-    navigation.navigate('NextScreen'); // Replace with the next screen
+    navigation.navigate('NextScreen'); // Replace 'NextScreen' with the next screen in your navigation flow
   };
 
   return (
@@ -109,7 +125,6 @@ export default function SelectHeight() {
 
       <Animated.ScrollView
         ref={scrollViewRef}
-        vertical
         contentContainerStyle={styles.scrollViewContainerStyle}
         bounces={false}
         showsVerticalScrollIndicator={false}
@@ -126,23 +141,26 @@ export default function SelectHeight() {
           { useNativeDriver: true }
         )}
       >
-        <Ruler scrollY={scrollY} />
+        <VerticalRuler scrollY={scrollY} />
       </Animated.ScrollView>
 
       <View style={styles.indicatorWrapper}>
-        <Text style={styles.heightTextStyle}>
-          {initialHeight} cm
-        </Text>
-        <View style={[styles.segment, styles.segmentIndicator]} />
+        <TextInput
+          ref={textInputRef}
+          style={styles.heightTextStyle}
+          value={initialHeight.toString()}
+          editable={false}
+        />
+        <Text style={styles.unitTextStyle}>cm</Text>
       </View>
 
+      <View style={styles.arrowIndicator} />  
       <TouchableOpacity style={styles.continueButton} onPress={handleContinuePress}>
         <Text style={styles.continueButtonText}>Continue</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
 }
-
 
 const styles = StyleSheet.create({
   container: {
@@ -152,7 +170,6 @@ const styles = StyleSheet.create({
   },
   backButton: {
     marginTop: 30,
-    marginLeft: 20,
   },
   backButtonText: {
     color: '#FD6639',
@@ -160,7 +177,7 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     alignItems: 'center',
-    marginTop: 40,
+    marginTop: 80,
   },
   title: {
     fontSize: 24,
@@ -170,42 +187,71 @@ const styles = StyleSheet.create({
   },
   indicatorWrapper: {
     position: 'absolute',
-    left: (Dimensions.get('window').width - 100) / 2,
-    top: height / 2 - 40,
+    left: 50,
+    top: (height - indicatorHeight) / 2,
     alignItems: 'center',
     justifyContent: 'center',
-    width: 100,
+    height: indicatorHeight,
   },
   segmentIndicator: {
-    width: 100,
+    width: indicatorWidth,
     backgroundColor: '#FD6639',
-    height: 2,
   },
   ruler: {
     backgroundColor: '#FD6639',
-    width: '30%',
-    height: rulerHeight,
     alignItems: 'center',
     justifyContent: 'flex-end',
     flexDirection: 'column',
-    borderRadius:15,
-    height:400,
-    top:55,
+    width: 120,
+    alignSelf: 'center',
+    marginTop: 50,
   },
   segment: {
-    height: segmentHeight,
+    height: segmentWidth,
     justifyContent: 'center',
     alignItems: 'center',
+    marginBottom: segmentSpacing / 2, 
   },
   scrollViewContainerStyle: {
     justifyContent: 'flex-end',
-    alignItems: 'center',
+    left: 40,
+    bottom:230,
+  },
+  label: {
+    position: 'absolute',
+    left: -50,
+    fontSize: 13,
+    color:'white',
+
   },
   heightTextStyle: {
     fontSize: 42,
     color: '#FFFFFF',
-    marginTop: 80,
+    textAlign: 'center',
+        color:'white',
+
   },
+  unitTextStyle: {
+    color: '#7E8385',
+    fontSize: 18,
+    top: 10,
+    
+  },
+  arrowIndicator: {
+    position: 'absolute',
+    width: 0,
+    height: 0,
+    top: height / 2 - 15,
+    right: 50, 
+    borderTopWidth: 15,
+    borderBottomWidth: 15,
+    borderRightWidth: 24,
+    borderTopColor: 'transparent',
+    borderBottomColor: 'transparent',
+    borderRightColor: '#FFFFFF',
+    borderRadius: 5,
+},
+
   continueButton: {
     backgroundColor: '#FD6639',
     paddingVertical: 12,
@@ -222,8 +268,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
-  number: {
-    fontSize: 16,
-    fontWeight: 'bold',
-  }
 });
