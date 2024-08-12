@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, handleContinuePress,useEffect } from 'react';
 import {
   TextInput,
   SafeAreaView,
@@ -12,6 +12,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 
 const { height } = Dimensions.get('screen');
+
 
 const minHeightCm = 100;
 const maxHeightCm = 250;
@@ -27,12 +28,11 @@ const indicatorWidth = 200;
 const indicatorHeight = 80;
 
 const VerticalRuler = ({ scrollY }) => {
-  // Generate an array of numbers for height in cm
   const dataCm = [...Array(maxHeightCm - minHeightCm + 1).keys()].map(i => i + minHeightCm);
 
   return (
     <View style={styles.ruler}>
-      <View style={{ height: spacerHeight - 40 }} /> 
+      <View style={{ height: spacerHeight - 40 }} />
       {dataCm.map(i => {
         const inputRange = [
           (i - 1) * snapSegment,
@@ -45,13 +45,13 @@ const VerticalRuler = ({ scrollY }) => {
           outputRange: ['#999', '#FFFFFF', '#999'],
           extrapolate: 'clamp',
         });
-        
+
         const scale = scrollY.interpolate({
           inputRange,
           outputRange: [0.8, 1.5, 0.8],
           extrapolate: 'clamp',
         });
-        
+
         return (
           <Animated.View
             key={i}
@@ -82,7 +82,7 @@ export default function SelectHeight() {
 
   const [initialHeight, setInitialHeight] = useState(minHeightCm); 
 
-useEffect(() => {
+  useEffect(() => {
     const scrollToInitialHeight = () => {
       if (scrollViewRef.current) {
         scrollViewRef.current.scrollTo({
@@ -92,10 +92,14 @@ useEffect(() => {
         });
       }
     };
+    
 
     scrollToInitialHeight();
   }, [initialHeight]);
-
+  const handleContinuePress = () => {
+    navigation.navigate('Goal'); // Replace 'NextScreen' with the next screen in your navigation flow
+  };
+    
   useEffect(() => {
     scrollY.addListener(({ value }) => {
       const currentIndex = Math.round(value / snapSegment) + minHeightCm;
@@ -107,10 +111,8 @@ useEffect(() => {
     });
   }, [scrollY]);
 
-  const handleContinuePress = () => {
-    navigation.navigate('Home'); // Replace 'NextScreen' with the next screen in your navigation flow
-  };
-
+  // Move the handleContinuePress function inside the component
+   
   return (
     <SafeAreaView style={styles.container}>
       <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
@@ -152,7 +154,7 @@ useEffect(() => {
         <Text style={styles.unitTextStyle}>cm</Text>
       </View>
 
-      <View style={styles.arrowIndicator} />  
+      <View style={styles.arrowIndicator} />
       <TouchableOpacity style={styles.continueButton} onPress={handleContinuePress}>
         <Text style={styles.continueButtonText}>Continue</Text>
       </TouchableOpacity>
@@ -225,7 +227,7 @@ const styles = StyleSheet.create({
     height: segmentWidth,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: segmentSpacing / 2, 
+    marginBottom: segmentSpacing / 2,
   },
   scrollViewContainerStyle: {
     justifyContent: 'flex-end',
@@ -258,8 +260,7 @@ const styles = StyleSheet.create({
     borderBottomColor: 'transparent',
     borderRightColor: '#FFFFFF',
     borderRadius: 5,
-},
-
+  },
   continueButton: {
     backgroundColor: '#FD6639',
     paddingVertical: 12,
@@ -277,4 +278,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
-});
+})
+;
