@@ -14,10 +14,7 @@ export default function PhysicalActivityLevel() {
 
   const handleContinue = () => {
     if (selectedLevel) {
-      navigation.navigate('Medicine', { level: selectedLevel });
-    } else {
-      // Show custom alert
-      setAlertVisible(true);
+      navigation.navigate('Home', { level: selectedLevel });
     }
   };
 
