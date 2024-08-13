@@ -1,19 +1,28 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import CustomAlert from './CustomAlert';
 
 export default function Goal() {
   const navigation = useNavigation();
   const [selectedGoal, setSelectedGoal] = useState(null);
+  const [alertVisible, setAlertVisible] = useState(false);
 
   const handleGoalSelection = (goal) => {
     setSelectedGoal(goal);
   };
   
   const handleContinue = () => {
-    navigation.navigate('PhysicalActivityLevel');
+    if (selectedGoal) {
+      navigation.navigate('PhysicalActivityLevel', { level: selectedGoal });
+    }else {
+      // Show custom alert
+      setAlertVisible(true);
+    }
   };
-   
+  const handleCloseAlert = () => {
+    setAlertVisible(false);
+  };
 
   return (
     <View style={styles.container}>
@@ -46,6 +55,12 @@ export default function Goal() {
       <TouchableOpacity style={styles.continueButton} onPress={handleContinue}>
         <Text style={styles.continueButtonText}>Continue</Text>
       </TouchableOpacity>
+
+      <CustomAlert
+        visible={alertVisible}
+        onClose={handleCloseAlert}
+        message="Please select a Goal"
+      />
     </View>
   );
 }

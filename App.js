@@ -28,6 +28,8 @@ import Settings from './Components/Settings';
 import Profile from './Components/Profile';
 import Goal from './Components/Goal';
 import PhysicalActivityLevel from './Components/PhysicalActivityLevel';
+import Medicine from './Components/Medecine';
+
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -154,6 +156,11 @@ export default function App() {
         <Stack.Screen
           name="PhysicalActivityLevel"
           component={PhysicalActivityLevel}
+          options={{ headerShown: false }} // Show header for Logging screen
+        />
+        <Stack.Screen
+          name="Medicine"
+          component={Medicine}
           options={{ headerShown: false }} // Show header for Logging screen
         />
          

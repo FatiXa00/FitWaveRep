@@ -1,19 +1,28 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import CustomAlert from './CustomAlert';
 
 export default function PhysicalActivityLevel() {
   const navigation = useNavigation();
   const [selectedLevel, setSelectedLevel] = useState(null);
+  const [alertVisible, setAlertVisible] = useState(false);
 
-  const handleLevelSelection = (Level) => {
-    setSelectedLevel(Level);
+  const handleLevelSelection = (level) => {
+    setSelectedLevel(level);
   };
 
   const handleContinue = () => {
     if (selectedLevel) {
-      navigation.navigate('NextScreen', { level: selectedLevel });
+      navigation.navigate('Medicine', { level: selectedLevel });
+    } else {
+      // Show custom alert
+      setAlertVisible(true);
     }
+  };
+
+  const handleCloseAlert = () => {
+    setAlertVisible(false);
   };
 
   return (
@@ -46,17 +55,22 @@ export default function PhysicalActivityLevel() {
       <TouchableOpacity style={styles.continueButton} onPress={handleContinue}>
         <Text style={styles.continueButtonText}>Continue</Text>
       </TouchableOpacity>
+      <CustomAlert
+        visible={alertVisible}
+        onClose={handleCloseAlert}
+        message="Please select a Level"
+      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#141824',
-        paddingHorizontal: 20,
-        paddingTop: 50,
-      },
+  container: {
+    flex: 1,
+    backgroundColor: '#141824',
+    paddingHorizontal: 20,
+    paddingTop: 50,
+  },
   backButton: {
     position: 'absolute',
     top: 30,
@@ -72,7 +86,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 40,
     fontWeight: 'bold',
-    top:10,
+    top: 10,
   },
   optionsContainer: {
     flex: 1,
@@ -89,7 +103,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     width: '100%',
-    top:-80,
+    top: -80,
   },
   selectedOptionButton: {
     backgroundColor: '#FD6639',
@@ -97,8 +111,8 @@ const styles = StyleSheet.create({
   optionText: {
     color: '#FFFFFF',
     fontSize: 17,
-    textAlign: 'center', 
-    width: '100%',  
+    textAlign: 'center',
+    width: '100%',
   },
   selectedOptionText: {
     color: '#FFFFFF',
