@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, TextInput, FlatList } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-export default function HomeScreen() {
+export default function Medicine() {
   const navigation = useNavigation();
 
   const reviewData = [
@@ -58,7 +58,7 @@ export default function HomeScreen() {
 
       {/* Image in Foreground */}
       <Image
-        source={require('C:/Users/lenovo/FitWaveProject/FitWaveRep/assets/images/flamenco-uploading.png')}
+        source={require('../assets/images/flamenco-uploading.png')}
         style={styles.greetingImage}
       />
 
