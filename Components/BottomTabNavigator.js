@@ -11,7 +11,8 @@ import Settings from './Settings';
 import CreateAccount from './CreateAccount';
 import NutritionHome from './NutritionHome';
 import AppoitmentHome from './AppointmentHome';
-import Medicine from './Medicine';
+import Medicine from './Medecine';
+
 import AddModal from './AddModal';
 
 const Tab = createBottomTabNavigator();

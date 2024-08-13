@@ -23,6 +23,7 @@ import BottomTabNavigator from './Components/BottomTabNavigator';
 import Profile from './Components/Profile';
 import Settings from './Components/Settings';
 import Goal from './Components/Goal';
+import AddModal from './Components/AddModal';
 import PhysicalActivityLevel from './Components/PhysicalActivityLevel';
 
 const Stack = createStackNavigator();

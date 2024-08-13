@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-export default function Medicine() {
+export default function MedicineTest() {
   return (
     <View style={styles.container}>
       <Text>Medicine Screen</Text>
