@@ -15,6 +15,9 @@ export default function PhysicalActivityLevel() {
   const handleContinue = () => {
     if (selectedLevel) {
       navigation.navigate('Home', { level: selectedLevel });
+    }else {
+      // Show custom alert
+      setAlertVisible(true);
     }
   };
 
