@@ -12,7 +12,7 @@ export default function PhysicalActivityLevel() {
 
   const handleContinue = () => {
     if (selectedLevel) {
-      navigation.navigate('NextScreen', { level: selectedLevel });
+      navigation.navigate('Home', { level: selectedLevel });
     }
   };
 
