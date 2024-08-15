@@ -1,5 +1,6 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity,StyleSheet } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import Modal from 'react-native-modal';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import Fontisto from '@expo/vector-icons/Fontisto';
@@ -7,7 +8,9 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import AntDesign from '@expo/vector-icons/AntDesign'; // For additional icons
 
 const AddModal = ({ isVisible, onClose }) => {
+  const navigation = useNavigation();
   return (
+    
     <Modal
       isVisible={isVisible}
       onBackdropPress={onClose}
@@ -30,7 +33,7 @@ const AddModal = ({ isVisible, onClose }) => {
             </TouchableOpacity>
           </View>
           <View style={styles.row}>
-            <TouchableOpacity style={styles.iconButton}>
+            <TouchableOpacity style={styles.iconButton} onPress={() => {navigation.navigate('ScanBarCodeScreen');}}>
               <AntDesign name="camera" size={40} color="#FD6639" />
               <Text style={styles.iconLabel}>Scan Food</Text>
             </TouchableOpacity>

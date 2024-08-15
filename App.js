@@ -25,6 +25,8 @@ import Settings from './Components/Settings';
 import Goal from './Components/Goal';
 import AddModal from './Components/AddModal';
 import PhysicalActivityLevel from './Components/PhysicalActivityLevel';
+import Medicine from './Components/Medecine';
+import ScanBarCodeScreen from './Components/ScanBarcodeScreen'
 
 const Stack = createStackNavigator();
 
@@ -40,6 +42,11 @@ export default function App() {
         <Stack.Screen
           name="OnBoarding1"
           component={Onboarding1}
+          options={{ headerShown: false }} 
+        />
+        <Stack.Screen
+          name="ScanBarCodeScreen"
+          component={ScanBarCodeScreen}
           options={{ headerShown: false }} 
         />
         <Stack.Screen
@@ -147,7 +154,11 @@ export default function App() {
           component={PhysicalActivityLevel}
           options={{ headerShown: false }} // Show header for Logging screen
         />
-         
+         <Stack.Screen
+          name="Medicine"
+          component={Medicine}
+          options={{ headerShown: false }} 
+        />
       </Stack.Navigator>
       <StatusBar style="auto" />
     </NavigationContainer>
