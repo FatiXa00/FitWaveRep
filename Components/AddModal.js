@@ -9,6 +9,10 @@ import AntDesign from '@expo/vector-icons/AntDesign'; // For additional icons
 
 const AddModal = ({ isVisible, onClose }) => {
   const navigation = useNavigation();
+  const ScanButton = () => {
+    navigation.navigate('ScanBarcodeScreen');};
+    const AddPlanButton = () => {
+      navigation.navigate('Plan');};
   return (
     
     <Modal
@@ -23,7 +27,7 @@ const AddModal = ({ isVisible, onClose }) => {
               <FontAwesome5 name="apple-alt" size={40} color="#FD6639" />
               <Text style={styles.iconLabel}>Nutrition</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.iconButton}>
+            <TouchableOpacity style={styles.iconButton} onPress={AddPlanButton}>
               <Fontisto name="pills" size={40} color="#FD6639" />
               <Text style={styles.iconLabel}>Medicine</Text>
             </TouchableOpacity>
@@ -33,7 +37,7 @@ const AddModal = ({ isVisible, onClose }) => {
             </TouchableOpacity>
           </View>
           <View style={styles.row}>
-            <TouchableOpacity style={styles.iconButton} onPress={() => {navigation.navigate('ScanBarCodeScreen');}}>
+            <TouchableOpacity style={styles.iconButton} onPress={ScanButton}>
               <AntDesign name="camera" size={40} color="#FD6639" />
               <Text style={styles.iconLabel}>Scan Food</Text>
             </TouchableOpacity>

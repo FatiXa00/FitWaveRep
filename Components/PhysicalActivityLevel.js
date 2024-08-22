@@ -1,65 +1,111 @@
-import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { Camera, CameraType, FlashMode } from 'expo-camera/legacy';
+import { useState } from 'react';
+import { StyleSheet, Text, TouchableOpacity, View, ActivityIndicator } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import CustomAlert from './CustomAlert';
 
-export default function PhysicalActivityLevel() {
+export default function ScanBarcodeScreen() {
+  const [type, setType] = useState(CameraType.back);
+  const [flash, setFlash] = useState(FlashMode.off);
+  const [permission, requestPermission] = Camera.useCameraPermissions();
+  const [scanned, setScanned] = useState(false);
+  const [scannedData, setScannedData] = useState(null);
+  const [nutritionData, setNutritionData] = useState(null);
+  const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
-  const [selectedLevel, setSelectedLevel] = useState(null);
-  const [alertVisible, setAlertVisible] = useState(false);
 
-  const handleLevelSelection = (level) => {
-    setSelectedLevel(level);
-  };
+  if (!permission) {
+    return <View />;
+  }
 
-  const handleContinue = () => {
-    if (selectedLevel) {
-      navigation.navigate('Home', { level: selectedLevel });
-    }else {
-      // Show custom alert
-      setAlertVisible(true);
+  if (!permission.granted) {
+    return (
+      <View style={styles.container}>
+        <Text style={{ textAlign: 'center', color: 'white' }}>We need your permission to show the camera</Text>
+        <TouchableOpacity style={styles.permissionButton} onPress={requestPermission}>
+          <Text style={styles.permissionText}>Grant Permission</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
+  const fetchNutritionData = async (barcode) => {
+    setLoading(true);
+    try {
+      const response = await fetch(`https://api.nutritionix.com/v1_1/item?upc=${barcode}&appId=YOUR_APP_ID&appKey=YOUR_APP_KEY`);
+      const data = await response.json();
+      setNutritionData(data);
+    } catch (error) {
+      console.error('Error fetching nutrition data:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  const handleCloseAlert = () => {
-    setAlertVisible(false);
+  const handleBarCodeScanned = ({ type, data }) => {
+    setScanned(true);
+    setScannedData({ type, data });
+    fetchNutritionData(data);
   };
+
+  function toggleFlashMode() {
+    setFlash((current) => (
+      current === FlashMode.off ? FlashMode.torch : FlashMode.off
+    ));
+  }
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-        <Text style={styles.backButtonText}>{'<'} Back</Text>
-      </TouchableOpacity>
-      <Text style={styles.title}>Physical Activity Level</Text>
-      <View style={styles.optionsContainer}>
-        {['Begginer', 'Intermediate', 'Advanced'].map((level) => (
-          <TouchableOpacity
-            key={level}
-            style={[
-              styles.optionButton,
-              selectedLevel === level && styles.selectedOptionButton,
-            ]}
-            onPress={() => handleLevelSelection(level)}
-          >
-            <Text
-              style={[
-                styles.optionText,
-                selectedLevel === level && styles.selectedOptionText,
-              ]}
-            >
-              {level}
-            </Text>
+      <Camera
+        style={styles.camera}
+        type={type}
+        flashMode={flash}
+        onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+      >
+        <View style={styles.headerContainer}>
+          <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+            <Ionicons name="arrow-back" size={30} color="white" />
           </TouchableOpacity>
-        ))}
+          <Text style={styles.headerText}>Scan Barcode</Text>
+        </View>
+        <View style={styles.scanFrame}>
+          <Text style={styles.scanText}>Scan Barcode</Text>
+          <Text style={styles.scanSubText}>Place Barcode in the frame to scan</Text>
+        </View>
+      </Camera>
+
+      <View style={styles.footerContainer}>
+        <TouchableOpacity style={styles.flashButton} onPress={toggleFlashMode}>
+          <Ionicons name="flash" size={24} color="white" />
+          <Text style={styles.footerButtonText}>Flash</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.typeBarcodeButton}>
+          <Ionicons name="md-keypad" size={24} color="white" />
+          <Text style={styles.footerButtonText}>Type Barcode</Text>
+        </TouchableOpacity>
       </View>
-      <TouchableOpacity style={styles.continueButton} onPress={handleContinue}>
-        <Text style={styles.continueButtonText}>Continue</Text>
-      </TouchableOpacity>
-      <CustomAlert
-        visible={alertVisible}
-        onClose={handleCloseAlert}
-        message="Please select a Level"
-      />
+
+      {scanned && (
+        <View style={styles.resultContainer}>
+          {loading ? (
+            <ActivityIndicator size="large" color="#ff6347" />
+          ) : nutritionData ? (
+            <View>
+              <Text style={styles.resultText}>Product: {nutritionData.item_name}</Text>
+              <Text style={styles.resultText}>Calories: {nutritionData.nf_calories}</Text>
+              <Text style={styles.resultText}>Total Fat: {nutritionData.nf_total_fat}g</Text>
+              <Text style={styles.resultText}>Sodium: {nutritionData.nf_sodium}mg</Text>
+              <Text style={styles.resultText}>Total Carbohydrate: {nutritionData.nf_total_carbohydrate}g</Text>
+              <Text style={styles.resultText}>Protein: {nutritionData.nf_protein}g</Text>
+            </View>
+          ) : (
+            <Text style={styles.resultText}>No nutritional data found for this product.</Text>
+          )}
+          <TouchableOpacity style={styles.scanAgainButton} onPress={() => { setScanned(false); setNutritionData(null); }}>
+            <Text style={styles.scanAgainText}>Scan Again</Text>
+          </TouchableOpacity>
+        </View>
+      )}
     </View>
   );
 }
@@ -67,71 +113,107 @@ export default function PhysicalActivityLevel() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#141824',
-    paddingHorizontal: 20,
-    paddingTop: 50,
+    backgroundColor: '#0d0d0d',
+  },
+  camera: {
+    flex: 1,
+  },
+  headerContainer: {
+    position: 'absolute',
+    top: 60,
+    left: 20,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   backButton: {
-    position: 'absolute',
-    top: 30,
-    left: 20,
+    marginRight: 20,
   },
-  backButtonText: {
-    color: '#FD6639',
-    fontSize: 16,
-  },
-  title: {
-    fontSize: 22,
-    color: '#FFFFFF',
-    textAlign: 'center',
-    marginTop: 40,
+  headerText: {
+    color: 'white',
+    fontSize: 20,
     fontWeight: 'bold',
-    top: 10,
   },
-  optionsContainer: {
+  scanFrame: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  optionButton: {
-    backgroundColor: '#2B2F3A',
-    paddingVertical: 30,
+  scanText: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
+  },
+  scanSubText: {
+    color: 'gray',
+    fontSize: 14,
+    marginTop: 10,
+  },
+  footerContainer: {
+    position: 'absolute',
+    bottom: 20,
+    left: 20,
+    right: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  flashButton: {
+    backgroundColor: '#ff6347',
+    paddingVertical: 10,
     paddingHorizontal: 20,
-    borderRadius: 60,
-    marginVertical: 15,
+    borderRadius: 10,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
-    width: '100%',
-    top: -80,
   },
-  selectedOptionButton: {
-    backgroundColor: '#FD6639',
-  },
-  optionText: {
-    color: '#FFFFFF',
-    fontSize: 17,
-    textAlign: 'center',
-    width: '100%',
-  },
-  selectedOptionText: {
-    color: '#FFFFFF',
-  },
-  continueButton: {
-    backgroundColor: '#FD6639',
-    paddingVertical: 12,
+  typeBarcodeButton: {
+    backgroundColor: '#ff6347',
+    paddingVertical: 10,
     paddingHorizontal: 20,
-    borderRadius: 25,
-    marginVertical: 20,
-    width: '50%',
-    alignSelf: 'center',
-    position: 'absolute',
-    bottom: 60, // Adjust this to match the vertical position
+    borderRadius: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
   },
-  continueButtonText: {
-    color: '#ffffff',
-    textAlign: 'center',
+  footerButtonText: {
+    color: 'white',
     fontSize: 16,
-    fontWeight: 'bold',
+    marginLeft: 10,
+  },
+  resultContainer: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: '#1a1a1a',
+    padding: 20,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
+  },
+  resultText: {
+    color: 'white',
+    fontSize: 16,
+    textAlign: 'center',
+    marginVertical: 5,
+  },
+  scanAgainButton: {
+    marginTop: 20,
+    backgroundColor: '#ff6347',
+    paddingVertical: 10,
+    borderRadius: 10,
+  },
+  scanAgainText: {
+    color: 'white',
+    fontSize: 16,
+    textAlign: 'center',
+  },
+  permissionButton: {
+    backgroundColor: '#ff6347',
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 10,
+    marginTop: 20,
+  },
+  permissionText: {
+    color: 'white',
+    fontSize: 16,
+    textAlign: 'center',
   },
 });

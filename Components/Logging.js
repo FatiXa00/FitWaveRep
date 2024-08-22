@@ -9,7 +9,7 @@ const Logging = ({ navigation }) => {
    const [password, setPassword] = useState('');
 
    const handleLogin = () => {
-    navigation.navigate('SetUp'); 
+    navigation.navigate('Home'); 
   };
 
 

@@ -26,9 +26,10 @@ import Goal from './Components/Goal';
 import AddModal from './Components/AddModal';
 import PhysicalActivityLevel from './Components/PhysicalActivityLevel';
 import Medicine from './Components/Medecine';
-import ScanBarCodeScreen from './Components/ScanBarcodeScreen'
-
-const Stack = createStackNavigator();
+import ScanBarcodeScreen from './Components/ScanBarcodeScreen';
+import Plan from './Components/Plan';
+import Notif from './Components/Notif';
+ const Stack = createStackNavigator();
 
 export default function App() {
   return (
@@ -44,11 +45,7 @@ export default function App() {
           component={Onboarding1}
           options={{ headerShown: false }} 
         />
-        <Stack.Screen
-          name="ScanBarCodeScreen"
-          component={ScanBarCodeScreen}
-          options={{ headerShown: false }} 
-        />
+         
         <Stack.Screen
           name="OnBoarding2"
           component={Onboarding2}
@@ -159,6 +156,22 @@ export default function App() {
           component={Medicine}
           options={{ headerShown: false }} 
         />
+     <Stack.Screen
+          name="ScanBarcodeScreen"
+          component={ScanBarcodeScreen}
+          options={{ headerShown: false }} 
+        />
+<Stack.Screen
+          name="Plan"
+          component={Plan}
+          options={{ headerShown: false }} 
+        />
+<Stack.Screen
+          name="Notif"
+          component={Notif}
+          options={{ headerShown: false }} 
+        />
+    
       </Stack.Navigator>
       <StatusBar style="auto" />
     </NavigationContainer>
