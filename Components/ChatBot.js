@@ -14,7 +14,7 @@ axiosRetry(axios, {
   },
 });
 
-const API_KEY = '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'; // Replace with your actual API key
+const API_KEY = ''; // Replace with your actual API key
 
 const ChatBot = () => {
   const [message, setMessage] = useState('');
