@@ -1,15 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   TextInput,
   SafeAreaView,
   Animated,
   Dimensions,
   StyleSheet,
-  ScrollView,
   View,
   TouchableOpacity,
   Text,
+  Alert,
 } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { width } = Dimensions.get('screen');
 
@@ -73,8 +74,6 @@ const Ruler = ({ scrollX }) => {
 };
 
 export default class HowOld extends React.Component {
-
-    
   scrollViewRef = React.createRef();
   textInputRef = React.createRef();
 
@@ -84,9 +83,9 @@ export default class HowOld extends React.Component {
     this.state = {
       scrollX: new Animated.Value(0),
       initialAge: 10,
+      selectedAge: 10,
     };
 
-    // Update scrollX listener to align the age correctly
     this.state.scrollX.addListener(({ value }) => {
       const currentIndex = Math.round((value - snapSegment / 2) / snapSegment) + minAge;
       if (this.textInputRef.current) {
@@ -94,36 +93,59 @@ export default class HowOld extends React.Component {
           text: `${currentIndex}`,
         });
       }
+      this.setState({ selectedAge: currentIndex });
     });
   }
 
   componentDidMount() {
     setTimeout(() => {
       if (this.scrollViewRef.current) {
-        // Adjust scrollTo position to center the initial age
         this.scrollViewRef.current.scrollTo({
           x: (this.state.initialAge - minAge) * snapSegment - (width / 2 - segmentWidth / 2),
           y: 0,
-          animated: true,
+          animated: false,  // Remove animation here
         });
       }
     }, 1000);
+
+    // Charger l'âge depuis AsyncStorage
+    this.loadAge();
   }
-  handleContinuePress = () => {
-    this.props.navigation.navigate('WeightPage'); // Replace 'NextScreen' with your next screen's name
+
+  loadAge = async () => {
+    try {
+      const age = await AsyncStorage.getItem('selectedAge');
+      if (age !== null) {
+        this.setState({ selectedAge: parseInt(age, 10) });
+        this.textInputRef.current.setNativeProps({ text: age });
+      }
+    } catch (error) {
+      console.error('Error loading age:', error);
+    }
   };
 
+  handleContinuePress = async () => {
+    const { selectedAge } = this.state;
 
- 
+    // Stocker l'âge dans AsyncStorage
+    try {
+      await AsyncStorage.setItem('selectedAge', selectedAge.toString());
+      console.log('Selected Age:', selectedAge);
+      this.props.navigation.navigate('WeightPage', { age: selectedAge });
+    } catch (error) {
+      console.error('Error saving age:', error);
+      Alert.alert('Error', 'Failed to save the age.');
+    }
+  };
+
   render() {
-    const { navigation } = this.props; 
+    const { navigation } = this.props;
 
-     
     return (
       <SafeAreaView style={styles.container}>
         <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-        <Text style={styles.backButtonText}>{'<'} Back</Text>
-      </TouchableOpacity>
+          <Text style={styles.backButtonText}>{'<'} Back</Text>
+        </TouchableOpacity>
 
         <View style={styles.titleContainer}>
           <Text style={styles.title}>How Old Are You?</Text>
@@ -135,8 +157,9 @@ export default class HowOld extends React.Component {
           contentContainerStyle={styles.scrollViewContainerStyle}
           bounces={false}
           showsHorizontalScrollIndicator={false}
-          scrollEventThrottle={16}
+          scrollEventThrottle={8}
           snapToInterval={snapSegment}
+          decelerationRate="fast"
           onScroll={Animated.event(
             [
               {
@@ -145,7 +168,7 @@ export default class HowOld extends React.Component {
                 },
               },
             ],
-            { useNativeDriver: true }
+            { useNativeDriver: false }
           )}
         >
           <Ruler scrollX={this.state.scrollX} />
@@ -176,22 +199,20 @@ const styles = StyleSheet.create({
   },
   backButton: {
     marginTop: -20,
-    marginLeft:2
-    },
-    
+    marginLeft: 2,
+  },
   backButtonText: {
     color: '#FD6639',
     fontSize: 18,
     top: 20,
-    left:15
-    
+    left: 15,
   },
   titleContainer: {
     marginBottom: 230,
     alignItems: 'center',
   },
   title: {
-    top:50,
+    top: 50,
     fontSize: 24,
     color: '#FFFFFF',
     textAlign: 'center',
@@ -208,8 +229,8 @@ const styles = StyleSheet.create({
     borderRightColor: 'transparent',
     borderBottomColor: '#ffff',
     borderRadius: 5,
-    marginLeft:22,
-    top:70,
+    marginLeft: 22,
+    top: 70,
   },
   indicatorWrapper: {
     position: 'absolute',
@@ -231,8 +252,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     height: 120,
     alignSelf: 'center',
-    maxWidth:rulerWidth,
-    bottom:30,
+    maxWidth: rulerWidth,
+    bottom: 30,
   },
   segment: {
     width: segmentWidth,
@@ -241,17 +262,16 @@ const styles = StyleSheet.create({
   },
   scrollViewContainerStyle: {
     justifyContent: 'flex-end',
-    left:25,
+    left: 25,
   },
   label: {
     position: 'absolute',
-    top: -45, 
+    top: -45,
     fontSize: 10,
   },
   ageTextStyle: {
     fontSize: 42,
     color: '#FFFFFF',
-    
   },
   spacer: {
     width: spacerWidth,
@@ -263,10 +283,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
     borderRadius: 25,
     marginVertical: 20,
-    width:'50%',
-    alignSelf:'center',
-    marginBottom:60,
-  
+    width: '50%',
+    alignSelf: 'center',
+    marginBottom: 60,
   },
   continueButtonText: {
     color: '#ffffff',

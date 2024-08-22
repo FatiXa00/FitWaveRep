@@ -1,74 +1,46 @@
-import React, { useState, useRef, handleContinuePress,useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
-  TextInput,
   SafeAreaView,
+  ScrollView,
   Animated,
   Dimensions,
   StyleSheet,
   View,
   TouchableOpacity,
   Text,
+  TextInput,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const { height } = Dimensions.get('screen');
-
 
 const minHeightCm = 100;
 const maxHeightCm = 250;
 
-const segmentWidth = 2;
-const segmentSpacing = 20;
-const snapSegment = segmentWidth + segmentSpacing;
-const spacerHeight = 80;
+const segmentHeight = 2;
+const segmentSpacing = 10; 
+const snapSegment = segmentHeight + segmentSpacing;
+const spacerHeight = 60; 
 
-const rulerHeightCm = spacerHeight * 2 + (maxHeightCm - minHeightCm) * snapSegment;
-
-const indicatorWidth = 200;
-const indicatorHeight = 80;
-
-const VerticalRuler = ({ scrollY }) => {
+const VerticalRuler = () => {
   const dataCm = [...Array(maxHeightCm - minHeightCm + 1).keys()].map(i => i + minHeightCm);
 
   return (
     <View style={styles.ruler}>
-      <View style={{ height: spacerHeight - 40 }} />
-      {dataCm.map(i => {
-        const inputRange = [
-          (i - 1) * snapSegment,
-          i * snapSegment,
-          (i + 1) * snapSegment,
-        ];
-
-        const color = scrollY.interpolate({
-          inputRange,
-          outputRange: ['#999', '#FFFFFF', '#999'],
-          extrapolate: 'clamp',
-        });
-
-        const scale = scrollY.interpolate({
-          inputRange,
-          outputRange: [0.8, 1.5, 0.8],
-          extrapolate: 'clamp',
-        });
-
-        return (
-          <Animated.View
-            key={i}
-            style={[
-              styles.segment,
-              {
-                backgroundColor: color,
-                width: i % 10 === 0 ? 40 : 20,
-                marginBottom: segmentSpacing,
-                transform: [{ scale }],
-              },
-            ]}
-          >
-           
-          </Animated.View>
-        );
-      })}
+      <View style={{ height: spacerHeight }} />
+      {dataCm.map(i => (
+        <View
+          key={i}
+          style={[
+            styles.segment,
+            {
+              width: i % 10 === 0 ? 40 : 20,
+              marginBottom: segmentSpacing,
+            },
+          ]}
+        />
+      ))}
       <View style={{ height: spacerHeight }} />
     </View>
   );
@@ -78,41 +50,84 @@ export default function SelectHeight() {
   const navigation = useNavigation();
   const scrollY = useRef(new Animated.Value(0)).current;
   const scrollViewRef = useRef(null);
-  const textInputRef = useRef(null);
+  const isInitialMount = useRef(true); // Track initial mount
 
-  const [initialHeight, setInitialHeight] = useState(minHeightCm); 
+  const [heightValue, setHeightValue] = useState(minHeightCm);
 
   useEffect(() => {
-    const scrollToInitialHeight = () => {
+    // Load stored height when component mounts
+    const loadStoredHeight = async () => {
+      try {
+        const storedHeight = await AsyncStorage.getItem('heightValue');
+        if (storedHeight !== null) {
+          setHeightValue(Number(storedHeight));
+        }
+      } catch (error) {
+        console.error('Failed to load height from storage:', error);
+      }
+    };
+
+    loadStoredHeight();
+  }, []);
+
+  useEffect(() => {
+    if (isInitialMount.current) {
+      // Scroll to initial height only on the first mount
       if (scrollViewRef.current) {
         scrollViewRef.current.scrollTo({
-          y: (initialHeight - minHeightCm) * snapSegment - spacerHeight,
+          y: (heightValue - minHeightCm) * snapSegment - spacerHeight,
+          x: 0,
+          animated: false, // No animation for initial mount
+        });
+      }
+      isInitialMount.current = false;
+    }
+  }, [heightValue]);
+
+  useEffect(() => {
+    const listenerId = scrollY.addListener(({ value }) => {
+      const currentIndex = Math.round(value / snapSegment) + minHeightCm;
+      setHeightValue(currentIndex);
+    });
+
+    return () => {
+      scrollY.removeListener(listenerId);
+    };
+  }, [scrollY]);
+
+
+  useEffect(() => {
+    // Store the heightValue when it changes
+    const storeHeightValue = async () => {
+      try {
+        await AsyncStorage.setItem('heightValue', heightValue.toString());
+      } catch (error) {
+        console.error('Failed to save height to storage:', error);
+      }
+    };
+
+    storeHeightValue();
+  }, [heightValue]);
+
+  const handleContinuePress = () => {
+    console.log('Selected height:', heightValue);
+    navigation.navigate('Goal', { height: heightValue });
+  };
+
+  const handleHeightChange = (text) => {
+    const newHeight = parseInt(text, 10);
+    if (!isNaN(newHeight) && newHeight >= minHeightCm && newHeight <= maxHeightCm) {
+      if (scrollViewRef.current) {
+        scrollViewRef.current.scrollTo({
+          y: (newHeight - minHeightCm) * snapSegment - spacerHeight,
           x: 0,
           animated: true,
         });
       }
-    };
-    
-
-    scrollToInitialHeight();
-  }, [initialHeight]);
-  const handleContinuePress = () => {
-    navigation.navigate('Goal'); // Replace 'NextScreen' with the next screen in your navigation flow
+      setHeightValue(newHeight);
+    }
   };
-    
-  useEffect(() => {
-    scrollY.addListener(({ value }) => {
-      const currentIndex = Math.round(value / snapSegment) + minHeightCm;
-      if (textInputRef.current) {
-        textInputRef.current.setNativeProps({
-          text: `${currentIndex}`,
-        });
-      }
-    });
-  }, [scrollY]);
 
-  // Move the handleContinuePress function inside the component
-   
   return (
     <SafeAreaView style={styles.container}>
       <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
@@ -122,34 +137,36 @@ export default function SelectHeight() {
       <View style={styles.titleContainer}>
         <Text style={styles.title}>Select Your Height</Text>
       </View>
-    <View style={styles.new}>
-      <Animated.ScrollView
-        ref={scrollViewRef}
-        contentContainerStyle={styles.scrollViewContainerStyle}
-        bounces={false}
-        showsVerticalScrollIndicator={false}
-        scrollEventThrottle={16}
-        snapToInterval={snapSegment}
-        onScroll={Animated.event(
-          [
-            {
-              nativeEvent: {
-                contentOffset: { y: scrollY },
+
+      <View style={styles.rulerContainer}>
+        <Animated.ScrollView
+          ref={scrollViewRef}
+          contentContainerStyle={styles.scrollViewContainerStyle}
+          bounces={false}
+          showsVerticalScrollIndicator={false}
+          snapToInterval={snapSegment} 
+          decelerationRate="fast" 
+          onScroll={Animated.event(
+            [
+              {
+                nativeEvent: {
+                  contentOffset: { y: scrollY },
+                },
               },
-            },
-          ],
-          { useNativeDriver: true }
-        )}
-      >
-        <VerticalRuler scrollY={scrollY} />
-      </Animated.ScrollView>
-    </View>
+            ],
+            { useNativeDriver: true }
+          )}
+        >
+          <VerticalRuler />
+        </Animated.ScrollView>
+      </View>
+
       <View style={styles.indicatorWrapper}>
         <TextInput
-          ref={textInputRef}
           style={styles.heightTextStyle}
-          value={initialHeight.toString()}
-          editable={false}
+          value={heightValue.toString()}
+          onChangeText={handleHeightChange}
+          keyboardType="numeric"
         />
         <Text style={styles.unitTextStyle}>cm</Text>
       </View>
@@ -170,15 +187,13 @@ const styles = StyleSheet.create({
   },
   backButton: {
     marginTop: -20,
-    marginLeft:2
-    },
-    
+    marginLeft: 2,
+  },
   backButtonText: {
     color: '#FD6639',
     fontSize: 18,
     top: 20,
-    left:15
-    
+    left: 15,
   },
   titleContainer: {
     alignItems: 'center',
@@ -190,12 +205,11 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: 'bold',
   },
-  new:{
+  rulerContainer: {
     marginTop: 55,
-    height:400,
-    margin:15,
-    bottom:-30,
-
+    height: 400,
+    margin: 15,
+    bottom: -30,
   },
   indicatorWrapper: {
     position: 'absolute',
@@ -203,11 +217,7 @@ const styles = StyleSheet.create({
     top: 410,
     alignItems: 'center',
     justifyContent: 'center',
-    height: indicatorHeight,
-  },
-  segmentIndicator: {
-    width: indicatorWidth,
-    backgroundColor: '#FD6639',
+    height: 80,
   },
   ruler: {
     backgroundColor: '#FD6639',
@@ -217,42 +227,37 @@ const styles = StyleSheet.create({
     width: 120,
     alignSelf: 'center',
     marginTop: 25,
-    borderRadius:35,
+    borderRadius: 35,
     marginBottom: 220,
-    bottom:-50,
-
-
+    bottom: -50,
   },
   segment: {
-    height: segmentWidth,
+    height: segmentHeight,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: segmentSpacing / 2,
+    backgroundColor: '#000', // Default color
   },
   scrollViewContainerStyle: {
     justifyContent: 'flex-end',
     left: 40,
-    top:100,
+    top: 100,
   },
-
   heightTextStyle: {
     fontSize: 42,
     color: '#FFFFFF',
     textAlign: 'center',
-    color:'white',
-
   },
   unitTextStyle: {
     color: '#7E8385',
-    fontSize: 18,    
+    fontSize: 18,
   },
-
   arrowIndicator: {
     position: 'absolute',
     width: 0,
     height: 0,
-    top: height / 2 ,
-    right: 50, 
+    top: height / 2,
+    right: 50,
     borderTopWidth: 15,
     borderBottomWidth: 15,
     borderRightWidth: 24,
@@ -270,7 +275,7 @@ const styles = StyleSheet.create({
     width: '50%',
     alignSelf: 'center',
     marginBottom: 60,
-    top:50,
+    top: 50,
   },
   continueButtonText: {
     color: '#ffffff',
@@ -278,5 +283,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
-})
-;
+});

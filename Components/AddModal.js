@@ -5,8 +5,11 @@ import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import Fontisto from '@expo/vector-icons/Fontisto';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import AntDesign from '@expo/vector-icons/AntDesign'; // For additional icons
+import { useNavigation } from '@react-navigation/native'; // Import useNavigation
 
 const AddModal = ({ isVisible, onClose }) => {
+  const navigation = useNavigation(); // Use the hook to access navigation
+
   return (
     <Modal
       isVisible={isVisible}
@@ -34,11 +37,11 @@ const AddModal = ({ isVisible, onClose }) => {
               <AntDesign name="camera" size={40} color="#FD6639" />
               <Text style={styles.iconLabel}>Scan Food</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.iconButton}>
+            <TouchableOpacity style={styles.iconButton} onPress={() => navigation.navigate('Settings')}>
               <MaterialIcons name="local-drink" size={40} color="#FD6639" />
               <Text style={styles.iconLabel}>Water Intake</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.iconButton}>
+            <TouchableOpacity style={styles.iconButton}onPress={() => navigation.navigate('ChatBot')}>
               <FontAwesome5 name="user-md" size={40} color="#FD6639" />
               <Text style={styles.iconLabel}>Biometric</Text>
             </TouchableOpacity>
@@ -60,7 +63,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     alignItems: 'center',
-    height:250,
+    height: 250,
   },
   title: {
     color: '#FD6639',

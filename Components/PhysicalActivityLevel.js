@@ -1,22 +1,44 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import CustomAlert from './CustomAlert';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function PhysicalActivityLevel() {
   const navigation = useNavigation();
   const [selectedLevel, setSelectedLevel] = useState(null);
   const [alertVisible, setAlertVisible] = useState(false);
 
-  const handleLevelSelection = (level) => {
+  useEffect(() => {
+    // Retrieve the stored activity level when the component mounts
+    const getStoredLevel = async () => {
+      try {
+        const storedLevel = await AsyncStorage.getItem('selectedLevel');
+        if (storedLevel) {
+          setSelectedLevel(storedLevel);
+        }
+      } catch (error) {
+        console.error('Failed to fetch the level from storage:', error);
+      }
+    };
+
+    getStoredLevel();
+  }, []);
+
+  const handleLevelSelection = async (level) => {
     setSelectedLevel(level);
+    try {
+      await AsyncStorage.setItem('selectedLevel', level);
+    } catch (error) {
+      console.error('Failed to save the level to storage:', error);
+    }
   };
 
   const handleContinue = () => {
     if (selectedLevel) {
+      console.log('Selected Level:', selectedLevel);
       navigation.navigate('Home', { level: selectedLevel });
-    }else {
-      // Show custom alert
+    } else {
       setAlertVisible(true);
     }
   };
@@ -32,7 +54,7 @@ export default function PhysicalActivityLevel() {
       </TouchableOpacity>
       <Text style={styles.title}>Physical Activity Level</Text>
       <View style={styles.optionsContainer}>
-        {['Begginer', 'Intermediate', 'Advanced'].map((level) => (
+        {['Beginner', 'Intermediate', 'Advanced'].map((level) => (
           <TouchableOpacity
             key={level}
             style={[
@@ -63,7 +85,6 @@ export default function PhysicalActivityLevel() {
     </View>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,

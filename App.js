@@ -25,7 +25,12 @@ import Settings from './Components/Settings';
 import Goal from './Components/Goal';
 import AddModal from './Components/AddModal';
 import PhysicalActivityLevel from './Components/PhysicalActivityLevel';
-
+import Medicine from './Components/Medecine';
+import Ruler from './Components/Ruler';
+import GoalCalories from './Components/GoalCalories';
+import Menu from './Components/Menu';
+import ChatBot from './Components/ChatBot';
+import BirthdayPage from './Components/BirthdayPage';
 const Stack = createStackNavigator();
 
 export default function App() {
@@ -70,6 +75,11 @@ export default function App() {
         <Stack.Screen
           name="CreateDoctor2"
           component={CreateDoctor2}
+          options={{ headerShown: false }} 
+        />
+           <Stack.Screen
+          name="Ruler"
+          component={Ruler}
           options={{ headerShown: false }} 
         />
         <Stack.Screen
@@ -142,12 +152,38 @@ export default function App() {
           component={Goal}
           options={{ headerShown: false }} 
         />
+    
         <Stack.Screen
           name="PhysicalActivityLevel"
           component={PhysicalActivityLevel}
-          options={{ headerShown: false }} // Show header for Logging screen
+          options={{ headerShown: false }} 
         />
-         
+           <Stack.Screen
+          name="GoalCalories"
+          component={GoalCalories}
+          options={{ headerShown: false }} 
+        />
+
+            <Stack.Screen
+          name="Medicine"
+          component={Medicine}
+          options={{ headerShown: false }} 
+        />
+            <Stack.Screen
+          name="Menu"
+          component={Menu}
+          options={{ headerShown: false }} 
+        />
+               <Stack.Screen
+          name="ChatBot"
+          component={ChatBot}
+          options={{ headerShown: false }} 
+        />
+                  <Stack.Screen
+          name="BirthdayPage"
+          component={BirthdayPage}
+          options={{ headerShown: false }} 
+        />
       </Stack.Navigator>
       <StatusBar style="auto" />
     </NavigationContainer>

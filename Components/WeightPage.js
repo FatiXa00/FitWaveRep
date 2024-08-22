@@ -10,85 +10,23 @@ import {
   Text,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Ruler from './Ruler';
 
 const { width } = Dimensions.get('screen');
 
 const minWeightKg = 20;
 const maxWeightKg = 200;
-
-const kgToLbs = kg => kg * 2.20462;
-const lbsToKg = lbs => lbs / 2.20462;
-
-const minWeightLbs = Math.round(kgToLbs(minWeightKg));
-const maxWeightLbs = Math.round(kgToLbs(maxWeightKg));
+const minWeightLbs = 44; // 20 kg in lbs
+const maxWeightLbs = 440; // 200 kg in lbs
 
 const segmentWidth = 2;
 const segmentSpacing = 20;
 const snapSegment = segmentWidth + segmentSpacing;
 const spacerWidth = (width - segmentWidth) / 2;
 
-const rulerWidthKg = spacerWidth * 2 + (maxWeightKg - minWeightKg) * snapSegment;
-const rulerWidthLbs = spacerWidth * 2 + (maxWeightLbs - minWeightLbs) * snapSegment;
-
 const indicatorWidth = 100;
 const indicatorHeight = 80;
-
-const Ruler = ({ scrollX, unit }) => {
-  const dataKg = [...Array(maxWeightKg - minWeightKg + 1).keys()].map(i => i + minWeightKg);
-  const dataLbs = [...Array(maxWeightLbs - minWeightLbs + 1).keys()].map(i => i + minWeightLbs);
-
-  const data = unit === 'kg' ? dataKg : dataLbs;
-
-  return (
-    <View style={styles.ruler}>
-        <View style={styles.spacerd} />
-      <View style={{ width: spacerWidth }} />
-      {data.map(i => {
-        const inputRange = [
-          (i - 1) * snapSegment,
-          i * snapSegment,
-          (i + 1) * snapSegment,
-        ];
-
-        const scale = scrollX.interpolate({
-          inputRange,
-          outputRange: [0.8, 1.5, 0.8],
-          extrapolate: 'clamp',
-        });
-
-        const color = scrollX.interpolate({
-          inputRange,
-          outputRange: ['#999', '#FFFFFF', '#999'],
-          extrapolate: 'clamp',
-        });
-
-        return (
-          <Animated.View
-            key={i}
-            style={[
-              styles.segment,
-              {
-                backgroundColor: color,
-                height: i % 10 === 0 ? 40 : 20,
-                marginRight: i === data.length - 1 ? 0 : segmentSpacing,
-                transform: [{ scale }],
-              },
-            ]}
-          >
-            <Animated.Text style={[styles.label, { color }]}>
-              {i}
-            </Animated.Text>
-          </Animated.View>
-        );
-        
-      })}
-      <View style={styles.spacerd} />
-      <View style={{ width: spacerWidth }} />
-
-    </View>
-    
-  );
-};
 
 export default function SelectWeight() {
   const navigation = useNavigation();
@@ -96,23 +34,37 @@ export default function SelectWeight() {
   const scrollViewRef = useRef(null);
   const textInputRef = useRef(null);
 
-  const [initialWeight, setInitialWeight] = useState(minWeightKg); 
+  const [initialWeight, setInitialWeight] = useState(minWeightKg);
   const [unit, setUnit] = useState('kg');
+  const [selectedWeight, setSelectedWeight] = useState(minWeightKg);
 
-  const convertWeight = (weight, fromUnit, toUnit) => {
-    if (fromUnit === 'kg' && toUnit === 'lbs') {
-      return kgToLbs(weight);
-    } else if (fromUnit === 'lbs' && toUnit === 'kg') {
-      return lbsToKg(weight);
-    }
-    return weight;
+  const getWeightRange = () => {
+    return unit === 'kg'
+      ? { min: minWeightKg, max: maxWeightKg }
+      : { min: minWeightLbs, max: maxWeightLbs };
   };
+
+  useEffect(() => {
+    const loadStoredWeight = async () => {
+      try {
+        const storedWeight = await AsyncStorage.getItem('weightValue');
+        if (storedWeight !== null) {
+          setSelectedWeight(Number(storedWeight));
+          setInitialWeight(Number(storedWeight));
+        }
+      } catch (error) {
+        console.error('Failed to load weight from storage:', error);
+      }
+    };
+
+    loadStoredWeight();
+  }, []);
 
   useEffect(() => {
     const scrollToInitialWeight = () => {
       if (scrollViewRef.current) {
         scrollViewRef.current.scrollTo({
-          x: (initialWeight - (unit === 'kg' ? minWeightKg : minWeightLbs)) * snapSegment - (width / 2 - segmentWidth / 2),
+          x: (initialWeight - getWeightRange().min) * snapSegment - (width / 2 - segmentWidth / 2),
           y: 0,
           animated: true,
         });
@@ -123,29 +75,46 @@ export default function SelectWeight() {
   }, [initialWeight, unit]);
 
   useEffect(() => {
-    scrollX.addListener(({ value }) => {
-      const currentIndex = Math.round((value - snapSegment / 2) / snapSegment) + (unit === 'kg' ? minWeightKg : minWeightLbs);
+    const updateWeight = ({ value }) => {
+      const currentIndex = Math.round((value - snapSegment / 2) / snapSegment) + getWeightRange().min;
       if (textInputRef.current) {
         textInputRef.current.setNativeProps({
           text: `${currentIndex}`,
         });
       }
-    });
+      setSelectedWeight(currentIndex);
+    };
+
+    const debouncedUpdateWeight = debounce(updateWeight, 5);
+
+    scrollX.addListener(debouncedUpdateWeight);
+    return () => scrollX.removeAllListeners();
   }, [scrollX, unit]);
+
+  useEffect(() => {
+    // Store the selected weight when it changes
+    const storeWeightValue = async () => {
+      try {
+        await AsyncStorage.setItem('weightValue', selectedWeight.toString());
+      } catch (error) {
+        console.error('Failed to save weight to storage:', error);
+      }
+    };
+
+    storeWeightValue();
+  }, [selectedWeight]);
 
   const handleUnitChange = newUnit => {
     if (newUnit !== unit) {
-      const currentWeight = parseFloat(textInputRef.current._lastNativeText || initialWeight);
-      const convertedWeight = convertWeight(currentWeight, unit, newUnit);
-      setInitialWeight(Math.round(convertedWeight));
+      setInitialWeight(selectedWeight);
       setUnit(newUnit);
 
       setTimeout(() => {
         if (scrollViewRef.current) {
           scrollViewRef.current.scrollTo({
-            x: (Math.round(convertedWeight) - (newUnit === 'kg' ? minWeightKg : minWeightLbs)) * snapSegment - (width / 2 - segmentWidth / 2),
+            x: (selectedWeight - getWeightRange().min) * snapSegment - (width / 2 - segmentWidth / 2),
             y: 0,
-            animated: true,
+            animated: false,
           });
         }
       }, 100);
@@ -153,7 +122,8 @@ export default function SelectWeight() {
   };
 
   const handleContinuePress = () => {
-    navigation.navigate('HeightSelection'); 
+    console.log('Selected weight:', selectedWeight);
+    navigation.navigate('HeightSelection', { selectedWeight });
   };
 
   return (
@@ -189,6 +159,7 @@ export default function SelectWeight() {
         showsHorizontalScrollIndicator={false}
         scrollEventThrottle={16}
         snapToInterval={snapSegment}
+        decelerationRate="fast"
         onScroll={Animated.event(
           [
             {
@@ -213,13 +184,21 @@ export default function SelectWeight() {
         <Text style={styles.unitTextStyle}>{unit}</Text>
       </View>
 
-      <View style={styles.arrowIndicator} />  
+      <View style={styles.arrowIndicator} />
       <TouchableOpacity style={styles.continueButton} onPress={handleContinuePress}>
         <Text style={styles.continueButtonText}>Continue</Text>
       </TouchableOpacity>
     </SafeAreaView>
   );
 }
+
+const debounce = (func, wait) => {
+  let timeout;
+  return (...args) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func(...args), wait);
+  };
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -259,7 +238,7 @@ const styles = StyleSheet.create({
   },
   numberText: {
     fontSize: 14,
-    color: '#FFFFFF', // Adjust color to your preference
+    color: '#FFFFFF', 
   },
   titleContainer: {
     alignItems: 'center',
@@ -375,4 +354,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight:'bold'
   },
+
 });

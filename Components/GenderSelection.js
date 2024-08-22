@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import CustomAlert from './CustomAlert'; // Adjust the path as necessary
 
 export default function GenderSelection() {
@@ -8,16 +9,20 @@ export default function GenderSelection() {
   const [selectedGender, setSelectedGender] = useState(null);
   const [alertVisible, setAlertVisible] = useState(false);
 
-  const handleGenderSelect = (gender) => {
+  const handleGenderSelect = async (gender) => {
     setSelectedGender(gender);
+    try {
+      await AsyncStorage.setItem('selectedGender', gender);
+    } catch (error) {
+      console.error('Failed to save gender to storage', error);
+    }
   };
 
   const handleContinuePress = () => {
     if (selectedGender) {
-      // Proceed to the next step
-      navigation.navigate('HowOld'); // Replace 'NextScreen' with your next screen's name
+      console.log('Selected gender:', selectedGender);
+      navigation.navigate('HowOld');
     } else {
-      // Show custom alert
       setAlertVisible(true);
     }
   };
@@ -32,7 +37,7 @@ export default function GenderSelection() {
         <Text style={styles.backButtonText}>{'<'} Back</Text>
       </TouchableOpacity>
       <View style={styles.titleContainer}>
-      <Text style={styles.title}>What's Your Gender</Text>
+        <Text style={styles.title}>What's Your Gender</Text>
       </View>
 
       <View style={styles.genderContainer}>
@@ -83,7 +88,6 @@ const styles = StyleSheet.create({
     top: 30,
     left: 10,
   },
-
   titleContainer: {
     marginBottom: 30,
     alignItems: 'center',
@@ -94,7 +98,6 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     textAlign: 'center',
     fontWeight: 'bold',
-   
   },
   genderContainer: {
     flex: 1,
@@ -128,10 +131,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
     borderRadius: 25,
     marginVertical: 20,
-    width:'50%',
-    alignSelf:'center',
-    marginBottom:60,
-  
+    width: '50%',
+    alignSelf: 'center',
+    marginBottom: 60,
   },
   continueButtonText: {
     color: '#ffffff',
