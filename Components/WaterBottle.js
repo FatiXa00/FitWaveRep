@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
     height: 150,
     borderRadius: 10,
     overflow: 'hidden',
-    top:15,
+    top:20,
   },
   bottleHead: {
     width: 40,
@@ -119,8 +119,8 @@ const styles = StyleSheet.create({
   },
   waterLevelText: {
     color: '#fff',
-    fontSize: 13,
-    marginTop: 10,
+    fontSize: 12,
+    marginTop: 8,
     fontWeight: 'bold',
   },
   buttonsContainer: {

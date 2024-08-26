@@ -1,39 +1,54 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, FlatList, StyleSheet } from 'react-native';
+import axios from 'axios';
+import { Ionicons } from '@expo/vector-icons';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 const FoodSearch = () => {
-  const data = [
-    { id: '1', name: 'Banana, Fresh', amount: '100g - 100.0g' },
-    { id: '2', name: 'Raw Egg', amount: '1 large - 50g' },
-    { id: '3', name: 'Oat Milk', amount: '1 cup - 160g' },
-    { id: '4', name: 'Bread, White', amount: '1g' },
-  ];
+  const [query, setQuery] = useState('');
+  const [results, setResults] = useState([]);
+  const navigation = useNavigation();
+  const route = useRoute();
+  const { handleAddMealItem } = route.params || {};
 
-  const renderItem = ({ item }) => (
-    <View style={styles.itemContainer}>
-      <Text style={styles.itemName}>{item.name}</Text>
-      <Text style={styles.itemAmount}>{item.amount}</Text>
-    </View>
-  );
+  const searchFood = async () => {
+    try {
+      const response = await axios.get('https://api.nal.usda.gov/fdc/v1/foods/search', {
+        params: {
+          query: query,
+          api_key: 'veVaIqWcTQBfUokzpUrZZhBE70tpkCk1uMNB1OsV' // Your API Key
+        },
+      });
+      setResults(response.data.foods);
+    } catch (error) {
+      console.error('Error fetching food data:', error);
+    }
+  };
+
+  const addToMeal = (item) => {
+    if (handleAddMealItem) {
+      handleAddMealItem(item); 
+      navigation.goBack(); 
+    }
+  };
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity style={styles.closeButton}>
-          <Text style={styles.closeButtonText}>X</Text>
+        <TextInput
+          style={styles.searchInput}
+          placeholder="Search"
+          placeholderTextColor="#777"
+          onChangeText={setQuery}
+          value={query}
+        />
+        <TouchableOpacity style={styles.iconButton} onPress={searchFood}>
+          <Ionicons name="search" size={24} color="#FD6639" />
         </TouchableOpacity>
-        <View style={styles.searchContainer}>
-          <TextInput
-            style={styles.searchInput}
-            placeholder="Search"
-            placeholderTextColor="#777"
-          />
-        </View>
-        <TouchableOpacity style={styles.iconButton}>
-          <Text style={styles.iconText}>🔍</Text>
+        <TouchableOpacity style={styles.scanButton}onPress={() => navigation.navigate('ScanBarcodeScreen')}>
+          <Ionicons name="scan-outline" size={24} color="#FD6639" />
         </TouchableOpacity>
       </View>
-
       <View style={styles.filterContainer}>
         <TouchableOpacity style={styles.filterButtonActive}>
           <Text style={styles.filterButtonTextActive}>All</Text>
@@ -45,17 +60,23 @@ const FoodSearch = () => {
           <Text style={styles.filterButtonText}>Custom</Text>
         </TouchableOpacity>
       </View>
-
       <View style={styles.resultsHeader}>
         <Text style={styles.resultsHeaderText}>Results</Text>
         <Text style={styles.bestMatchText}>Best Match</Text>
       </View>
-
       <FlatList
-        data={data}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={styles.list}
+        data={results}
+        renderItem={({ item }) => (
+          <TouchableOpacity onPress={() => addToMeal(item)}>
+            <View style={styles.resultContainer}>
+            <View style={styles.itemContainer}>
+              <Text style={styles.itemName}>{item.description}</Text>
+              <Text style={styles.itemAmount}>{item.foodNutrients[0]?.value} {item.foodNutrients[0]?.unitName}</Text>
+            </View>
+            </View>
+          </TouchableOpacity>
+        )}
+        keyExtractor={(item) => item.fdcId.toString()}
       />
     </View>
   );
@@ -65,51 +86,51 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#141824',
-    paddingHorizontal: 20,
-    paddingTop: 40,
+    padding: 20,
   },
   header: {
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 20,
-  },
-  closeButton: {
-    marginRight: 10,
-  },
-  closeButtonText: {
-    color: '#fff',
-    fontSize: 18,
-  },
-  searchContainer: {
-    flex: 1,
-    backgroundColor: '#1f2730',
-    borderRadius: 10,
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 10,
+    paddingVertical: 15,
+    top:35,
   },
   searchInput: {
     flex: 1,
+    backgroundColor: '#222435',
+    borderRadius: 10,
     color: '#fff',
     fontSize: 16,
+    paddingHorizontal: 10,
+    paddingVertical: 8 ,
   },
   iconButton: {
     marginLeft: 10,
+    padding: 5,
+    backgroundColor: '#222435',
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  iconText: {
-    color: '#FD6639',
-    fontSize: 18,
+  scanButton: {
+    marginLeft: 10,
+    padding: 5,
+    backgroundColor: '#222435',
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   filterContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 20,
+    top:15,
   },
   filterButton: {
     flex: 1,
     padding: 10,
     borderRadius: 10,
-    backgroundColor: '#1f2730',
+    backgroundColor: '#222435',
     marginHorizontal: 5,
     alignItems: 'center',
   },
@@ -131,25 +152,28 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginBottom: 10,
+    top:5,
   },
   resultsHeaderText: {
     color: '#fff',
-    fontSize: 18,
+    fontSize: 16,
   },
   bestMatchText: {
     color: '#FD6639',
     fontSize: 16,
   },
-  list: {
-    backgroundColor: '#1f2730',
-    borderRadius: 10,
-    paddingVertical: 10,
+  resultContainer:{
+    backgroundColor: '#222435',
+    top:18,
+    borderRadius:8,
+
   },
   itemContainer: {
     paddingVertical: 15,
     paddingHorizontal: 10,
     borderBottomWidth: 1,
     borderBottomColor: '#333',
+
   },
   itemName: {
     color: '#fff',

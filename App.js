@@ -31,7 +31,9 @@ import Plan from './Components/Plan';
 import Ruler from './Components/Ruler';
 import GoalCalories from './Components/GoalCalories';
 import Menu from './Components/Menu';
-
+import Food from './Components/Food';
+import FoodSearch from './Components/FoodSearch';
+import MealSummary from './Components/MealSummary';
 const Stack = createStackNavigator();
 
 export default function App() {
@@ -183,13 +185,28 @@ export default function App() {
           component={ScanBarcodeScreen}
           options={{ headerShown: false }} 
         />
-<Stack.Screen
-          name="Plan"
-          component={Plan}
+      <Stack.Screen
+                name="Plan"
+                component={Plan}
+                options={{ headerShown: false }} 
+              />
+      <Stack.Screen
+          name="Food"
+          component={Food}
+          options={{ headerShown: false }} 
+        />
+      <Stack.Screen
+          name="FoodSearch"
+          component={FoodSearch}
+          options={{ headerShown: false }} 
+        />
+  <Stack.Screen
+          name="MealSummary"
+          component={MealSummary}
           options={{ headerShown: false }} 
         />
 
-    
+
       </Stack.Navigator>
       <StatusBar style="auto" />
     </NavigationContainer>

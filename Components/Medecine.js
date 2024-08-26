@@ -71,7 +71,7 @@ export default function Medicine() {
       </View>
 
       {/* Review List */}
-      <FlatList
+      <FlatList contentContainerStyle={{ paddingBottom: 200 }}
         data={reviewData}
         renderItem={renderReviewItem}
         keyExtractor={(item) => item.id}

@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Modal, Button, ImageBackground } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useNavigation } from '@react-navigation/native';
 
 const Settings = () => {
   const [waterIntakeGoal, setWaterIntakeGoal] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
+  const navigation = useNavigation();
 
   useEffect(() => {
     const loadSettings = async () => {
@@ -25,6 +27,8 @@ const Settings = () => {
       await AsyncStorage.setItem('waterIntakeGoal', goal);
       setWaterIntakeGoal(goal);
       setModalVisible(false);
+      // Pass the updated goal to WaterIntake via navigation or state
+      navigation.navigate('WaterIntake', { goal });
     } catch (error) {
       console.error('Failed to save settings:', error);
     }
@@ -45,7 +49,6 @@ const Settings = () => {
           <Text style={styles.buttonText}>{waterIntakeGoal ? `${waterIntakeGoal} liters` : 'Select Goal'}</Text>
         </TouchableOpacity>
 
-        {/* Modal for selecting water intake goal */}
         <Modal
           transparent={true}
           animationType="slide"

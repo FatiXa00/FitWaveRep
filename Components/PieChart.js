@@ -53,7 +53,7 @@ const PieChart = ({ burn, eaten }) => {
               cy="18"
               r="15.915"
               fill="none"
-              stroke="#FF6347" 
+              stroke="#FFBB00" 
               strokeWidth="3.5"
               strokeDasharray={`${burnStroke} ${360 - burnStroke}`}
               strokeDashoffset="25"
@@ -64,23 +64,13 @@ const PieChart = ({ burn, eaten }) => {
               cy="18"
               r="15.915"
               fill="none"
-              stroke="#32CD32" 
+              stroke="#00FF88" 
               strokeWidth="3.5"
               strokeDasharray={`${eatenStroke} ${360 - eatenStroke}`}
               strokeDashoffset={25 + burnStroke}
               strokeLinecap="round"
             />
-            <Circle
-              cx="18"
-              cy="18"
-              r="15.915"
-              fill="none"
-              stroke="#1E90FF"
-              strokeWidth="3.5"
-              strokeDasharray={`${remainingStroke} ${360 - remainingStroke}`}
-              strokeDashoffset={25 + burnStroke + eatenStroke}
-              strokeLinecap="round"
-            />
+          
           </Svg>
           <View style={styles.textContainer}>
             <Text style={styles.caloriesText}>{remaining.toFixed(2)}</Text>
@@ -104,20 +94,22 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginTop: 50,
-    paddingHorizontal: 20,
+    marginTop: 30,
+    paddingHorizontal: 15, // Increased padding for more space between texts and circle
   },
   burnText: {
     color: '#FFBB00',
     textAlign: 'center',
     fontSize: 16,
-    width: 70, // Add width for proper alignment
+    width: 70, 
+    right:15,
   },
   eatenText: {
     color: '#00FF88',
     textAlign: 'center',
     fontSize: 16,
-    width: 70, // Add width for proper alignment
+    width: 70, 
+    left:15,
   },
   circle: {
     width: 160,
@@ -141,5 +133,17 @@ const styles = StyleSheet.create({
     color: 'gray',
   },
 });
+
+/*<Circle
+cx="18"
+cy="18"
+r="15.915"
+fill="none"
+stroke="#1E90FF"
+strokeWidth="3.5"
+strokeDasharray={`${remainingStroke} ${360 - remainingStroke}`}
+strokeDashoffset={25 + burnStroke + eatenStroke}
+strokeLinecap="round"
+/>*/
 
 export default PieChart;

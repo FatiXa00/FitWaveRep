@@ -99,7 +99,7 @@ const Home = () => {
   };
 
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <ScrollView style={styles.container}contentContainerStyle={{ paddingBottom: 200 }}>
       <StatusBar barStyle="light-content" />
       <View style={styles.header}>
         <View style={styles.dateContainer}>
@@ -223,8 +223,9 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     paddingHorizontal: 16,
-    backgroundColor: '#1a1c2c',
+    backgroundColor: '#141824',
     paddingBottom: 16,
+    
   },
   header: {
     flexDirection: 'row',
