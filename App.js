@@ -34,6 +34,11 @@ import Menu from './Components/Menu';
 import Food from './Components/Food';
 import FoodSearch from './Components/FoodSearch';
 import MealSummary from './Components/MealSummary';
+import ShowMore from './Components/ShowMore';
+import PillList from './Components/PillList';
+
+
+
 const Stack = createStackNavigator();
 
 export default function App() {
@@ -205,8 +210,17 @@ export default function App() {
           component={MealSummary}
           options={{ headerShown: false }} 
         />
-
-
+<Stack.Screen
+          name="ShowMore"
+          component={ShowMore}
+          options={{ headerShown: false }} 
+        />
+<Stack.Screen
+          name="PillList"
+          component={PillList}
+          options={{ headerShown: false }} 
+        />
+    
       </Stack.Navigator>
       <StatusBar style="auto" />
     </NavigationContainer>
