@@ -31,6 +31,10 @@ import Plan from './Components/Plan';
 import Ruler from './Components/Ruler';
 import GoalCalories from './Components/GoalCalories';
 import Menu from './Components/Menu';
+import ShowMore from './Components/ShowMore';
+import PillList from './Components/PillList';
+
+
 
 const Stack = createStackNavigator();
 
@@ -188,7 +192,16 @@ export default function App() {
           component={Plan}
           options={{ headerShown: false }} 
         />
-
+<Stack.Screen
+          name="ShowMore"
+          component={ShowMore}
+          options={{ headerShown: false }} 
+        />
+<Stack.Screen
+          name="PillList"
+          component={PillList}
+          options={{ headerShown: false }} 
+        />
     
       </Stack.Navigator>
       <StatusBar style="auto" />

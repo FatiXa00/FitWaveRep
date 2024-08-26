@@ -52,7 +52,7 @@ export default function Medicine() {
         <Text style={styles.planTitle}>for today</Text>
         <Text style={styles.planDetails}>1 of 4 completed</Text>
         <TouchableOpacity>
-          <Text style={styles.showMore}>Show More</Text>
+          <Text style={styles.showMore}onPress={() => {navigation.navigate('ShowMore');}}>Show More</Text>
         </TouchableOpacity>
       </View>
 
