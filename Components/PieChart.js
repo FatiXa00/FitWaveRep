@@ -39,14 +39,14 @@ const PieChart = ({ burn, eaten }) => {
           {burn}{'\n'}burn
         </Text>
         <View style={styles.circle}>
-          <Svg height="150" width="150" viewBox="0 0 36 36">
+          <Svg height="160" width="160" viewBox="0 0 36 36">
             <Circle
               cx="18"
               cy="18"
               r="15.915"
               fill="none"
               stroke="#ddd"
-              strokeWidth="3"
+              strokeWidth="3.5"
             />
             <Circle
               cx="18"
@@ -54,7 +54,7 @@ const PieChart = ({ burn, eaten }) => {
               r="15.915"
               fill="none"
               stroke="#FF6347" 
-              strokeWidth="3"
+              strokeWidth="3.5"
               strokeDasharray={`${burnStroke} ${360 - burnStroke}`}
               strokeDashoffset="25"
               strokeLinecap="round"
@@ -65,7 +65,7 @@ const PieChart = ({ burn, eaten }) => {
               r="15.915"
               fill="none"
               stroke="#32CD32" 
-              strokeWidth="3"
+              strokeWidth="3.5"
               strokeDasharray={`${eatenStroke} ${360 - eatenStroke}`}
               strokeDashoffset={25 + burnStroke}
               strokeLinecap="round"
@@ -76,13 +76,12 @@ const PieChart = ({ burn, eaten }) => {
               r="15.915"
               fill="none"
               stroke="#1E90FF"
-              strokeWidth="3"
+              strokeWidth="3.5"
               strokeDasharray={`${remainingStroke} ${360 - remainingStroke}`}
               strokeDashoffset={25 + burnStroke + eatenStroke}
               strokeLinecap="round"
             />
           </Svg>
-          {/* Center the remaining calories and Kcal available text */}
           <View style={styles.textContainer}>
             <Text style={styles.caloriesText}>{remaining.toFixed(2)}</Text>
             <Text style={styles.subText}>Kcal available</Text>
@@ -105,22 +104,25 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    left:55,
+    marginTop: 50,
+    paddingHorizontal: 20,
   },
   burnText: {
-    color: 'white',
+    color: '#FFBB00',
     textAlign: 'center',
     fontSize: 16,
+    width: 70, // Add width for proper alignment
   },
   eatenText: {
-    color: 'white',
+    color: '#00FF88',
     textAlign: 'center',
     fontSize: 16,
+    width: 70, // Add width for proper alignment
   },
   circle: {
-    width: 150,
-    height: 150,
-    borderRadius: 75,
+    width: 160,
+    height: 160,
+    borderRadius: 80,
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#141824',
@@ -130,17 +132,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   caloriesText: {
-    fontSize: 22,
+    fontSize: 24,
     color: '#FD6639',
+    fontWeight: 'bold',
   },
   subText: {
     fontSize: 12,
     color: 'gray',
-  },
-  goalText: {
-    marginTop: 10,
-    fontSize: 18,
-    color: 'white',
   },
 });
 

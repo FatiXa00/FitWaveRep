@@ -72,7 +72,7 @@ const NutritionHome = () => {
 
       <View style={styles.circleContainer}>
     <PieChart
-    burn={100}
+    burn={500}
     eaten={200}
     />
     </View>
