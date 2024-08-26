@@ -1,16 +1,21 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity,StyleSheet } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import Modal from 'react-native-modal';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import Fontisto from '@expo/vector-icons/Fontisto';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import AntDesign from '@expo/vector-icons/AntDesign'; // For additional icons
-import { useNavigation } from '@react-navigation/native'; // Import useNavigation
 
 const AddModal = ({ isVisible, onClose }) => {
+  const ScanButton = () => {
+    navigation.navigate('ScanBarcodeScreen');};
+    const AddPlanButton = () => {
+      navigation.navigate('Plan');};
   const navigation = useNavigation(); // Use the hook to access navigation
 
   return (
+    
     <Modal
       isVisible={isVisible}
       onBackdropPress={onClose}
@@ -23,7 +28,7 @@ const AddModal = ({ isVisible, onClose }) => {
               <FontAwesome5 name="apple-alt" size={40} color="#FD6639" />
               <Text style={styles.iconLabel}>Nutrition</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.iconButton}>
+            <TouchableOpacity style={styles.iconButton} onPress={AddPlanButton}>
               <Fontisto name="pills" size={40} color="#FD6639" />
               <Text style={styles.iconLabel}>Medicine</Text>
             </TouchableOpacity>
@@ -33,7 +38,7 @@ const AddModal = ({ isVisible, onClose }) => {
             </TouchableOpacity>
           </View>
           <View style={styles.row}>
-            <TouchableOpacity style={styles.iconButton}>
+            <TouchableOpacity style={styles.iconButton} onPress={ScanButton}>
               <AntDesign name="camera" size={40} color="#FD6639" />
               <Text style={styles.iconLabel}>Scan Food</Text>
             </TouchableOpacity>

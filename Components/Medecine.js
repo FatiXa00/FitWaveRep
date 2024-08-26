@@ -65,7 +65,7 @@ export default function Medicine() {
       {/* Daily Review */}
       <View style={styles.dailyReviewContainer}>
         <Text style={styles.dailyReviewTitle}>Daily Review</Text>
-        <TouchableOpacity style={styles.addPlanButton}>
+        <TouchableOpacity style={styles.addPlanButton}onPress={() => {navigation.navigate('Plan');}}>
           <Text style={styles.addPlanButtonText}>Add Plan</Text>
         </TouchableOpacity>
       </View>

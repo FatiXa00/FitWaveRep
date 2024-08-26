@@ -26,11 +26,12 @@ import Goal from './Components/Goal';
 import AddModal from './Components/AddModal';
 import PhysicalActivityLevel from './Components/PhysicalActivityLevel';
 import Medicine from './Components/Medecine';
+import ScanBarcodeScreen from './Components/ScanBarcodeScreen';
+import Plan from './Components/Plan';
 import Ruler from './Components/Ruler';
 import GoalCalories from './Components/GoalCalories';
 import Menu from './Components/Menu';
-import ChatBot from './Components/ChatBot';
-import BirthdayPage from './Components/BirthdayPage';
+
 const Stack = createStackNavigator();
 
 export default function App() {
@@ -47,6 +48,7 @@ export default function App() {
           component={Onboarding1}
           options={{ headerShown: false }} 
         />
+         
         <Stack.Screen
           name="OnBoarding2"
           component={Onboarding2}
@@ -165,25 +167,29 @@ export default function App() {
         />
 
             <Stack.Screen
-          name="Medicine"
-          component={Medicine}
-          options={{ headerShown: false }} 
-        />
-            <Stack.Screen
           name="Menu"
           component={Menu}
           options={{ headerShown: false }} 
         />
-               <Stack.Screen
-          name="ChatBot"
-          component={ChatBot}
-          options={{ headerShown: false }} 
-        />
-                  <Stack.Screen
-          name="BirthdayPage"
-          component={BirthdayPage}
-          options={{ headerShown: false }} 
-        />
+              
+                 
+         <Stack.Screen
+          name="Medicine"
+          component={Medicine}
+          options={{ headerShown: false }} 
+        />
+     <Stack.Screen
+          name="ScanBarcodeScreen"
+          component={ScanBarcodeScreen}
+          options={{ headerShown: false }} 
+        />
+<Stack.Screen
+          name="Plan"
+          component={Plan}
+          options={{ headerShown: false }} 
+        />
+
+    
       </Stack.Navigator>
       <StatusBar style="auto" />
     </NavigationContainer>
