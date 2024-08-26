@@ -28,8 +28,11 @@ import PhysicalActivityLevel from './Components/PhysicalActivityLevel';
 import Medicine from './Components/Medecine';
 import ScanBarcodeScreen from './Components/ScanBarcodeScreen';
 import Plan from './Components/Plan';
-import Notif from './Components/Notif';
- const Stack = createStackNavigator();
+import Ruler from './Components/Ruler';
+import GoalCalories from './Components/GoalCalories';
+import Menu from './Components/Menu';
+
+const Stack = createStackNavigator();
 
 export default function App() {
   return (
@@ -74,6 +77,11 @@ export default function App() {
         <Stack.Screen
           name="CreateDoctor2"
           component={CreateDoctor2}
+          options={{ headerShown: false }} 
+        />
+           <Stack.Screen
+          name="Ruler"
+          component={Ruler}
           options={{ headerShown: false }} 
         />
         <Stack.Screen
@@ -146,11 +154,25 @@ export default function App() {
           component={Goal}
           options={{ headerShown: false }} 
         />
+    
         <Stack.Screen
           name="PhysicalActivityLevel"
           component={PhysicalActivityLevel}
-          options={{ headerShown: false }} // Show header for Logging screen
+          options={{ headerShown: false }} 
         />
+           <Stack.Screen
+          name="GoalCalories"
+          component={GoalCalories}
+          options={{ headerShown: false }} 
+        />
+
+            <Stack.Screen
+          name="Menu"
+          component={Menu}
+          options={{ headerShown: false }} 
+        />
+              
+                 
          <Stack.Screen
           name="Medicine"
           component={Medicine}
@@ -166,11 +188,7 @@ export default function App() {
           component={Plan}
           options={{ headerShown: false }} 
         />
-<Stack.Screen
-          name="Notif"
-          component={Notif}
-          options={{ headerShown: false }} 
-        />
+
     
       </Stack.Navigator>
       <StatusBar style="auto" />

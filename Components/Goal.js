@@ -1,25 +1,48 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import CustomAlert from './CustomAlert';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Goal() {
   const navigation = useNavigation();
   const [selectedGoal, setSelectedGoal] = useState(null);
   const [alertVisible, setAlertVisible] = useState(false);
 
-  const handleGoalSelection = (goal) => {
+  useEffect(() => {
+    // Retrieve the stored goal when the component mounts
+    const getStoredGoal = async () => {
+      try {
+        const storedGoal = await AsyncStorage.getItem('selectedGoal');
+        if (storedGoal) {
+          setSelectedGoal(storedGoal);
+        }
+      } catch (error) {
+        console.error('Failed to fetch the goal from storage:', error);
+      }
+    };
+
+    getStoredGoal();
+  }, []);
+
+  const handleGoalSelection = async (goal) => {
     setSelectedGoal(goal);
+    try {
+      await AsyncStorage.setItem('selectedGoal', goal);
+    } catch (error) {
+      console.error('Failed to save the goal to storage:', error);
+    }
   };
   
   const handleContinue = () => {
     if (selectedGoal) {
+      console.log('Selected goal:', selectedGoal);
       navigation.navigate('PhysicalActivityLevel', { level: selectedGoal });
-    }else {
-      // Show custom alert
+    } else {
       setAlertVisible(true);
     }
   };
+
   const handleCloseAlert = () => {
     setAlertVisible(false);
   };
