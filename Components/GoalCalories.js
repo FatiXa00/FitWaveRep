@@ -12,21 +12,21 @@ const GoalCalories = ({ visible, onClose }) => {
         const height = await AsyncStorage.getItem('heightValue');
         const age = await AsyncStorage.getItem('selectedAge');
         const gender = await AsyncStorage.getItem('selectedGender');
-        const activityLevel = await AsyncStorage.getItem('selectedLevel');
+        const physicalLevel = await AsyncStorage.getItem('selectedLevel');
         const goal = await AsyncStorage.getItem('selectedGoal');
 
-        if (weight && height && age && gender && activityLevel && goal) {
+        if (weight && height && age && gender && physicalLevel && goal) {
           const weightNum = parseFloat(weight);
           const heightNum = parseFloat(height);
           const ageNum = parseInt(age);
-          const activityMultiplier = getActivityMultiplier(activityLevel);
+          const activityMultiplier = getActivityMultiplier(physicalLevel);
 
           const bmr = calculateBMR(weightNum, heightNum, ageNum, gender);
           const tdee = bmr * activityMultiplier;
           const calculatedGoalCalories = calculateGoalCalories(tdee, goal);
 
           setGoalCalories(calculatedGoalCalories);
-          // Save the goal calories to AsyncStorage
+
           await AsyncStorage.setItem('goalCalories', calculatedGoalCalories.toString());
         } else {
           console.error('One or more data items are missing');
@@ -40,14 +40,12 @@ const GoalCalories = ({ visible, onClose }) => {
   }, []);
 
   const getActivityMultiplier = (level) => {
-    const activityMultipliers = {
-      Sedentary: 1.2,
-      LightlyActive: 1.375,
-      ModeratelyActive: 1.55,
-      VeryActive: 1.725,
-      SuperActive: 1.9,
+    const levelMapping = {
+      'Beginner': 1.2,           
+      'Intermediate': 1.55,      
+      'Advanced': 1.725,         
     };
-    return activityMultipliers[level] || 1.2;
+    return levelMapping[level] || 1.2;  
   };
 
   const calculateBMR = (weight, height, age, gender) => {
@@ -62,19 +60,21 @@ const GoalCalories = ({ visible, onClose }) => {
   const calculateGoalCalories = (tdee, goal) => {
     switch (goal) {
       case 'Lose Weight':
-        return tdee - 500;
+        return tdee - 500;  
       case 'Gain Weight':
-        return tdee + 500;
+        return tdee + 500;  
+      case 'Muscle Mass Gain':
+        return tdee + 250;  
       case 'Maintain Weight':
-        return tdee;
+        return tdee;        
       default:
-        return tdee;
+        return tdee;        
     }
   };
 
   const handleClose = () => {
     if (onClose) {
-      onClose(); // Close the modal
+      onClose(); 
     }
   };
   

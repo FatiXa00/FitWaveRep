@@ -1,4 +1,3 @@
-// Components/FitWaveLogo.js
 import React from 'react';
 import { Image, StyleSheet, View } from 'react-native';
 
@@ -6,7 +5,7 @@ export default function FitWaveLogo() {
   return (
     <View style={styles.container}>
       <Image
-        source={require('../assets/images/FitLogo.png')} // Ensure this path is correct
+        source={require('../assets/images/FitLogo.png')} 
         style={styles.FitLogo}
       />
     </View>

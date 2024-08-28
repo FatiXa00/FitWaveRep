@@ -10,7 +10,6 @@ export default function Goal() {
   const [alertVisible, setAlertVisible] = useState(false);
 
   useEffect(() => {
-    // Retrieve the stored goal when the component mounts
     const getStoredGoal = async () => {
       try {
         const storedGoal = await AsyncStorage.getItem('selectedGoal');

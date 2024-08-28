@@ -1,4 +1,3 @@
-// MyBarChart.js
 import React from 'react';
 import { View, StyleSheet, Dimensions, ScrollView } from 'react-native';
 import { BarChart } from 'react-native-chart-kit';

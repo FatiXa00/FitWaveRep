@@ -147,7 +147,7 @@ const styles = StyleSheet.create({
     width: '50%',
     alignSelf: 'center',
     position: 'absolute',
-    bottom: 60, // Adjust this to match the vertical position
+    bottom: 60, 
   },
   continueButtonText: {
     color: '#ffffff',

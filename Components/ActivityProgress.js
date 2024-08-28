@@ -1,9 +1,9 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import ProgressCircleComponent from './ProgressCircleComponent'; // Ensure this component exists
+import ProgressCircleComponent from './ProgressCircleComponent'; 
 
 const ActivityProgress = ({ caloriesBurned, steps, distance }) => {
-  const totalProgress = Math.min(100, (caloriesBurned + steps + distance) / 3); // Example calculation
+  const totalProgress = Math.min(100, (caloriesBurned + steps + distance) / 3); 
 
   return (
     <View style={styles.container}>

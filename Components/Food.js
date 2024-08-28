@@ -20,8 +20,8 @@ const Food = () => {
         <Text style={styles.title}>Food</Text>
         <TouchableOpacity
           style={styles.addButton}
-          onPress={() => { /* Handle add action */ }}
-        >
+          onPress={() => navigation.navigate('FoodSearch')} >
+
           <AntDesign name="plus" size={24} color="white" />
         </TouchableOpacity>
       </View>
@@ -37,7 +37,7 @@ const Food = () => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => { /* Handle custom recipe */ }}
+          onPress={() => {  }}
         >
           <MaterialCommunityIcons name="chef-hat" size={35} color="white" />
           <Text style={styles.buttonText}>Custom Recipe</Text>
@@ -45,7 +45,7 @@ const Food = () => {
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.button}
-          onPress={() => { /* Handle custom food */ }}
+          onPress={() => { }}
         >
           <MaterialCommunityIcons name="food-apple-outline" size={35} color="white" />
           <Text style={styles.buttonText}>Custom Food</Text>

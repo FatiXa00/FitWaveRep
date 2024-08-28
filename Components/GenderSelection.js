@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import CustomAlert from './CustomAlert'; // Adjust the path as necessary
+import CustomAlert from './CustomAlert'; 
 
 export default function GenderSelection() {
   const navigation = useNavigation();
@@ -62,7 +62,6 @@ export default function GenderSelection() {
         <Text style={styles.continueButtonText}>Continue</Text>
       </TouchableOpacity>
 
-      {/* Include the CustomAlert component */}
       <CustomAlert
         visible={alertVisible}
         onClose={handleCloseAlert}

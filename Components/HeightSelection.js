@@ -50,12 +50,12 @@ export default function SelectHeight() {
   const navigation = useNavigation();
   const scrollY = useRef(new Animated.Value(0)).current;
   const scrollViewRef = useRef(null);
-  const isInitialMount = useRef(true); // Track initial mount
+  const isInitialMount = useRef(true); 
 
   const [heightValue, setHeightValue] = useState(minHeightCm);
 
   useEffect(() => {
-    // Load stored height when component mounts
+
     const loadStoredHeight = async () => {
       try {
         const storedHeight = await AsyncStorage.getItem('heightValue');
@@ -72,12 +72,11 @@ export default function SelectHeight() {
 
   useEffect(() => {
     if (isInitialMount.current) {
-      // Scroll to initial height only on the first mount
       if (scrollViewRef.current) {
         scrollViewRef.current.scrollTo({
           y: (heightValue - minHeightCm) * snapSegment - spacerHeight,
           x: 0,
-          animated: false, // No animation for initial mount
+          animated: false, 
         });
       }
       isInitialMount.current = false;
@@ -97,7 +96,7 @@ export default function SelectHeight() {
 
 
   useEffect(() => {
-    // Store the heightValue when it changes
+
     const storeHeightValue = async () => {
       try {
         await AsyncStorage.setItem('heightValue', heightValue.toString());
@@ -236,7 +235,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: segmentSpacing / 2,
-    backgroundColor: '#000', // Default color
+    backgroundColor: '#000',
   },
   scrollViewContainerStyle: {
     justifyContent: 'flex-end',

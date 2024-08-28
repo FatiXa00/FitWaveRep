@@ -42,7 +42,7 @@ export default function BottomTabNavigator() {
               iconComponent = <MaterialIcons name="fitness-center" size={size + 3} color={color} />;
             } else if (route.name === 'Home') {
               iconComponent = <FontAwesome5 name="th-large" size={size + 3} color={color} />;
-            } else if (route.name === 'Menu') {
+            } else if (route.name === 'Settings') {
               iconComponent = <Octicons name="three-bars" size={size + 3} color={color} />;
             } else if (route.name === 'AddModal') {
               iconComponent = <Feather name="plus-circle" size={size + 10} color={color} onPress={toggleModal} />;
@@ -77,7 +77,7 @@ export default function BottomTabNavigator() {
         <Tab.Screen name="AddModal" component={AddModal} />
         <Tab.Screen name="AppoitmentHome" component={AppoitmentHome} />
         <Tab.Screen name="Medicine" component={Medicine} />
-        <Tab.Screen name="Menu" component={Menu} />
+        <Tab.Screen name="Settings" component={Settings} />
       </Tab.Navigator>
 
       <AddModal

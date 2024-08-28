@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   icon: {
-    marginBottom: 10, // Adjust marginBottom to move the icon up
+    marginBottom: 10, 
     width: 40,
     height: 40,
   },

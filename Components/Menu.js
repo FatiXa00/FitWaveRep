@@ -8,7 +8,6 @@ const Menu = ({ navigation }) => {
   };
 
   const handleLogout = () => {
-    // Implement your logout logic here
     Alert.alert('Logged Out', 'You have been logged out.');
   };
 

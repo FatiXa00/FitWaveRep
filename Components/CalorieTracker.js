@@ -5,7 +5,7 @@ import Slider from '@react-native-community/slider';
 
 const CalorieTracker = () => {
     const progressData = {
-        data: [0.75], // 75% of the goal reached
+        data: [0.75], 
     };
 
     const mealData = [
@@ -17,7 +17,6 @@ const CalorieTracker = () => {
 
     return (
         <View style={styles.container}>
-            {/* Date and Progress Circle */}
             <View style={styles.header}>
                 <Text style={styles.date}>2 May, Monday</Text>
                 <ProgressChart
@@ -38,7 +37,6 @@ const CalorieTracker = () => {
                 </View>
             </View>
 
-            {/* Water Intake Slider */}
             <View style={styles.waterContainer}>
                 <Text style={styles.waterText}>Water 0.9L (75%)</Text>
                 <Text style={styles.waterSubText}>Recommended until now 1.4L</Text>

@@ -1,5 +1,3 @@
-// NutritionHome.js
-
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Modal, TouchableOpacity, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -7,19 +5,40 @@ import AntDesign from '@expo/vector-icons/AntDesign';
 import Entypo from '@expo/vector-icons/Entypo';
 import { Calendar as FullScreenCalendar } from 'react-native-calendars';
 import GoalCalories from './GoalCalories';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import WaterIntake from './WaterIntake';
 import PieChart from './PieChart';
-import MealItem from './MealItem'; // Import MealItem component
+import MealItem from './MealItem'; 
+import { Menu, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-menu';
+import Icon from 'react-native-vector-icons/MaterialIcons';
+import Popover from 'react-native-popover-menu';
+import RNPopover from 'react-native-popover-menu';
+
+
 
 const NutritionHome = () => {
+
+  const route = useRoute();
+  const navigation = useNavigation();
+
   const [date, setDate] = useState(new Date());
   const [showCalendarModal, setShowCalendarModal] = useState(false);
   const [showGoalCaloriesModal, setShowGoalCaloriesModal] = useState(false);
   const [goalCalories, setGoalCalories] = useState(0);
+ 
 
-  const navigation = useNavigation();
+  const [totalCalories, setTotalCalories] = useState(0);
+  const [totalProtein, setTotalProtein] = useState(0);
+  const [totalCarbs, setTotalCarbs] = useState(0);
+  const [totalFat, setTotalFat] = useState(0);
 
+
+  const handleMenuSelect = (index) => {
+    if (index === 0) {
+      navigation.navigate('FoodSuggestionPage');
+    }
+  }
+  
   const handleFullScreenDateChange = (day) => {
     const { dateString } = day;
     const [year, month, dayOfMonth] = dateString.split('-').map(Number);
@@ -29,6 +48,13 @@ const NutritionHome = () => {
   };
 
   useEffect(() => {
+
+       const params = route.params || {};
+       setTotalCalories(params.totalCalories || 0);
+       setTotalProtein(params.totalProtein || 0);
+       setTotalCarbs(params.totalCarbs || 0);
+       setTotalFat(params.totalFat || 0);
+
     const fetchGoalCalories = async () => {
       try {
         const storedGoalCalories = await AsyncStorage.getItem('goalCalories');
@@ -41,7 +67,11 @@ const NutritionHome = () => {
     };
 
     fetchGoalCalories();
-  }, []);
+  }, [route.params]);
+
+  const handleNavigation = (screen) => {
+    navigation.navigate(screen);
+  };
 
   const handleGoalCaloriesUpdate = (newGoalCalories) => {
     setGoalCalories(newGoalCalories);
@@ -59,17 +89,46 @@ const NutritionHome = () => {
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 200 }}>
-      <View style={styles.header}>
-        <TouchableOpacity
-          style={styles.iconButton}
-          onPress={() => setShowCalendarModal(true)}
-        >
+   <View style={styles.header}>
+        <TouchableOpacity style={styles.iconButton} onPress={() => setShowCalendarModal(true)}>
           <Text><AntDesign name="calendar" size={24} color="white" /></Text>
         </TouchableOpacity>
+
         <Text style={styles.dateText}>{formatDate(date)}</Text>
-        <TouchableOpacity style={styles.iconButton} onPress={() => { navigation.navigate('BirthdayPage'); }}>
+
+       
+        <Menu>
+        <MenuTrigger>
           <Text><Entypo name="dots-three-horizontal" size={24} color="white" /></Text>
-        </TouchableOpacity>
+        </MenuTrigger>
+        <MenuOptions customStyles={optionsStyles}>
+          <MenuOption onSelect={() => handleNavigation('FoodSuggestionPage')}>
+            <Text style={styles.menuText}>
+              <Icon name="fastfood" size={20} color="#FD6639" /> Suggest Dishes
+            </Text>
+          </MenuOption>
+          <MenuOption onSelect={() => handleNavigation('RecipeListPage')}>
+            <Text style={styles.menuText}>
+              <Icon name="restaurant-menu" size={20} color="#FD6639" /> View Recipes
+            </Text>
+          </MenuOption>
+          <MenuOption onSelect={() => handleNavigation('MealTracker')}>
+            <Text style={styles.menuText}>
+              <Icon name="fitness-center" size={20} color="#FD6639" /> Track Meals
+            </Text>
+          </MenuOption>
+          <MenuOption onSelect={() => alert('Edit')}>
+            <Text style={styles.menuText}>
+              <Icon name="" size={20} color="#FD6639" /> option
+            </Text>
+          </MenuOption>
+          <MenuOption onSelect={() => alert('Delete')}>
+            <Text style={styles.menuText}>
+              <Icon name="" size={20} color="#FD6639" /> option
+            </Text>
+          </MenuOption>
+        </MenuOptions>
+      </Menu>
       </View>
 
       <View style={styles.circleContainer}>
@@ -83,17 +142,18 @@ const NutritionHome = () => {
       <WaterIntake />
 
       <View style={styles.mealContainer}>
-      <View style={styles.dailyTextContainer}>
+        <View style={styles.dailyTextContainer}>
           <Text style={styles.dailyText}>Daily Meals</Text>
           <TouchableOpacity style={styles.EditIcon}>
             <AntDesign name="edit" size={25} color="white" />
           </TouchableOpacity>
         </View>
-        <MealItem label="Breakfast" kcal="306" recommendedKcal="447" color="#FF6F61" />
+        <MealItem label="Breakfast" kcal={totalCalories.toFixed(2)} recommendedKcal="447" color="#FF6F61" />
         <MealItem label="Lunch" kcal="-" recommendedKcal="547" color="#6B5B95" />
         <MealItem label="Dinner" kcal="-" recommendedKcal="547" color="#88B04B" />
         <MealItem label="Snack" kcal="-" recommendedKcal="447" color="#F7CAC9" />
       </View>
+
 
       <Modal
         visible={showCalendarModal}
@@ -239,6 +299,29 @@ const styles = StyleSheet.create({
     marginTop: 20,
     alignItems: 'center',
   },
+  menuText: {
+    color: '#FFFFFF',
+    fontSize: 18,
+    padding: 10,
+    fontFamily: 'Cursive', 
+  },
 });
+
+const optionsStyles = {
+  optionsContainer: {
+    backgroundColor: '#222435',
+    borderRadius: 8,
+    padding: 5,
+  },
+  optionsWrapper: {
+    backgroundColor: '#222435',
+  },
+  optionWrapper: {
+    padding: 5,
+  },
+  optionTouchable: {
+    underlayColor: '#FD6639', 
+  },
+};
 
 export default NutritionHome;

@@ -19,7 +19,7 @@ const MyChartComponent = () => {
     backgroundGradientFrom: "#1c2a38",
     backgroundGradientTo: "#1c2a38",
     color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-    strokeWidth: 2, // optional, default 3
+    strokeWidth: 2,
     barPercentage: 0.5,
   };
 

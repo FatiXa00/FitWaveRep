@@ -32,7 +32,7 @@ export default function ScanBarcodeScreen() {
   const fetchNutritionData = async (barcode) => {
     setLoading(true);
     try {
-      const response = await fetch(`https://api.nutritionix.com/v1_1/item?upc=${barcode}&appId=YOUR_APP_ID&appKey=YOUR_APP_KEY`);
+      const response = await fetch(`https://api.nutritionix.com/v1_1/item?upc=${barcode}&appId=9f936287&appKey=a1686d5082666cc09c8569a72ba977c6`);
       const data = await response.json();
       setNutritionData(data);
     } catch (error) {
@@ -64,7 +64,6 @@ export default function ScanBarcodeScreen() {
         <Text style={styles.headerText}>Scan Barcode</Text>
       </View>
 
-      {/* Camera Section */}
       <View style={styles.cameraContainer}>
         <Camera
           style={styles.camera}
@@ -79,7 +78,6 @@ export default function ScanBarcodeScreen() {
         </Camera>
       </View>
 
-      {/* Footer */}
       <View style={styles.footerContainer}>
         <TouchableOpacity style={styles.flashButton} onPress={toggleFlashMode}>
           <Ionicons name="flash" size={24} color="white" />

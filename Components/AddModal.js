@@ -1,21 +1,21 @@
 import React from 'react';
-import { View, Text, TouchableOpacity,StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import Modal from 'react-native-modal';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import Fontisto from '@expo/vector-icons/Fontisto';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import AntDesign from '@expo/vector-icons/AntDesign'; // For additional icons
+import AntDesign from '@expo/vector-icons/AntDesign'; 
 
 const AddModal = ({ isVisible, onClose }) => {
-  const ScanButton = () => {
-    navigation.navigate('ScanBarcodeScreen');};
-    const AddPlanButton = () => {
-      navigation.navigate('Plan');};
-  const navigation = useNavigation(); // Use the hook to access navigation
+  const navigation = useNavigation(); 
+
+  const handleNavigation = (screen) => {
+    onClose(); 
+    navigation.navigate(screen); 
+  };
 
   return (
-    
     <Modal
       isVisible={isVisible}
       onBackdropPress={onClose}
@@ -24,29 +24,47 @@ const AddModal = ({ isVisible, onClose }) => {
       <View style={styles.container}>
         <View style={styles.iconContainer}>
           <View style={styles.row}>
-            <TouchableOpacity style={styles.iconButton}>
+            <TouchableOpacity
+              style={styles.iconButton}
+              onPress={() => handleNavigation('Food')}
+            >
               <FontAwesome5 name="apple-alt" size={40} color="#FD6639" />
               <Text style={styles.iconLabel}>Nutrition</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.iconButton} onPress={AddPlanButton}>
+            <TouchableOpacity
+              style={styles.iconButton}
+              onPress={() => handleNavigation('Plan')}
+            >
               <Fontisto name="pills" size={40} color="#FD6639" />
               <Text style={styles.iconLabel}>Medicine</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.iconButton}>
+            <TouchableOpacity
+              style={styles.iconButton}
+              onPress={() => handleNavigation('Fitness')}
+            >
               <MaterialIcons name="fitness-center" size={40} color="#FD6639" />
               <Text style={styles.iconLabel}>Fitness</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.row}>
-            <TouchableOpacity style={styles.iconButton} onPress={ScanButton}>
+            <TouchableOpacity
+              style={styles.iconButton}
+              onPress={() => handleNavigation('ScanBarcodeScreen')}
+            >
               <AntDesign name="camera" size={40} color="#FD6639" />
               <Text style={styles.iconLabel}>Scan Food</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.iconButton} onPress={() => navigation.navigate('Settings')}>
+            <TouchableOpacity
+              style={styles.iconButton}
+              onPress={() => handleNavigation('AdjustWater')}
+            >
               <MaterialIcons name="local-drink" size={40} color="#FD6639" />
               <Text style={styles.iconLabel}>Water Intake</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.iconButton}onPress={() => navigation.navigate('ChatBot')}>
+            <TouchableOpacity
+              style={styles.iconButton}
+              onPress={() => handleNavigation('ChatBot')}
+            >
               <FontAwesome5 name="user-md" size={40} color="#FD6639" />
               <Text style={styles.iconLabel}>Biometric</Text>
             </TouchableOpacity>
@@ -69,11 +87,6 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 20,
     alignItems: 'center',
     height: 250,
-  },
-  title: {
-    color: '#FD6639',
-    fontSize: 18,
-    marginBottom: 15,
   },
   iconContainer: {
     width: '100%',

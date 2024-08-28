@@ -10,12 +10,10 @@ const pillData = [
 const PillList = () => {
   const handleDelete = (pillId) => {
     console.log(`Delete pill with id: ${pillId}`);
-    // Handle delete logic here
   };
 
   const handleTaken = (pillId) => {
     console.log(`Pill taken with id: ${pillId}`);
-    // Handle pill taken logic here
   };
 
   return (

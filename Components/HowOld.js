@@ -103,12 +103,11 @@ export default class HowOld extends React.Component {
         this.scrollViewRef.current.scrollTo({
           x: (this.state.initialAge - minAge) * snapSegment - (width / 2 - segmentWidth / 2),
           y: 0,
-          animated: false,  // Remove animation here
+          animated: false, 
         });
       }
     }, 1000);
 
-    // Charger l'âge depuis AsyncStorage
     this.loadAge();
   }
 
@@ -127,7 +126,6 @@ export default class HowOld extends React.Component {
   handleContinuePress = async () => {
     const { selectedAge } = this.state;
 
-    // Stocker l'âge dans AsyncStorage
     try {
       await AsyncStorage.setItem('selectedAge', selectedAge.toString());
       console.log('Selected Age:', selectedAge);

@@ -11,10 +11,9 @@ const ProgressCircleComponent = ({ percentage, size, color }) => {
         thickness={15}
         color={color}
         unfilledColor="#e0e0e0"
-        borderWidth={0} // Ensure there's no border
-        formatText={() => null} // Disable internal text rendering
+        borderWidth={0}
+        formatText={() => null} 
       >
-        {/* Custom text */}
         <View style={styles.textContainer}>
           <Text style={styles.text}>{`${percentage}%`}</Text>
         </View>
@@ -29,7 +28,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   textContainer: {
-    position: 'absolute', // Position text absolutely in the center
+    position: 'absolute', 
     justifyContent: 'center',
     alignItems: 'center',
     top: 0,
@@ -38,7 +37,7 @@ const styles = StyleSheet.create({
     right: 0,
   },
   text: {
-    fontSize: 14, // Adjust size as needed
+    fontSize: 14, 
     color: 'white',
     fontWeight: 'bold',
     textAlign: 'center',

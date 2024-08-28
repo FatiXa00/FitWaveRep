@@ -5,7 +5,7 @@ import { Ionicons } from '@expo/vector-icons';
 
 const MyPlanScreen = () => {
   const [pillStatus, setPillStatus] = useState({});
-  const [expandedPillId, setExpandedPillId] = useState(null); // Track expanded pill
+  const [expandedPillId, setExpandedPillId] = useState(null); 
   const [warningMessage, setWarningMessage] = useState('');
 
   const swipeableRefs = useRef({});
@@ -106,7 +106,6 @@ const MyPlanScreen = () => {
 
   return (
     <View style={styles.container}>
-      {/* Header with Back Button and Date Selection */}
       <View style={styles.headerContainer}>
         <TouchableOpacity style={styles.backButton}>
           <Ionicons name="arrow-back" size={24} color="white" />
@@ -118,7 +117,6 @@ const MyPlanScreen = () => {
         </TouchableOpacity>
       </View>
 
-      {/* Plan Progress */}
       <View style={styles.planProgressContainer}>
         <View>
           <Text style={styles.planTitle}>Your plan </Text>
@@ -130,7 +128,6 @@ const MyPlanScreen = () => {
         </View>
       </View>
 
-      {/* Pill List and Warning Message */}
       <FlatList
         data={pillData}
         renderItem={renderPill}
@@ -138,7 +135,6 @@ const MyPlanScreen = () => {
         ListHeaderComponent={<Text style={styles.sectionTitle}>Morning</Text>}
       />
 
-      {/* Warning Message */}
       <View style={styles.warningContainerBottom}>
         <Text style={styles.warningText}>{warningMessage}</Text>
       </View>
@@ -210,7 +206,7 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   pillWrapper: {
-    marginBottom: 20, // Space between pill containers
+    marginBottom: 20, 
   },
   pillContainer: {
     backgroundColor: '#272A3B',
@@ -277,7 +273,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#272A3B',
     borderRadius: 10,
     padding: 15,
-    marginTop: 10, // Space between the list and the warning message
+    marginTop: 10,
     bottom:50,
   },
   leftAction: {

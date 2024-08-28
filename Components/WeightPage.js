@@ -17,8 +17,8 @@ const { width } = Dimensions.get('screen');
 
 const minWeightKg = 20;
 const maxWeightKg = 200;
-const minWeightLbs = 44; // 20 kg in lbs
-const maxWeightLbs = 440; // 200 kg in lbs
+const minWeightLbs = 44; 
+const maxWeightLbs = 440; 
 
 const segmentWidth = 2;
 const segmentSpacing = 20;
@@ -92,7 +92,6 @@ export default function SelectWeight() {
   }, [scrollX, unit]);
 
   useEffect(() => {
-    // Store the selected weight when it changes
     const storeWeightValue = async () => {
       try {
         await AsyncStorage.setItem('weightValue', selectedWeight.toString());
@@ -231,7 +230,7 @@ const styles = StyleSheet.create({
     numberRow: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginBottom: 10, // Adjust to control space between numbers and ruler
+    marginBottom: 10, 
   },
   numberContainer: {
     alignItems: 'center',

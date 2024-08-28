@@ -15,7 +15,6 @@ export default function Medicine() {
   ];
 
   const handleReviewPress = (item) => {
-    // Navigate to Detail screen with the selected review
     navigation.navigate('Detail', { review: item });
   };
 
@@ -30,7 +29,6 @@ export default function Medicine() {
 
   return (
     <View style={styles.container}>
-      {/* Top Bar */}
       <View style={styles.topBar}>
         <TextInput
           style={styles.searchBar}
@@ -39,14 +37,12 @@ export default function Medicine() {
         />
       </View>
 
-      {/* Greeting Section */}
       <View style={styles.greetingContainer}>
         <Text style={styles.greetingText}>
           Hello, <Text style={styles.highlightedText}>Fati</Text>
         </Text>
       </View>
 
-      {/* Plan Overview */}
       <View style={styles.planContainer}>
         <Text style={styles.planTitle}>Your plan</Text>
         <Text style={styles.planTitle}>for today</Text>
@@ -56,13 +52,11 @@ export default function Medicine() {
         </TouchableOpacity>
       </View>
 
-      {/* Image in Foreground */}
       <Image
         source={require('../assets/images/flamenco-uploading.png')}
         style={styles.greetingImage}
       />
 
-      {/* Daily Review */}
       <View style={styles.dailyReviewContainer}>
         <Text style={styles.dailyReviewTitle}>Daily Review</Text>
         <TouchableOpacity style={styles.addPlanButton}onPress={() => {navigation.navigate('Plan');}}>
@@ -70,7 +64,6 @@ export default function Medicine() {
         </TouchableOpacity>
       </View>
 
-      {/* Review List */}
       <FlatList contentContainerStyle={{ paddingBottom: 200 }}
         data={reviewData}
         renderItem={renderReviewItem}
@@ -103,7 +96,7 @@ const styles = StyleSheet.create({
   },
   greetingContainer: {
     marginTop: 20,
-    zIndex: 3, // Ensure it stays above the yellow box
+    zIndex: 3, 
   },
   greetingText: {
     color: 'white',
@@ -120,7 +113,7 @@ const styles = StyleSheet.create({
     padding: 40,
     borderRadius: 20,
     marginTop: 20,
-    zIndex: 1, // Ensure the yellow box stays in the background
+    zIndex: 1, 
   },
   planTitle: {
     fontSize: 25,
@@ -145,11 +138,11 @@ const styles = StyleSheet.create({
     resizeMode: 'contain',
     position: 'absolute',
     right: 0,
-    top: 160, // Adjust to position the image in front of the yellow box
-    zIndex: 2, // Place the image in the foreground
+    top: 160, 
+    zIndex: 2, 
   },
   dailyReviewContainer: {
-    marginTop: 20, // Adjust this to provide space for the image overlap
+    marginTop: 20, 
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -171,7 +164,7 @@ const styles = StyleSheet.create({
   },
   reviewList: {
     marginTop: 10,
-    flex: 1, // Allow list to take available space
+    flex: 1, 
   },
   reviewItem: {
     backgroundColor: '#1F2430',

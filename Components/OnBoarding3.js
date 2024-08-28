@@ -69,17 +69,17 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   button: {
-    marginTop: 30, // Adjust marginTop to fit your design
-    backgroundColor: 'rgba(255, 255, 255, 0.15)', // Transparent background
+    marginTop: 30, 
+    backgroundColor: 'rgba(255, 255, 255, 0.15)', 
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.3)', // Semi-transparent border
+    borderColor: 'rgba(255, 255, 255, 0.3)', 
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 3,
-    elevation: 5, // Elevation for Android shadow
-    paddingVertical: 10, // Padding to make the button larger
-    paddingHorizontal: 70, // Padding to make the button larger
-    borderRadius: 100, // Keep the borderRadius proportional to the button size
+    elevation: 5, 
+    paddingVertical: 10,
+    paddingHorizontal: 70, 
+    borderRadius: 100, 
   },
   buttonText: {
     color: 'white',
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   icon: {
-    marginBottom: 10, // Adjust marginBottom to move the icon up
+    marginBottom: 10, 
     width: 40,
     height: 40,
   },

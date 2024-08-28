@@ -20,8 +20,6 @@ import SelectHeight from './Components/HeightSelection';
 import SelectWeight from './Components/WeightPage';
 import CreateDoctor2 from './Components/CreateDoctor2';
 import BottomTabNavigator from './Components/BottomTabNavigator';
-import Profile from './Components/Profile';
-import Settings from './Components/Settings';
 import Goal from './Components/Goal';
 import AddModal from './Components/AddModal';
 import PhysicalActivityLevel from './Components/PhysicalActivityLevel';
@@ -30,20 +28,30 @@ import ScanBarcodeScreen from './Components/ScanBarcodeScreen';
 import Plan from './Components/Plan';
 import Ruler from './Components/Ruler';
 import GoalCalories from './Components/GoalCalories';
-import Menu from './Components/Menu';
 import Food from './Components/Food';
 import FoodSearch from './Components/FoodSearch';
 import MealSummary from './Components/MealSummary';
 import ShowMore from './Components/ShowMore';
 import PillList from './Components/PillList';
-
+import AdjustWater from './Components/AdjustWater';
+import Settings from './Components/Settings';
+import { MenuProvider } from 'react-native-popup-menu';
+import FoodSuggestionPage from './Components/FoodSuggestionPage';
+import RecipeListPage from './Components/RecipeListPage';
+import RecipeDetailPage from './Components/RecipeDetailPage';
+import MealTracker from './Components/MealTracker';
+import NutritionalSummary from './Components/NutritionalSummary';
 
 
 const Stack = createStackNavigator();
 
 export default function App() {
+
   return (
-    <NavigationContainer>
+    <MenuProvider>
+
+    
+      <NavigationContainer>
       <Stack.Navigator initialRouteName="Launch">
         <Stack.Screen
           name="Launch"
@@ -146,11 +154,7 @@ export default function App() {
           component={AddModal}
           options={{ headerShown: false }} 
         />
-        <Stack.Screen
-          name="Profile"
-          component={Profile}
-          options={{ headerShown: false }} 
-        />
+   
         <Stack.Screen
           name="Settings"
           component={Settings}
@@ -173,13 +177,11 @@ export default function App() {
           options={{ headerShown: false }} 
         />
 
-            <Stack.Screen
-          name="Menu"
-          component={Menu}
+        <Stack.Screen
+          name="AdjustWater"
+          component={AdjustWater}
           options={{ headerShown: false }} 
-        />
-              
-                 
+        />    
          <Stack.Screen
           name="Medicine"
           component={Medicine}
@@ -220,10 +222,37 @@ export default function App() {
           component={PillList}
           options={{ headerShown: false }} 
         />
+<Stack.Screen
+          name="FoodSuggestionPage"
+          component={FoodSuggestionPage}
+          options={{ headerShown: false }} 
+        /> 
+
+<Stack.Screen
+          name="RecipeListPage"
+          component={RecipeListPage}
+          options={{ headerShown: false }} 
+        />
+<Stack.Screen
+          name="RecipeDetailPage"
+          component={RecipeDetailPage}
+          options={{ headerShown: false }} 
+        />
+<Stack.Screen
+          name="MealTracker"
+          component={MealTracker}
+          options={{ headerShown: false }} 
+        />
+<Stack.Screen
+          name="NutritionalSummary"
+          component={NutritionalSummary}
+          options={{ headerShown: false }} 
+        />
     
       </Stack.Navigator>
       <StatusBar style="auto" />
-    </NavigationContainer>
+      </NavigationContainer>
+      </MenuProvider>  
   );
 }
 

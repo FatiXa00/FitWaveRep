@@ -1,140 +1,215 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Modal, Button, ImageBackground } from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { useState } from 'react';
+import { View, Text, Image, TouchableOpacity, Modal, StyleSheet,Alert } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome5';
+import * as ImagePicker from 'expo-image-picker';
+import {launchImageLibrary} from '@react-native-picker/picker';
 import { useNavigation } from '@react-navigation/native';
 
-const Settings = () => {
-  const [waterIntakeGoal, setWaterIntakeGoal] = useState('');
-  const [modalVisible, setModalVisible] = useState(false);
+
+export default function Settings() {
+  const [isLogoutVisible, setIsLogoutVisible] = useState(false);
+  const [profileImage, setProfileImage] = useState('https://i.sstatic.net/dr5qp.jpg'); 
   const navigation = useNavigation();
 
-  useEffect(() => {
-    const loadSettings = async () => {
-      try {
-        const savedGoal = await AsyncStorage.getItem('waterIntakeGoal');
-        if (savedGoal !== null) {
-          setWaterIntakeGoal(savedGoal);
-        }
-      } catch (error) {
-        console.error('Failed to load settings:', error);
-      }
-    };
-    loadSettings();
-  }, []);
+  const handleLogout = () => {
+    Alert.alert('Logged out');
+    setIsLogoutVisible(false);
+  };
 
-  const handleSelectGoal = async (goal) => {
-    try {
-      await AsyncStorage.setItem('waterIntakeGoal', goal);
-      setWaterIntakeGoal(goal);
-      setModalVisible(false);
-      // Pass the updated goal to WaterIntake via navigation or state
-      navigation.navigate('WaterIntake', { goal });
-    } catch (error) {
-      console.error('Failed to save settings:', error);
+  const showLogoutConfirm = () => setIsLogoutVisible(true);
+  const hideLogoutConfirm = () => setIsLogoutVisible(false);
+
+  console.log(launchImageLibrary); 
+
+  const pickImage = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      Alert.alert('Sorry, we need camera roll permissions to make this work!');
+      return;
+    }
+
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    if (!result.canceled) {
+      setProfileImage(result.assets[0].uri);
     }
   };
 
-  const showModal = () => {
-    setModalVisible(true);
-  };
-
   return (
-    <ImageBackground
-      source={require('../assets/images/BackgroundWater.jpeg')}
-      style={styles.background}
-    >
-      <View style={styles.container}>
-        <Text style={styles.header}>Water Goal</Text>
-        <TouchableOpacity onPress={showModal} style={styles.button}>
-          <Text style={styles.buttonText}>{waterIntakeGoal ? `${waterIntakeGoal} liters` : 'Select Goal'}</Text>
+    <View style={styles.container}>
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Icon name="arrow-left" size={20} color="#FD6639" />
         </TouchableOpacity>
-
-        <Modal
-          transparent={true}
-          animationType="slide"
-          visible={modalVisible}
-          onRequestClose={() => setModalVisible(false)}
-        >
-          <View style={styles.modalBackground}>
-            <View style={styles.modalContainer}>
-              <Text style={styles.modalTitle}>Select Water Intake Goal</Text>
-              {Array.from({ length: 10 }, (_, i) => i + 1).map((num) => (
-                <Button
-                  key={num}
-                  title={`${num} liters`}
-                  onPress={() => handleSelectGoal(`${num}`)}
-                />
-              ))}
-              <TouchableOpacity onPress={() => setModalVisible(false)} style={styles.modalCloseButton}>
-                <Text style={styles.modalCloseButtonText}>Close</Text>
+        <Text style={styles.headerTitle}>My Profile</Text>
+      </View>
+      <View style={styles.profileSection}>
+        <TouchableOpacity onPress={pickImage}>
+          <Image
+            source={{ uri: profileImage }}
+            style={styles.profileImage}
+          />
+        </TouchableOpacity>
+        <Text style={styles.profileName}>Fatima Zahraa</Text>
+      </View>
+      <View style={styles.menuSection}>
+        <MenuItem icon="user" label="Profile" />
+        <MenuItem icon="heart" label="Favorite" />
+        <MenuItem icon="credit-card" label="Payment Method" />
+        <MenuItem icon="lock" label="Privacy Policy" />
+        <MenuItem icon="cog" label="Settings" />
+        <MenuItem icon="question-circle" label="Help" />
+        <MenuItem icon="sign-out-alt" label="Logout" onPress={showLogoutConfirm} />
+      </View>
+      <Modal
+        visible={isLogoutVisible}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={hideLogoutConfirm}
+      >
+        <View style={styles.modalBackground}>
+          <View style={styles.logoutConfirm}>
+            <Text style={styles.logoutText}>Are you sure you want to log out?</Text>
+            <View style={styles.logoutButtons}>
+              <TouchableOpacity style={styles.cancelButton} onPress={hideLogoutConfirm}>
+                <Text style={styles.cancelText}>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+                <Text style={styles.logoutButtonText}>Yes, Logout</Text>
               </TouchableOpacity>
             </View>
           </View>
-        </Modal>
-      </View>
-    </ImageBackground>
+        </View>
+      </Modal>
+    </View>
   );
-};
+}
+
+const MenuItem = ({ icon, label, onPress }) => (
+  <TouchableOpacity style={styles.menuItem} onPress={onPress}>
+    <View style={styles.menuItemLeft}>
+      <Icon name={icon} size={20} color="#FD6639" />
+      <Text style={styles.menuItemText}>{label}</Text>
+    </View>
+    <Icon name="chevron-right" size={20} color="#FD6639" />
+  </TouchableOpacity>
+);
 
 const styles = StyleSheet.create({
-  background: {
-    flex: 1,
-    resizeMode: 'cover',
-  },
   container: {
-    flexGrow: 1,
-    padding: 16,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    flex: 1,
+    backgroundColor: '#141824',
+    paddingHorizontal: 20,
+    paddingTop: 40,
   },
   header: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
-  button: {
-    backgroundColor: '#fff',
-    padding: 15,
-    borderRadius: 5,
-    width: '80%',
+    flexDirection: 'row',
     alignItems: 'center',
     marginBottom: 20,
-    borderColor: '#ddd',
-    borderWidth: 1,
+    top: 25,
   },
-  buttonText: {
-    fontSize: 16,
-    color: '#000',
+  headerTitle: {
+    flex: 1,
+    textAlign: 'center',
+    fontSize: 20,
+    color: '#FD6639',
+    fontWeight: 'bold',
+  },
+  profileSection: {
+    alignItems: 'center',
+    marginBottom: 60,
+    top:20,
+  },
+  profileImage: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    marginBottom: 10,
+    borderWidth: 2,
+    borderColor: '#FD6639',
+  },
+  profileName: {
+    fontSize: 20,
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+  menuSection: {
+    marginBottom: 20,
+  },
+  menuItem: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding:15,
+    paddingVertical: 15,
+    borderBottomWidth: 1,
+    borderBottomColor: '#2E2F34',
+  },
+  menuItemLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  menuItemText: {
+    marginLeft: 15,
+    fontSize: 18,
+    color: '#fff',
   },
   modalBackground: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: 'flex-end',
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
-  modalContainer: {
-    width: '80%',
-    backgroundColor: '#fff',
+  logoutConfirm: {
     padding: 20,
-    borderRadius: 10,
-    alignItems: 'center',
+    backgroundColor: '#222435',
+    borderRadius: 20,
+    height:220,
   },
-  modalTitle: {
+  logoutText: {
+    color: '#fff',
     fontSize: 18,
-    marginBottom: 20,
+    textAlign: 'center',
+    top:20,
+    margin:15,
+
   },
-  modalCloseButton: {
-    marginTop: 20,
+  logoutButtons: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    margin:15,
+    top:25,
+    
+  },
+  cancelButton: {
+    flex: 1,
+    alignItems: 'center',
     padding: 10,
-    backgroundColor: '#FD6639',
-    borderRadius: 5,
+    borderWidth: 1,
+    borderColor: '#FD6639',
+    marginRight: 10,
+    borderRadius: 20,
+
   },
-  modalCloseButtonText: {
+  cancelText: {
+    color: '#FD6639',
+    fontSize: 16,
+  },
+  logoutButton: {
+    flex: 1,
+    alignItems: 'center',
+    padding: 10,
+    borderRadius: 20,
+    backgroundColor: '#FD6639',
+  },
+  logoutButtonText: {
     color: '#fff',
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight:'bold',
+
   },
 });
-
-export default Settings;

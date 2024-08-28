@@ -33,7 +33,7 @@ const Calendar = ({ onDateChange, selectedDate = new Date() }) => {
         setSelectedDay(selectedDate.getUTCDate());
       } else {
         console.error('Invalid selectedDate in useEffect:', selectedDate);
-        selectedDate = new Date(); // Fallback if still invalid
+        selectedDate = new Date(); 
         setSelectedDay(selectedDate.getUTCDate());
       }
     }, [selectedDate]);
@@ -41,7 +41,7 @@ const Calendar = ({ onDateChange, selectedDate = new Date() }) => {
     const handleDayPress = (day) => {
       const newDate = new Date(year, month, day);
       setSelectedDay(day);
-      onDateChange(newDate); // Notify parent with the complete Date object
+      onDateChange(newDate);
     };
     
   

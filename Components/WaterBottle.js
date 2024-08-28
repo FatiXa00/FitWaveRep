@@ -32,7 +32,7 @@ const WaterBottle = () => {
 
   const renderBottleSections = () => {
     const sections = [];
-    for (let i = totalSections - 1; i >= 0; i--) { // Reverse order
+    for (let i = totalSections - 1; i >= 0; i--) { 
       sections.push(
         <View
           key={i}
@@ -50,9 +50,7 @@ const WaterBottle = () => {
     <View style={styles.container}>
       <Text style={styles.title}>Daily Water Intake</Text>
       <View style={styles.bottleContainer}>
-        {/* Bottle head */}
         <View style={styles.bottleHead} />
-        {/* Bottle sections */}
         {renderBottleSections()}
         <Text style={styles.waterLevelText}>{waterLevel.toFixed(1)}L / {waterIntakeGoal}L</Text>
       </View>

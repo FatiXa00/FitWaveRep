@@ -2,23 +2,25 @@ import React, { useState, useRef } from 'react';
 import { View, Text, ScrollView, StyleSheet, StatusBar, TouchableOpacity, Modal, Dimensions, Animated, FlatList } from 'react-native';
 import { FontAwesome, FontAwesome5 } from '@expo/vector-icons';
 import Calendar from './Calendar';
+import { useNavigation } from '@react-navigation/native';
 import { Calendar as FullScreenCalendar } from 'react-native-calendars';
 import MyBarChart from './MyBarChart';
 import ProgressCircleComponent from './ProgressCircleComponent';
 import EnergyBarChart from './EnergyBarChart';
 import NutrientsBarChart from './NutrientsBarChart';
-import GoalCalories from './GoalCalories'; // Import the GoalCalories component
-import ActivityProgress from './ActivityProgress'; // Import the new component
-import WaterBottle from './WaterBottle'; // Assuming you have this component
+import GoalCalories from './GoalCalories'; 
+import ActivityProgress from './ActivityProgress'; 
+import WaterBottle from './WaterBottle'; 
 
 const { width } = Dimensions.get('window');
 
 const Home = () => {
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [goalCaloriesVisible, setGoalCaloriesVisible] = useState(false); // State for GoalCalories modal
+  const [goalCaloriesVisible, setGoalCaloriesVisible] = useState(false); 
   const [modalVisible, setModalVisible] = useState(false);
   const scrollX = useRef(new Animated.Value(0)).current;
   const [currentPage, setCurrentPage] = useState(0);
+  const navigation = useNavigation();
 
   const handleDateChange = (day, month, year) => {
     const newDate = new Date(Date.UTC(year, month, day));
@@ -98,6 +100,10 @@ const Home = () => {
     viewAreaCoveragePercentThreshold: 50,
   };
 
+  const handleNavigation = (screen) => {
+    navigation.navigate(screen);
+  };
+
   return (
     <ScrollView style={styles.container}contentContainerStyle={{ paddingBottom: 200 }}>
       <StatusBar barStyle="light-content" />
@@ -107,17 +113,18 @@ const Home = () => {
           <Text style={styles.dateText}>{`${date} ${monthName}`}</Text>
         </View>
         <View style={styles.iconRow}>
-          <TouchableOpacity>
-            <FontAwesome name="bell" size={25} color="white" />
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <FontAwesome5 name="user-circle" size={25} color="white" style={styles.icon} />
-          </TouchableOpacity>
+        
           <TouchableOpacity onPress={() => setModalVisible(true)}>
-            <FontAwesome5 name="calendar-alt" size={25} color="white" />
+            <FontAwesome5 name="calendar-alt" size={22} color="#FD6639" style={styles.icon} />
           </TouchableOpacity>
-          <TouchableOpacity onPress={() => setGoalCaloriesVisible(true)}style={styles.icon} >
-            <FontAwesome5 name="fire" size={25} color="white" />
+          <TouchableOpacity onPress={() => setGoalCaloriesVisible(true)}  >
+            <FontAwesome5 name="fire" size={22} color="#FD6639" style={styles.icon} />
+          </TouchableOpacity>
+          <TouchableOpacity>
+            <FontAwesome name="bell" size={22} color="#FD6639" style={styles.icon}/>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => handleNavigation('Settings')}>
+            <FontAwesome5 name="user-circle" size={22} color="#FD6639" style={styles.icon} />
           </TouchableOpacity>
         </View>
       </View>
@@ -250,7 +257,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   icon: {
-    marginHorizontal: 8,
+    marginHorizontal: 4,
   },
   greetingContainer: {
     marginVertical: 16,
@@ -303,13 +310,13 @@ const styles = StyleSheet.create({
 
 
 waterIntakeContainer: {
-  backgroundColor: '#222435', // Match activity container background
+  backgroundColor: '#222435', 
   padding: 16,
   borderRadius: 12,
   alignItems: 'center',
   marginVertical: 16,
   marginHorizontal: 8,
-  width: '40%', // Adjust width as needed
+  width: '40%',
 },
 waterIntakeLabel: {
   color: 'white',

@@ -5,7 +5,7 @@ import { Fontisto, MaterialCommunityIcons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const PieChart = ({ burn, eaten }) => {
-  const [goalCalories, setGoalCalories] = useState(2000); // default value
+  const [goalCalories, setGoalCalories] = useState(2000); 
 
   useEffect(() => {
     const fetchGoalCalories = async () => {
@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     marginTop: 30,
-    paddingHorizontal: 15, // Increased padding for more space between texts and circle
+    paddingHorizontal: 15, 
   },
   burnText: {
     color: '#FFBB00',

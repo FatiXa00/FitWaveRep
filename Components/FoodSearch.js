@@ -16,7 +16,7 @@ const FoodSearch = () => {
       const response = await axios.get('https://api.nal.usda.gov/fdc/v1/foods/search', {
         params: {
           query: query,
-          api_key: 'veVaIqWcTQBfUokzpUrZZhBE70tpkCk1uMNB1OsV' // Your API Key
+          api_key: 'veVaIqWcTQBfUokzpUrZZhBE70tpkCk1uMNB1OsV' 
         },
       });
       setResults(response.data.foods);
@@ -45,7 +45,7 @@ const FoodSearch = () => {
         <TouchableOpacity style={styles.iconButton} onPress={searchFood}>
           <Ionicons name="search" size={24} color="#FD6639" />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.scanButton}onPress={() => navigation.navigate('ScanBarcodeScreen')}>
+        <TouchableOpacity style={styles.scanButton} onPress={() => navigation.navigate('ScanBarcodeScreen')}>
           <Ionicons name="scan-outline" size={24} color="#FD6639" />
         </TouchableOpacity>
       </View>
@@ -69,10 +69,10 @@ const FoodSearch = () => {
         renderItem={({ item }) => (
           <TouchableOpacity onPress={() => addToMeal(item)}>
             <View style={styles.resultContainer}>
-            <View style={styles.itemContainer}>
-              <Text style={styles.itemName}>{item.description}</Text>
-              <Text style={styles.itemAmount}>{item.foodNutrients[0]?.value} {item.foodNutrients[0]?.unitName}</Text>
-            </View>
+              <View style={styles.itemContainer}>
+                <Text style={styles.itemName}>{item.description}</Text>
+                <Text style={styles.itemAmount}>{item.foodNutrients[0]?.value} {item.foodNutrients[0]?.unitName}</Text>
+              </View>
             </View>
           </TouchableOpacity>
         )}

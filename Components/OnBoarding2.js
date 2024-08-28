@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Image, Text, StyleSheet, ImageBackground, TouchableOpacity,Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-const { width } = Dimensions.get('window'); // Get the screen width for responsive design
+const { width } = Dimensions.get('window'); 
 
 export default function Onboarding2() {
   const navigation = useNavigation();
@@ -33,22 +33,22 @@ export default function Onboarding2() {
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-    resizeMode: 'cover', // Cover the entire screen with the image
+    resizeMode: 'cover', 
   },
   overlay: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.3)', // Semi-transparent overlay
+    backgroundColor: 'rgba(0, 0, 0, 0.3)', 
   },
   content: {
-    width: '100%', // Adjust width to 80% of the screen width
-    maxWidth: 500, // Max width constraint
-    height: 150, // Fixed height to prevent resizing
-    marginTop: 20, // Adjust marginTop to fit your design
+    width: '100%', 
+    maxWidth: 500,
+    height: 150, 
+    marginTop: 20, 
     alignItems: 'center',
     justifyContent: 'center',
-    padding: 30, // Adjust padding to fit your design
+    padding: 30, 
     backgroundColor: '#7E8385',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -63,17 +63,17 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   button: {
-    marginTop: 30, // Adjust marginTop to fit your design
-    backgroundColor: 'rgba(255, 255, 255, 0.15)', // Transparent background
+    marginTop: 30, 
+    backgroundColor: 'rgba(255, 255, 255, 0.15)', 
     borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.3)', // Semi-transparent border
+    borderColor: 'rgba(255, 255, 255, 0.3)', 
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 3,
-    elevation: 5, // Elevation for Android shadow
-    paddingVertical: 10, // Padding to make the button larger
-    paddingHorizontal: 70, // Padding to make the button larger
-    borderRadius: 100, // Keep the borderRadius proportional to the button size
+    elevation: 5,
+    paddingVertical: 10, 
+    paddingHorizontal: 70, 
+    borderRadius: 100, 
   },
   buttonText: {
     color: 'white',
@@ -81,7 +81,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   icon: {
-    marginBottom: 10, // Adjust marginBottom to move the icon up
+    marginBottom: 10, 
     width: 40,
     height: 40,
   },

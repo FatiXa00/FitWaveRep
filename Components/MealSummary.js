@@ -1,20 +1,19 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, FlatList, StyleSheet, TextInput, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Ionicons } from '@expo/vector-icons';
-import { AntDesign } from '@expo/vector-icons';
+import { Ionicons, AntDesign } from '@expo/vector-icons';
+import { Swipeable } from 'react-native-gesture-handler';
 
 const MealSummary = () => {
   const [mealItems, setMealItems] = useState([]);
   const [mealName, setMealName] = useState('');
+  const [expandedItemId, setExpandedItemId] = useState(null);
   const navigation = useNavigation();
 
-  // This function will be triggered when navigating back from the search screen
   const handleAddMealItem = (item) => {
     setMealItems([...mealItems, item]);
   };
 
-  // Function to handle validation and navigation
   const handleNavigateToSearch = () => {
     if (mealName.trim() === '') {
       Alert.alert('Required', 'Please enter a meal name.');
@@ -23,17 +22,53 @@ const MealSummary = () => {
     }
   };
 
-  // Function to handle "Next" button press with meal name validation
   const handleNext = () => {
     if (mealName.trim() === '') {
       Alert.alert('Required', 'Please enter a meal name.');
     } else if (mealItems.length === 0) {
       Alert.alert('Empty Meal', 'Please add at least one meal item.');
     } else {
-      // Add your navigation or next steps here
-      Alert.alert('Proceed', 'You can now proceed to the next step.');
+      navigation.navigate('NutritionalSummary', { mealItems });
     }
   };
+
+  const handleDelete = (itemToDelete) => {
+    setMealItems(mealItems.filter(item => item.fdcId !== itemToDelete.fdcId));
+  };
+
+  const toggleExpand = (itemId) => {
+    setExpandedItemId(expandedItemId === itemId ? null : itemId);
+  };
+
+  const renderItem = ({ item }) => (
+    <Swipeable
+      onSwipeableRightOpen={() => handleDelete(item)}
+      renderRightActions={() => (
+        <View style={styles.deleteButton}>
+          <Text style={styles.deleteButtonText}>Deleting...</Text>
+        </View>
+      )}
+    >
+      <View style={styles.itemContainer}>
+        <TouchableOpacity onPress={() => toggleExpand(item.fdcId)}>
+          <View style={styles.itemHeader}>
+            <Text style={styles.itemName}>{item.description}</Text>
+            <AntDesign name="down" size={20} color="gray" style={styles.arrowIcon} />
+
+          </View>
+        </TouchableOpacity>
+        {expandedItemId === item.fdcId && (
+          <View style={styles.nutrientList}>
+            {item.foodNutrients.map(nutrient => (
+              <Text key={nutrient.nutrientName} style={styles.nutrientText}>
+                {nutrient.nutrientName}: {nutrient.value} {nutrient.unitName}
+              </Text>
+            ))}
+          </View>
+        )}
+      </View>
+    </Swipeable>
+  );
 
   return (
     <View style={styles.container}>
@@ -47,13 +82,12 @@ const MealSummary = () => {
         <Text style={styles.title}>Create Meal</Text>
         <TouchableOpacity
           style={styles.addButton}
-          onPress={() => { /* Handle add action */ }}
+          onPress={() => { }}
         >
           <AntDesign name="" size={24} color="white" />
         </TouchableOpacity>
       </View>
 
-      {/* TextInput for the meal name */}
       <TextInput
         style={styles.mealNameInput}
         placeholder="Meal Name (Required)"
@@ -63,7 +97,6 @@ const MealSummary = () => {
       />
 
       <View style={styles.mealContainer}>
-        {/* Button to add a new meal item */}
         <TouchableOpacity
           style={styles.addButton}
           onPress={handleNavigateToSearch}
@@ -72,20 +105,13 @@ const MealSummary = () => {
           <Text style={styles.addButtonText}>Add Meal Item</Text>
         </TouchableOpacity>
 
-        {/* Display the list of added meal items */}
         <FlatList
           data={mealItems}
-          renderItem={({ item }) => (
-            <View style={styles.itemContainer}>
-              <Text style={styles.itemName}>{item.description}</Text>
-              <Text style={styles.itemAmount}>{item.foodNutrients[0]?.value} {item.foodNutrients[0]?.unitName}</Text>
-            </View>
-          )}
+          renderItem={renderItem}
           keyExtractor={(item) => item.fdcId.toString()}
         />
       </View>
 
-      {/* Next button */}
       <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
         <Text style={styles.nextButtonText}>Next</Text>
       </TouchableOpacity>
@@ -154,13 +180,35 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#333',
   },
+  itemHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
   itemName: {
     color: '#fff',
     fontSize: 16,
   },
-  itemAmount: {
+  nutrientList: {
+    marginTop: 10,
+  },
+  nutrientText: {
     color: '#777',
     fontSize: 14,
+  },
+  deleteButton: {
+    backgroundColor: '#FF4D4D',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop:5,
+    width: 80,
+    height: 35,
+    borderRadius: 10,
+  },
+  deleteButtonText: {
+    color: '#fff',
+    fontSize: 14,
+    fontWeight: 'bold',
   },
   nextButton: {
     backgroundColor: '#FD6639',

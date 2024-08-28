@@ -29,6 +29,7 @@ const styles = StyleSheet.create({
     height:'auto',
 
   },
+  
   barContainer: {
     flexDirection: 'row',
     alignItems: 'center',

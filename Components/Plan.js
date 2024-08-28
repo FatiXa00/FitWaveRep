@@ -20,11 +20,10 @@ import { FontAwesome } from '@expo/vector-icons';
 export default function AddPlanScreen() {
   const [pillsName, setPillsName] = useState('');
   const [amount, setAmount] = useState(1);
-  const [duration, setDuration] = useState(1); // Default to 1 for proper unit handling
-  const [durationUnit, setDurationUnit] = useState('Day'); // Default to singular 'Day'
+  const [duration, setDuration] = useState(1); 
+  const [durationUnit, setDurationUnit] = useState('Day');
   const [selectedFoodPillsButton, setSelectedFoodPillsButton] = useState(null);
   
-  // Visibility states for dropdowns
   const [isAmountModalVisible, setIsAmountModalVisible] = useState(false);
   const [isDurationModalVisible, setIsDurationModalVisible] = useState(false);
 
@@ -104,7 +103,7 @@ export default function AddPlanScreen() {
         } else {
           setNotifications([...notifications, { id: Date.now().toString(), time }]);
         }
-        setEditingNotificationId(null); // Clear editing state
+        setEditingNotificationId(null); 
       };
     
     
@@ -114,7 +113,7 @@ export default function AddPlanScreen() {
       const handleConfirm = () => {
         const time = `${hours[hour]}:${minutes[minute] < 10 ? `0${minutes[minute]}` : minutes[minute]} ${periods[period]}`;
         addOrUpdateNotification(time);
-        setIsTimePickerVisible(false); // Hide TimePicker after adding or updating notification
+        setIsTimePickerVisible(false); 
       };
       const handleNotificationPress = (id, time) => {
         const [notificationHour, notificationMinute, notificationPeriod] = time.split(/[: ]/);
@@ -145,15 +144,12 @@ export default function AddPlanScreen() {
       );
   return (
     <View style={styles.container}>
-      {/* Back Button */}
       <TouchableOpacity style={styles.backButton}>
         <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
       </TouchableOpacity>
 
-      {/* Page Title */}
       <Text style={styles.title}>Add Plan</Text>
 
-      {/* Pills Name Input */}
       <Text style={styles.label}>Pills Name</Text>
       <View style={styles.inputContainer}>
         <MaterialIcons name="medication" size={24} color="#AAAAAA" />
@@ -169,10 +165,8 @@ export default function AddPlanScreen() {
         </TouchableOpacity>
       </View>
 
-      {/* Amount & Duration */}
       <Text style={styles.label}>Amount & How Long?</Text>
       <View style={styles.row}>
-        {/* Amount Dropdown */}
         <TouchableOpacity
           style={styles.dropdownContainer}
           onPress={() => setIsAmountModalVisible(true)}
@@ -183,7 +177,6 @@ export default function AddPlanScreen() {
           </Text>
         </TouchableOpacity>
 
-        {/* Duration Dropdown */}
         <TouchableOpacity
           style={styles.dropdownContainer}
           onPress={() => setIsDurationModalVisible(true)}
@@ -195,7 +188,6 @@ export default function AddPlanScreen() {
         </TouchableOpacity>
       </View>
 
-      {/* Amount Modal */}
       <Modal
         transparent={true}
         visible={isAmountModalVisible}
@@ -211,7 +203,6 @@ export default function AddPlanScreen() {
                 keyExtractor={item => item.toString()}
                 style={styles.scrollableList}
               />
-              {/* Done Button */}
               <TouchableOpacity
                 style={styles.doneButton}
                 onPress={() => setIsAmountModalVisible(false)}
@@ -223,7 +214,6 @@ export default function AddPlanScreen() {
         </TouchableWithoutFeedback>
       </Modal>
 
-      {/* Duration Modal */}
       <Modal
         transparent={true}
         visible={isDurationModalVisible}
@@ -234,7 +224,6 @@ export default function AddPlanScreen() {
           <View style={styles.modalOverlay}>
             <View style={styles.modalContent}>
               <View style={styles.modalRow}>
-                {/* Numbers 1 to 30 */}
                 <View style={styles.numberSection}>
                   <Text style={styles.sectionTitle}>Number Of Days</Text>
                   <FlatList
@@ -244,13 +233,11 @@ export default function AddPlanScreen() {
                     style={styles.scrollableList}
                   />
                 </View>
-                {/* Unit Selection */}
                 <View style={styles.unitSection}>
                   <Text style={styles.sectionTitle}>Select Unit</Text>
                   {['Day', 'Month'].map(renderUnitItem)}
                 </View>
               </View>
-              {/* Done Button */}
               <TouchableOpacity
                 onPress={() => setIsDurationModalVisible(false)}
                 style={styles.doneButton}
@@ -262,10 +249,8 @@ export default function AddPlanScreen() {
         </TouchableWithoutFeedback>
       </Modal>
 
-      {/* Food & Pills */}
       <Text style={styles.label}>Food & Pills</Text>
       <View style={styles.row}>
-        {/* Left Button */}
         <TouchableOpacity
           style={[styles.iconButton, selectedFoodPillsButton === 'pre-meal' && styles.activeButton]}
           onPress={() => setSelectedFoodPillsButton('pre-meal')}
@@ -278,7 +263,6 @@ export default function AddPlanScreen() {
           <Text style={styles.iconLabel}>Pre-meal</Text>
         </TouchableOpacity>
 
-        {/* Middle Button */}
         <TouchableOpacity
           style={[styles.iconButton, selectedFoodPillsButton === 'in-meal' && styles.activeButton]}
           onPress={() => setSelectedFoodPillsButton('in-meal')}
@@ -291,7 +275,6 @@ export default function AddPlanScreen() {
           <Text style={styles.iconLabel}>In-meal</Text>
         </TouchableOpacity>
 
-        {/* Right Button */}
         <TouchableOpacity
           style={[styles.iconButton, selectedFoodPillsButton === 'post-meal' && styles.activeButton]}
           onPress={() => setSelectedFoodPillsButton('post-meal')}
@@ -305,7 +288,6 @@ export default function AddPlanScreen() {
         </TouchableOpacity>
       </View>
 
-      {/* Notification */}
       <GestureHandlerRootView  >
       <View style={styles.notificationRow}>
         <Text style={styles.notificationLabel}>Notification</Text>
@@ -362,7 +344,6 @@ export default function AddPlanScreen() {
       </Modal>
     </GestureHandlerRootView>
 
-      {/* Done Button */}
       <TouchableOpacity style={styles.doneButton} onPress={() => {navigation.navigate('Home');}}>
         <Text style={styles.doneButtonText}>Done</Text>
       </TouchableOpacity>
@@ -430,17 +411,17 @@ const styles = StyleSheet.create({
     padding: 13,
     marginHorizontal: 4,
     justifyContent: 'center',
-    flexDirection: 'column', // Stack icons and label vertically
+    flexDirection: 'column', 
     alignItems: 'center',
   },
   iconWrapper: {
-    flexDirection: 'row', // Align icons in a row
-    justifyContent: 'space-between', // Adjust spacing between icons
+    flexDirection: 'row', 
+    justifyContent: 'space-between', 
     alignItems: 'center',
-    marginBottom: 5, // Space between icons and label
+    marginBottom: 5, 
   },
   icon: {
-    marginHorizontal: 2, // Space between individual icons
+    marginHorizontal: 2, 
   },
   activeButton: {
     backgroundColor: '#FF6347',
@@ -523,13 +504,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 15,
-    backgroundColor: '#2C2C2C', // Light background for notification
+    backgroundColor: '#2C2C2C', 
     borderRadius: 10,
     marginBottom: 10,
   },
   notificationText: {
     fontSize: 16,
-    color: 'white', // Dark text color
+    color: 'white', 
     marginLeft: 10,
   },
   bellIcon: {
@@ -581,7 +562,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
     alignItems: 'center',
-    bottom: 40,            // Position it 20 units from the bottom of the screen/modal
+    bottom: 40,
  
   },
   doneButtonText: {

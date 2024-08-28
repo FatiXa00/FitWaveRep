@@ -1,13 +1,11 @@
-// WaterIntake.js
-
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons'; // Install this library for icons
+import Icon from 'react-native-vector-icons/Ionicons'; 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const WaterIntake = () => {
   const [currentWaterIntake, setCurrentWaterIntake] = useState(0.9);
-  const [waterIntakeGoal, setWaterIntakeGoal] = useState(1.4); // Default goal
+  const [waterIntakeGoal, setWaterIntakeGoal] = useState(1.4);
 
   useEffect(() => {
     const loadSettings = async () => {
@@ -39,7 +37,6 @@ const WaterIntake = () => {
   const percentage = Math.round((currentWaterIntake / waterIntakeGoal) * 100);
   const dropletCount = Math.round((currentWaterIntake / waterIntakeGoal) * 7);
   
-  // Calculate the remaining recommended amount based on the water taken
   const remainingGoal = waterIntakeGoal - currentWaterIntake;
   const remainingPercentage = Math.round((remainingGoal / waterIntakeGoal) * 100);
 
@@ -60,7 +57,7 @@ const WaterIntake = () => {
                 key={index}
                 name="water"
                 size={20}
-                color={index < dropletCount ? '#007AFF' : '#d3d3d3'} // Blue for filled droplets, gray for empty
+                color={index < dropletCount ? '#007AFF' : '#d3d3d3'} 
                 style={styles.dropletIcon}
               />
             ))}
