@@ -6,6 +6,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const WaterIntake = () => {
   const [currentWaterIntake, setCurrentWaterIntake] = useState(0.9);
   const [waterIntakeGoal, setWaterIntakeGoal] = useState(1.4);
+  
 
   useEffect(() => {
     const loadSettings = async () => {

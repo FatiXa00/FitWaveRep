@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>835890473974-iofgucrq807okdu9l58cvgs35pqhjr2e.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.835890473974-iofgucrq807okdu9l58cvgs35pqhjr2e</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCCZ-M5sIrSvoBMIAgPY0VRtIcyS7H_T_k</string>
+	<key>GCM_SENDER_ID</key>
+	<string>835890473974</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.SharedSystem.FitWaveProject</string>
+	<key>PROJECT_ID</key>
+	<string>myfitwave-86bb6</string>
+	<key>STORAGE_BUCKET</key>
+	<string>myfitwave-86bb6.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:835890473974:ios:af7e5625b4c73372c035d7</string>
+</dict>
+</plist>

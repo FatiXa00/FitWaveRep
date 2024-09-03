@@ -1,17 +1,26 @@
+import React, { useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Alert } from 'react-native';
+import { auth } from '../Components/firebaseConfig'; // Adjust the path to your Firebase config
+import { signInWithEmailAndPassword } from 'firebase/auth';
+import { LoginManager, AccessToken } from 'react-native-fbsdk-next';
+import { getAuth, FacebookAuthProvider, signInWithCredential } from 'firebase/auth';
 
-import React, {useState} from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image} from 'react-native';
-import { FontAwesome } from '@expo/vector-icons';
-
-   
 const Logging = ({ navigation }) => {
-   const [usernameOrEmail, setususernameOrEmail] = useState('');
-   const [password, setPassword] = useState('');
+  const [usernameOrEmail, setUsernameOrEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-   const handleLogin = () => {
-    navigation.navigate('SetUp'); 
+
+
+  const handleLogin = async () => {
+    try {
+      await signInWithEmailAndPassword(auth, usernameOrEmail, password);
+      // Navigate to the SetUp screen after successful login
+      navigation.navigate('SetUp');
+    } catch (error) {
+      // Handle errors here
+      Alert.alert('Login Error', error.message);
+    }
   };
-
 
   return (
     <View style={styles.container}>
@@ -19,13 +28,12 @@ const Logging = ({ navigation }) => {
       <Text style={styles.subtitle}>Welcome</Text>
 
       <View style={styles.inputContainer}>
-      <Text
-        style={styles.label}>Username or email</Text>
+        <Text style={styles.label}>Username or email</Text>
         <TextInput
-        style={styles.input}
-         placeholder="Enter Your Username or Email"
-        value={usernameOrEmail}
-        onChangeText={setususernameOrEmail}
+          style={styles.input}
+          placeholder="Enter Your Username or Email"
+          value={usernameOrEmail}
+          onChangeText={setUsernameOrEmail}
         />
       </View>
 
@@ -40,7 +48,7 @@ const Logging = ({ navigation }) => {
         />
       </View>
 
-      <TouchableOpacity onPress={() => {navigation.navigate('ForgottenPassword')}}>
+      <TouchableOpacity onPress={() => navigation.navigate('ForgottenPassword')}>
         <Text style={styles.forgotPassword}>Forgot Password?</Text>
       </TouchableOpacity>
 
@@ -54,21 +62,21 @@ const Logging = ({ navigation }) => {
         <TouchableOpacity>
           <Image source={require('../assets/icons/IconApple.png')} style={styles.socialIcon} />
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity >
           <Image source={require('../assets/icons/IconGoogle.png')} style={styles.socialIcon} />
         </TouchableOpacity>
-        <TouchableOpacity>
+        <TouchableOpacity onPress={handleFacebookSignIn}>
           <Image source={require('../assets/icons/IconFacebook.png')} style={styles.socialIcon} />
         </TouchableOpacity>
       </View>
 
       <Text style={styles.signUp}>Don't have an account? Sign Up as</Text>
       <View style={styles.signUpRow}>
-        <TouchableOpacity onPress={() => {   navigation.navigate('CreateAccount');  }}>
+        <TouchableOpacity onPress={() => navigation.navigate('CreateAccount')}>
           <Text style={styles.signUpUser}> User</Text>
         </TouchableOpacity>
         <Text style={styles.signUp}> or</Text>
-        <TouchableOpacity onPress={() => { navigation.navigate('CreateDoctor'); }}>
+        <TouchableOpacity onPress={() => navigation.navigate('CreateDoctor')}>
           <Text style={styles.signUpUser}> Doctor</Text>
         </TouchableOpacity>
       </View>
@@ -82,35 +90,30 @@ const styles = StyleSheet.create({
     padding: 30,
     backgroundColor: '#141824',
   },
-
   title: {
-    marginTop:45,
+    marginTop: 45,
     fontSize: 24,
     fontWeight: 'bold',
     color: '#FD6639',
     textAlign: 'center',
     marginVertical: 20,
   },
-
   subtitle: {
     fontSize: 18,
     fontWeight: 'bold',
     color: '#ffffff',
     textAlign: 'center',
     marginBottom: 50,
-    marginTop:50,
+    marginTop: 50,
   },
-
   inputContainer: {
-     marginBottom: 20,
+    marginBottom: 20,
   },
-
   label: {
     fontSize: 16,
     color: '#ffffff',
     marginBottom: 5,
   },
-
   input: {
     backgroundColor: '#ffffff',
     borderRadius: 15,
@@ -118,17 +121,15 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     fontSize: 16,
   },
-
   forgotPassword: {
     color: '#FD6639',
     alignSelf: 'flex-end',
     marginBottom: 20,
   },
-
   loginButton: {
     backgroundColor: '#FD6639',
     paddingVertical: 15,
-    paddingHorizontal:5,
+    paddingHorizontal: 5,
     borderRadius: 25,
     marginVertical: 20,
   },
@@ -143,7 +144,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginVertical: 10,
   },
-   
   socialButtons: {
     flexDirection: 'row',
     justifyContent: 'center',

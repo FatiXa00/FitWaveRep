@@ -1,6 +1,6 @@
 import React from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View,SafeAreaView } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Launch from './Components/Launch'; 
@@ -252,7 +252,9 @@ export default function App() {
       </Stack.Navigator>
       <StatusBar style="auto" />
       </NavigationContainer>
-      </MenuProvider>  
+      </MenuProvider> 
+      
+      
   );
 }
 

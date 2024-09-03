@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import ForgottenPassword from './ForgottenPassword';
-import SetPassword from './SetPassword';
+import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
+import { firebaseConfig } from '../Components/firebaseConfig'; // Adjust the path to your Firebase config
+
+const auth = getAuth(firebaseConfig);
 
 export default function CreateAccount() {
   const navigation = useNavigation();
@@ -11,23 +13,41 @@ export default function CreateAccount() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  const handleSignUp = () => {
-    navigation.navigate('Logging');   
+  const handleSignUp = async () => {
+    if (password !== confirmPassword) {
+      Alert.alert('Error', 'Passwords do not match');
+      return;
+    }
+
+    try {
+      // Create user with email and password
+      const userCredential = await createUserWithEmailAndPassword(auth, emailOrMobile, password);
+      const user = userCredential.user;
+
+      // Send verification email
+      await sendEmailVerification(user);
+
+      Alert.alert('Success', 'Account created. Please check your email for verification.');
+      navigation.navigate('Logging'); // Navigate to the Login screen after successful sign-up
+    } catch (error) {
+      Alert.alert('Sign Up Error', error.message);
+    }
   };
 
   const handleLogin = () => {
-    navigation.navigate('Logging'); 
+    navigation.navigate('Logging');
   };
+
   return (
     <View style={styles.container}>
-    <View style={styles.header}>
-    <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
-        <Text style={styles.backButtonText}>{'<'} Back</Text>
-      </TouchableOpacity>
+      <View style={styles.header}>
+        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
+          <Text style={styles.backButtonText}>{'<'} Back</Text>
+        </TouchableOpacity>
         <Text style={styles.title}>Create Account</Text>
       </View>
       <Text style={styles.subtitle}>Let's Start!</Text>
-      
+
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Full name</Text>
         <TextInput
@@ -71,11 +91,11 @@ export default function CreateAccount() {
       </View>
 
       <View style={styles.policy}>
-      <Text style={styles.terms}>By continuing, you agree to</Text>
-      <Text style={styles.terms}>
-        <Text style={styles.link}>Terms of Use</Text> and{' '}
-        <Text style={styles.link}>Privacy Policy</Text>.
-      </Text>
+        <Text style={styles.terms}>By continuing, you agree to</Text>
+        <Text style={styles.terms}>
+          <Text style={styles.link}>Terms of Use</Text> and{' '}
+          <Text style={styles.link}>Privacy Policy</Text>.
+        </Text>
       </View>
 
       <TouchableOpacity style={styles.signUpButton} onPress={handleSignUp}>
@@ -108,36 +128,24 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 30,
     backgroundColor: '#141824',
-      },
-
-    header: {
-     flexDirection: "row",
-     alignItems: 'center',
-      },
-
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
   backButton: {
     marginTop: -20,
-    marginLeft:1
-
-    },
-    
-  
+    marginLeft: 1,
+  },
   backButtonText: {
     color: '#FD6639',
     fontSize: 18,
     top: -2,
-    left:-10
-
+    left: -10,
   },
-
-  arrow: {
-    fontSize: 30,
-    color: '#FD6639',
-   },
-  
   title: {
-    marginTop:45,
-    marginLeft:25,
+    marginTop: 45,
+    marginLeft: 25,
     fontSize: 24,
     fontWeight: 'bold',
     color: '#FD6639',
@@ -175,14 +183,14 @@ const styles = StyleSheet.create({
     color: '#FD6639',
   },
   signUpButton: {
-    marginTop:50,
+    marginTop: 50,
     backgroundColor: '#FD6639',
     paddingVertical: 12,
     paddingHorizontal: 5,
     borderRadius: 25,
     marginVertical: 20,
-    width:'50%',
-    alignSelf:'center',
+    width: '50%',
+    alignSelf: 'center',
   },
   signUpButtonText: {
     color: '#ffffff',
@@ -213,9 +221,7 @@ const styles = StyleSheet.create({
   loginLink: {
     color: '#FD6639',
   },
-  policy:{
-    marginTop:10,
-
+  policy: {
+    marginTop: 10,
   },
 });
- 
