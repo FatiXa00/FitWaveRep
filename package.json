@@ -28,6 +28,7 @@
     "expo-linear-gradient": "~13.0.2",
     "expo-notifications": "~0.28.16",
     "expo-status-bar": "~1.12.1",
+    "firebase": "^10.13.1",
     "lodash": "^4.17.21",
     "lottie-react-native": "^6.7.0",
     "lottie-web": "^5.12.2",
