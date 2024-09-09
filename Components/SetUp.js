@@ -1,12 +1,19 @@
+// SetUp.js
 import React from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 
 export default function SetUp() {
   const navigation = useNavigation();
 
-  const handleButtonPress = () => {
-    navigation.navigate('GenderSelection');
+  const handleButtonPress = async () => {
+    try {
+      await AsyncStorage.setItem('setupCompleted', 'true');
+      navigation.navigate('GenderSelection');
+    } catch (error) {
+      console.error('Error saving setup status:', error);
+    }
   };
 
   return (
@@ -16,7 +23,7 @@ export default function SetUp() {
         style={styles.setUpImage}
       />
       <View style={styles.content}>
-      <Text style={styles.subtitle}>
+        <Text style={styles.subtitle}>
           Consistency Is {'\n'}
           the Key To Progress. {'\n'}
           Don't Give Up!
@@ -36,9 +43,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#141824',
   },
   setUpImage: {
-    width: '100%',  
-    height: '50%',  
-    resizeMode: 'cover', 
+    width: '100%',
+    height: '50%',
+    resizeMode: 'cover',
   },
   content: {
     flex: 1,
@@ -46,24 +53,21 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: 30,
   },
-
   subtitle: {
     fontSize: 35,
     textAlign: 'center',
     color: '#FD6639',
     marginBottom: 130,
   },
-
   button: {
     backgroundColor: '#FD6639',
     paddingVertical: 12,
     paddingHorizontal: 5,
     borderRadius: 25,
     marginVertical: 20,
-    width:'50%',
-    alignSelf:'center',
-    marginBottom:30,
-
+    width: '50%',
+    alignSelf: 'center',
+    marginBottom: 30,
   },
   buttonText: {
     color: '#ffffff',
@@ -72,4 +76,3 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
-

@@ -1,6 +1,8 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
 
+// Firebase configuration for your app
 const firebaseConfig = {
   apiKey: 'AIzaSyCCZ-M5sIrSvoBMIAgPY0VRtIcyS7H_T_k',
   authDomain: 'myfitwave-86bb6.firebaseapp.com',
@@ -10,7 +12,11 @@ const firebaseConfig = {
   appId: '1:835890473974:ios:af7e5625b4c73372c035d7',
 };
 
+// Initialize Firebase app
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
 
-export { auth };
+// Initialize Firebase Authentication and Firestore
+const auth = getAuth(app);
+const firestore = getFirestore(app);
+
+export { auth, firestore };

@@ -2,18 +2,17 @@ import React, { useEffect } from 'react';
 import { View, StyleSheet, TouchableWithoutFeedback } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import FitWaveLogo from './FitWaveLogo'; 
+import { getAuth } from 'firebase/auth';
 
 export default function Launch() {
   const navigation = useNavigation();
 
   useEffect(() => {
-   
     const timer = setTimeout(() => {
       navigation.navigate('OnBoarding1');
-    }, 3000); 
+    }, 3000); // 3 seconds delay
     return () => clearTimeout(timer);
   }, [navigation]);
-
 
   const handlePress = () => {
     navigation.navigate('OnBoarding1');

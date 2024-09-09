@@ -1,25 +1,50 @@
-import React, { useState } from 'react';
-import { View, Text, Image, TouchableOpacity, Modal, StyleSheet,Alert } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, Image, TouchableOpacity, Modal, StyleSheet, Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import * as ImagePicker from 'expo-image-picker';
-import {launchImageLibrary} from '@react-native-picker/picker';
 import { useNavigation } from '@react-navigation/native';
-
+import { auth, firestore } from './firebaseConfig'; // Ensure paths are correct
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 
 export default function Settings() {
   const [isLogoutVisible, setIsLogoutVisible] = useState(false);
   const [profileImage, setProfileImage] = useState('https://i.sstatic.net/dr5qp.jpg'); 
+  const [fullName, setFullName] = useState('');
   const navigation = useNavigation();
 
-  const handleLogout = () => {
-    Alert.alert('Logged out');
-    setIsLogoutVisible(false);
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const user = auth.currentUser;
+      if (user) {
+        try {
+          const userDocRef = doc(firestore, 'users', user.uid);
+          const userDoc = await getDoc(userDocRef);
+          if (userDoc.exists()) {
+            const userData = userDoc.data();
+            setProfileImage(userData.profileImage || 'https://i.sstatic.net/dr5qp.jpg');
+            setFullName(userData.fullName || '');
+          }
+        } catch (error) {
+          Alert.alert('Error', 'Failed to load user data');
+        }
+      }
+    };
+    fetchUserData();
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+     
+      await auth.signOut();
+    
+      navigation.navigate('Logging'); 
+    } catch (error) {
+      Alert.alert('Error', 'Failed to log out');
+    }
   };
 
   const showLogoutConfirm = () => setIsLogoutVisible(true);
   const hideLogoutConfirm = () => setIsLogoutVisible(false);
-
-  console.log(launchImageLibrary); 
 
   const pickImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -36,7 +61,18 @@ export default function Settings() {
     });
 
     if (!result.canceled) {
-      setProfileImage(result.assets[0].uri);
+      const newProfileImage = result.assets[0].uri;
+      setProfileImage(newProfileImage);
+      
+      const user = auth.currentUser;
+      if (user) {
+        try {
+          const userRef = doc(firestore, 'users', user.uid);
+          await setDoc(userRef, { profileImage: newProfileImage }, { merge: true });
+        } catch (error) {
+          Alert.alert('Error', 'Failed to update profile image');
+        }
+      }
     }
   };
 
@@ -55,7 +91,7 @@ export default function Settings() {
             style={styles.profileImage}
           />
         </TouchableOpacity>
-        <Text style={styles.profileName}>Fatima Zahraa</Text>
+        <Text style={styles.profileName}>{fullName}</Text>
       </View>
       <View style={styles.menuSection}>
         <MenuItem icon="user" label="Profile" />
@@ -176,14 +212,12 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     top:20,
     margin:15,
-
   },
   logoutButtons: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     margin:15,
     top:25,
-    
   },
   cancelButton: {
     flex: 1,
@@ -193,7 +227,6 @@ const styles = StyleSheet.create({
     borderColor: '#FD6639',
     marginRight: 10,
     borderRadius: 20,
-
   },
   cancelText: {
     color: '#FD6639',
@@ -210,6 +243,5 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
     fontWeight:'bold',
-
   },
 });

@@ -3,32 +3,32 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>835890473974-iofgucrq807okdu9l58cvgs35pqhjr2e.apps.googleusercontent.com</string>
+	<string>835890473974-iofgucrq807okdu9l58cvgs35pqhjr2e.apps.googleusercontent.com</string> <!-- Update if necessary -->
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.835890473974-iofgucrq807okdu9l58cvgs35pqhjr2e</string>
+	<string>com.googleusercontent.apps.835890473974-iofgucrq807okdu9l58cvgs35pqhjr2e</string> <!-- Should be reversed client ID -->
 	<key>API_KEY</key>
-	<string>AIzaSyCCZ-M5sIrSvoBMIAgPY0VRtIcyS7H_T_k</string>
+	<string>AIzaSyCCZ-M5sIrSvoBMIAgPY0VRtIcyS7H_T_k</string> <!-- Update if necessary -->
 	<key>GCM_SENDER_ID</key>
-	<string>835890473974</string>
+	<string>835890473974</string> <!-- This should match the Firebase GCM sender ID -->
 	<key>PLIST_VERSION</key>
-	<string>1</string>
+	<string>1</string> <!-- Do not modify -->
 	<key>BUNDLE_ID</key>
-	<string>com.SharedSystem.FitWaveProject</string>
+	<string>com.SharedSystem.FitWaveProject</string> <!-- Must match your app's bundle ID -->
 	<key>PROJECT_ID</key>
-	<string>myfitwave-86bb6</string>
+	<string>myfitwave-86bb6</string> <!-- Ensure this matches your Firebase project ID -->
 	<key>STORAGE_BUCKET</key>
-	<string>myfitwave-86bb6.appspot.com</string>
+	<string>myfitwave-86bb6.appspot.com</string> <!-- Ensure this is correct -->
 	<key>IS_ADS_ENABLED</key>
-	<false></false>
+	<false/> <!-- Adjust if you enable ads -->
 	<key>IS_ANALYTICS_ENABLED</key>
-	<false></false>
+	<false/> <!-- Adjust based on your Firebase Analytics usage -->
 	<key>IS_APPINVITE_ENABLED</key>
-	<true></true>
+	<true/> <!-- Ensure this is true if you use app invites -->
 	<key>IS_GCM_ENABLED</key>
-	<true></true>
+	<true/> <!-- Keep true for Firebase Cloud Messaging (GCM) -->
 	<key>IS_SIGNIN_ENABLED</key>
-	<true></true>
+	<true/> <!-- Ensure this is true for Firebase Auth Sign-In -->
 	<key>GOOGLE_APP_ID</key>
-	<string>1:835890473974:ios:af7e5625b4c73372c035d7</string>
+	<string>1:835890473974:ios:af7e5625b4c73372c035d7</string> <!-- This should match your Firebase app ID -->
 </dict>
 </plist>

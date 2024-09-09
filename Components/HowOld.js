@@ -1,16 +1,8 @@
 import React from 'react';
-import {
-  TextInput,
-  SafeAreaView,
-  Animated,
-  Dimensions,
-  StyleSheet,
-  View,
-  TouchableOpacity,
-  Text,
-  Alert,
-} from 'react-native';
+import { TextInput,SafeAreaView,Animated,Dimensions,StyleSheet,View,TouchableOpacity,Text,Alert } from 'react-native';
+import { getAuth } from 'firebase/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getFirestore, doc, setDoc } from 'firebase/firestore';
 
 const { width } = Dimensions.get('screen');
 
@@ -103,7 +95,7 @@ export default class HowOld extends React.Component {
         this.scrollViewRef.current.scrollTo({
           x: (this.state.initialAge - minAge) * snapSegment - (width / 2 - segmentWidth / 2),
           y: 0,
-          animated: false, 
+          animated: false,
         });
       }
     }, 1000);
@@ -125,14 +117,26 @@ export default class HowOld extends React.Component {
 
   handleContinuePress = async () => {
     const { selectedAge } = this.state;
+    const auth = getAuth();
+    const firestore = getFirestore();
 
     try {
-      await AsyncStorage.setItem('selectedAge', selectedAge.toString());
-      console.log('Selected Age:', selectedAge);
-      this.props.navigation.navigate('WeightPage', { age: selectedAge });
+      const user = auth.currentUser;
+
+      if (user) {
+        const userRef = doc(firestore, 'users', user.uid); // Reference to the user's document
+
+        // Update Firestore with the selected age
+        await setDoc(userRef, { age: selectedAge }, { merge: true });
+
+        console.log('Selected Age:', selectedAge);
+        this.props.navigation.navigate('WeightPage', { age: selectedAge });
+      } else {
+        Alert.alert('Error', 'User not authenticated.');
+      }
     } catch (error) {
-      console.error('Error saving age:', error);
-      Alert.alert('Error', 'Failed to save the age.');
+      console.error('Failed to save age to Firestore:', error);
+      Alert.alert('Error', 'Failed to save the age. Please try again.');
     }
   };
 

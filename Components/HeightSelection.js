@@ -12,6 +12,9 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getAuth } from 'firebase/auth';
+import { getFirestore, doc, setDoc } from 'firebase/firestore';
+
 
 const { height } = Dimensions.get('screen');
 
@@ -108,9 +111,27 @@ export default function SelectHeight() {
     storeHeightValue();
   }, [heightValue]);
 
-  const handleContinuePress = () => {
-    console.log('Selected height:', heightValue);
-    navigation.navigate('Goal', { height: heightValue });
+  const handleContinuePress = async () => {
+    try {
+      const auth = getAuth();
+      const firestore = getFirestore();
+      const user = auth.currentUser;
+
+      if (user) {
+        const userRef = doc(firestore, 'users', user.uid); // Reference to the user's document
+
+        // Update Firestore with the selected height
+        await setDoc(userRef, { height: heightValue }, { merge: true });
+
+        console.log('Selected Height:', heightValue);
+        navigation.navigate('Goal', { height: heightValue });
+      } else {
+        Alert.alert('Error', 'User not authenticated.');
+      }
+    } catch (error) {
+      console.error('Failed to save height to Firestore:', error);
+      Alert.alert('Error', 'Failed to save the height. Please try again.');
+    }
   };
 
   const handleHeightChange = (text) => {

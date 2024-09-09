@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image, Alert } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image,Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
-import { firebaseConfig } from '../Components/firebaseConfig'; // Adjust the path to your Firebase config
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { auth } from './firebaseConfig'; // Assurez-vous que le chemin est correct
+import { getFirestore, doc, setDoc } from 'firebase/firestore';
 
-const auth = getAuth(firebaseConfig);
 
 export default function CreateAccount() {
   const navigation = useNavigation();
   const [fullName, setFullName] = useState('');
-  const [emailOrMobile, setEmailOrMobile] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
@@ -18,21 +18,32 @@ export default function CreateAccount() {
       Alert.alert('Error', 'Passwords do not match');
       return;
     }
-
+    
     try {
-      // Create user with email and password
-      const userCredential = await createUserWithEmailAndPassword(auth, emailOrMobile, password);
+      if (!email.includes('@')) {
+        throw new Error('Invalid email address');
+      }
+  
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
-
-      // Send verification email
-      await sendEmailVerification(user);
-
-      Alert.alert('Success', 'Account created. Please check your email for verification.');
-      navigation.navigate('Logging'); // Navigate to the Login screen after successful sign-up
+  
+      const firestore = getFirestore();
+        const userRef = doc(firestore, 'users', user.uid);
+  
+      await setDoc(userRef, {
+        fullName: fullName,
+        email: email, 
+        uid: user.uid, 
+        setupCompleted: false, 
+        createdAt: new Date(),
+      });
+  
+      navigation.navigate('Logging');
     } catch (error) {
-      Alert.alert('Sign Up Error', error.message);
+      Alert.alert('Error', error.message);
     }
   };
+  
 
   const handleLogin = () => {
     navigation.navigate('Logging');
@@ -59,12 +70,12 @@ export default function CreateAccount() {
       </View>
 
       <View style={styles.inputContainer}>
-        <Text style={styles.label}>Email or Mobile Number</Text>
+        <Text style={styles.label}>Email</Text>
         <TextInput
           style={styles.input}
-          placeholder="+212625739588"
-          value={emailOrMobile}
-          onChangeText={setEmailOrMobile}
+          placeholder="Enter Your Email"
+          value={email}
+          onChangeText={setEmail}
         />
       </View>
 
@@ -72,7 +83,7 @@ export default function CreateAccount() {
         <Text style={styles.label}>Password</Text>
         <TextInput
           style={styles.input}
-          placeholder="************"
+          placeholder="Enter Your Password"
           secureTextEntry
           value={password}
           onChangeText={setPassword}
@@ -83,7 +94,7 @@ export default function CreateAccount() {
         <Text style={styles.label}>Confirm Password</Text>
         <TextInput
           style={styles.input}
-          placeholder="************"
+          placeholder="Enter Your Password again"
           secureTextEntry
           value={confirmPassword}
           onChangeText={setConfirmPassword}
@@ -121,31 +132,43 @@ export default function CreateAccount() {
       </TouchableOpacity>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 30,
     backgroundColor: '#141824',
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
+      },
+
+    header: {
+     flexDirection: "row",
+     alignItems: 'center',
+      },
+
   backButton: {
     marginTop: -20,
-    marginLeft: 1,
-  },
+    marginLeft:1
+
+    },
+    
+  
   backButtonText: {
     color: '#FD6639',
     fontSize: 18,
     top: -2,
-    left: -10,
+    left:-10
+
   },
+
+  arrow: {
+    fontSize: 30,
+    color: '#FD6639',
+   },
+  
   title: {
-    marginTop: 45,
-    marginLeft: 25,
+    marginTop:45,
+    marginLeft:25,
     fontSize: 24,
     fontWeight: 'bold',
     color: '#FD6639',
@@ -183,14 +206,14 @@ const styles = StyleSheet.create({
     color: '#FD6639',
   },
   signUpButton: {
-    marginTop: 50,
+    marginTop:50,
     backgroundColor: '#FD6639',
     paddingVertical: 12,
     paddingHorizontal: 5,
     borderRadius: 25,
     marginVertical: 20,
-    width: '50%',
-    alignSelf: 'center',
+    width:'50%',
+    alignSelf:'center',
   },
   signUpButtonText: {
     color: '#ffffff',
@@ -221,7 +244,8 @@ const styles = StyleSheet.create({
   loginLink: {
     color: '#FD6639',
   },
-  policy: {
-    marginTop: 10,
+  policy:{
+    marginTop:10,
+
   },
 });

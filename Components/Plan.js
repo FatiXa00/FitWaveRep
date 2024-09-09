@@ -1,35 +1,59 @@
 import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  Button,
-  TextInput,
-  TouchableOpacity,
-  StyleSheet,
-  Modal,
-  TouchableWithoutFeedback,
-  FlatList,
-  Dimensions,
-} from 'react-native';
+import {View,Text,Button,TextInput,TouchableOpacity,StyleSheet,Modal,TouchableWithoutFeedback,FlatList,Dimensions,} from 'react-native';
 import { Ionicons, MaterialIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { Picker } from '@react-native-picker/picker';
 import { GestureHandlerRootView, Swipeable } from 'react-native-gesture-handler';
 import { FontAwesome } from '@expo/vector-icons';  
- 
+import { collection, addDoc,getFirestore, getDocs } from 'firebase/firestore';
+import { auth, firestore } from './firebaseConfig'; // Ensure paths are correct
+
 export default function AddPlanScreen() {
   const [pillsName, setPillsName] = useState('');
   const [amount, setAmount] = useState(1);
   const [duration, setDuration] = useState(1); 
   const [durationUnit, setDurationUnit] = useState('Day');
   const [selectedFoodPillsButton, setSelectedFoodPillsButton] = useState(null);
-  
   const [isAmountModalVisible, setIsAmountModalVisible] = useState(false);
   const [isDurationModalVisible, setIsDurationModalVisible] = useState(false);
-
   const navigation = useNavigation();
+
   const Notif = () => {
-    navigation.navigate('Notif');};
+    navigation.navigate('Notif');
+  };
+  const addPlan = async () => {
+    if (!pillsName || !selectedFoodPillsButton) {
+      alert('Please fill out all required fields.');
+      return;
+    }
+  
+    try {
+      const firestore = getFirestore();
+      const planData = {
+        pillsName: pillsName,
+        amount: amount,
+        duration: duration,
+        durationUnit: durationUnit,
+        foodPillsButton: selectedFoodPillsButton,
+        notifications: notifications,
+      };
+  
+      console.log('Adding document with data:', planData);
+  
+      const docRef = await addDoc(collection(firestore, 'plans'), planData);
+      console.log('Document written with ID:', docRef.id);
+  
+      navigation.navigate('Home');
+    } catch (error) {
+      console.error('Error adding document:', error);
+      let errorMessage = 'Failed to add plan.';
+      if (error.code) {
+        errorMessage = `Error code: ${error.code}. ${error.message}`;
+      }
+      alert(errorMessage);
+    }
+  };
+  
 
   const renderNumberItem = ({ item }) => (
     <TouchableOpacity
@@ -163,7 +187,7 @@ export default function AddPlanScreen() {
         <TouchableOpacity>
           <MaterialIcons name="qr-code-scanner" size={24} color="#FF6347" />
         </TouchableOpacity>
-      </View>
+       </View>
 
       <Text style={styles.label}>Amount & How Long?</Text>
       <View style={styles.row}>
@@ -207,7 +231,7 @@ export default function AddPlanScreen() {
                 style={styles.doneButton}
                 onPress={() => setIsAmountModalVisible(false)}
               >
-                <Text style={styles.doneButtonText}>Done</Text>
+                <Text style={styles.doneButtonText}onPress={addPlan}>Done</Text>
               </TouchableOpacity>
             </View>
           </View>

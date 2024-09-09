@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useEffect,useRef } from 'react';
 import { View, Text, ScrollView, StyleSheet, StatusBar, TouchableOpacity, Modal, Dimensions, Animated, FlatList } from 'react-native';
 import { FontAwesome, FontAwesome5 } from '@expo/vector-icons';
 import Calendar from './Calendar';
@@ -11,6 +11,9 @@ import NutrientsBarChart from './NutrientsBarChart';
 import GoalCalories from './GoalCalories'; 
 import ActivityProgress from './ActivityProgress'; 
 import WaterBottle from './WaterBottle'; 
+import { auth, firestore } from './firebaseConfig'; 
+import { doc, getDoc } from 'firebase/firestore'; 
+
 
 const { width } = Dimensions.get('window');
 
@@ -21,6 +24,27 @@ const Home = () => {
   const scrollX = useRef(new Animated.Value(0)).current;
   const [currentPage, setCurrentPage] = useState(0);
   const navigation = useNavigation();
+  const [fullName, setFullName] = useState('');
+
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const user = auth.currentUser;
+      if (user) {
+        try {
+          const userDocRef = doc(firestore, 'users', user.uid);
+          const userDoc = await getDoc(userDocRef);
+          if (userDoc.exists()) {
+            const userData = userDoc.data();
+            setFullName(userData.fullName || '');
+          }
+        } catch (error) {
+          Alert.alert('Error', 'Failed to load user data');
+        }
+      }
+    };
+    fetchUserData();
+  }, []);
 
   const handleDateChange = (day, month, year) => {
     const newDate = new Date(Date.UTC(year, month, day));
@@ -130,7 +154,7 @@ const Home = () => {
       </View>
 
       <View style={styles.greetingContainer}>
-        <Text style={styles.greetingText}>Hi, Fati</Text>
+        <Text style={styles.greetingText}>Hi, {fullName}</Text>
         <Text style={styles.subText}>It's time to challenge your limits...</Text>
       </View>
 

@@ -12,6 +12,8 @@
     ],
     "name": "FitWaveProject",
     "slug": "FitWaveProject",
+    "facebookAppId": "537396642191859",
+    "facebookDisplayName": "FitWave",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -22,12 +24,22 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "googleServicesFile": "./GoogleService-Info.plist",
+      "config": {
+        "facebookAppId": "537396642191859",
+        "facebookDisplayName": "FitWave"
+      }
+
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#ffffff",
+        "config": {
+          "facebookAppId": "537396642191859",
+          "facebookDisplayName": "FitWave"
+        }
       },
       "permissions": [
          "android.permission.RECORD_AUDIO"

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getAuth } from 'firebase/auth';
+import { getFirestore, doc, setDoc } from 'firebase/firestore';
 import CustomAlert from './CustomAlert'; 
 
 export default function GenderSelection() {
@@ -9,19 +10,31 @@ export default function GenderSelection() {
   const [selectedGender, setSelectedGender] = useState(null);
   const [alertVisible, setAlertVisible] = useState(false);
 
-  const handleGenderSelect = async (gender) => {
+  // Initialize Firebase services
+  const auth = getAuth();
+  const firestore = getFirestore();
+
+  const handleGenderSelect = (gender) => {
     setSelectedGender(gender);
-    try {
-      await AsyncStorage.setItem('selectedGender', gender);
-    } catch (error) {
-      console.error('Failed to save gender to storage', error);
-    }
   };
 
-  const handleContinuePress = () => {
+  const handleContinuePress = async () => {
     if (selectedGender) {
-      console.log('Selected gender:', selectedGender);
-      navigation.navigate('HowOld');
+      const user = auth.currentUser;
+
+      if (user) {
+        const userRef = doc(firestore, 'users', user.uid); // Reference to the user's document
+
+        try {
+          // Update Firestore with the selected gender
+          await setDoc(userRef, { gender: selectedGender }, { merge: true });
+
+          console.log('Selected gender:', selectedGender);
+          navigation.navigate('HowOld');
+        } catch (error) {
+          console.error('Failed to save gender to Firestore', error);
+        }
+      }
     } else {
       setAlertVisible(true);
     }

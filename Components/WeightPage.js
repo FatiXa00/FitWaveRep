@@ -12,6 +12,8 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ruler from './Ruler';
+import { getFirestore, doc, setDoc } from 'firebase/firestore';
+import { getAuth } from 'firebase/auth';
 
 const { width } = Dimensions.get('screen');
 
@@ -120,10 +122,29 @@ export default function SelectWeight() {
     }
   };
 
-  const handleContinuePress = () => {
-    console.log('Selected weight:', selectedWeight);
-    navigation.navigate('HeightSelection', { selectedWeight });
+  const handleContinuePress = async () => {
+    try {
+      const auth = getAuth();
+      const firestore = getFirestore();
+      const user = auth.currentUser;
+  
+      if (user) {
+        const userRef = doc(firestore, 'users', user.uid); // Reference to the user's document
+  
+        // Update Firestore with the selected weight
+        await setDoc(userRef, { weight: selectedWeight }, { merge: true });
+  
+        console.log('Selected Weight:', selectedWeight);
+        navigation.navigate('HeightSelection', { selectedWeight });
+      } else {
+        Alert.alert('Error', 'User not authenticated.');
+      }
+    } catch (error) {
+      console.error('Failed to save weight to Firestore:', error);
+      Alert.alert('Error', 'Failed to save the weight. Please try again.');
+    }
   };
+  
 
   return (
     <SafeAreaView style={styles.container}>

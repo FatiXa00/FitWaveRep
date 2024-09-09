@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import CustomAlert from './CustomAlert';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getAuth } from 'firebase/auth';
+import { getFirestore, doc, setDoc, getDoc } from 'firebase/firestore';
 
 export default function Goal() {
   const navigation = useNavigation();
@@ -10,29 +11,51 @@ export default function Goal() {
   const [alertVisible, setAlertVisible] = useState(false);
 
   useEffect(() => {
-    const getStoredGoal = async () => {
+    const fetchStoredGoal = async () => {
       try {
-        const storedGoal = await AsyncStorage.getItem('selectedGoal');
-        if (storedGoal) {
-          setSelectedGoal(storedGoal);
+        const auth = getAuth();
+        const firestore = getFirestore();
+        const user = auth.currentUser;
+
+        if (user) {
+          const userRef = doc(firestore, 'users', user.uid); // Reference to the user's document
+          const docSnap = await getDoc(userRef);
+
+          if (docSnap.exists()) {
+            const userData = docSnap.data();
+            if (userData.selectedGoal) {
+              setSelectedGoal(userData.selectedGoal);
+            }
+          }
+        } else {
+          Alert.alert('Error', 'User not authenticated.');
         }
       } catch (error) {
-        console.error('Failed to fetch the goal from storage:', error);
+        console.error('Failed to fetch the goal from Firestore:', error);
       }
     };
 
-    getStoredGoal();
+    fetchStoredGoal();
   }, []);
 
   const handleGoalSelection = async (goal) => {
     setSelectedGoal(goal);
     try {
-      await AsyncStorage.setItem('selectedGoal', goal);
+      const auth = getAuth();
+      const firestore = getFirestore();
+      const user = auth.currentUser;
+
+      if (user) {
+        const userRef = doc(firestore, 'users', user.uid); // Reference to the user's document
+        await setDoc(userRef, { selectedGoal: goal }, { merge: true });
+      } else {
+        Alert.alert('Error', 'User not authenticated.');
+      }
     } catch (error) {
-      console.error('Failed to save the goal to storage:', error);
+      console.error('Failed to save the goal to Firestore:', error);
     }
   };
-  
+
   const handleContinue = () => {
     if (selectedGoal) {
       console.log('Selected goal:', selectedGoal);
@@ -109,7 +132,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 40,
     fontWeight: 'bold',
-    top:10,
+    top: 10,
   },
   optionsContainer: {
     flex: 2,
@@ -135,7 +158,6 @@ const styles = StyleSheet.create({
   optionText: {
     color: '#FFFFFF',
     fontSize: 17,
-   
   },
   selectedOptionText: {
     color: '#FD6639',
@@ -164,7 +186,7 @@ const styles = StyleSheet.create({
     width: '50%',
     alignSelf: 'center',
     marginBottom: 80,
-    bottom:5,
+    bottom: 5,
   },
   continueButtonText: {
     color: '#ffffff',

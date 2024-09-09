@@ -1,38 +1,62 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import CustomAlert from './CustomAlert';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getAuth } from 'firebase/auth';
+import { getFirestore, doc, setDoc, getDoc } from 'firebase/firestore';
 
 export default function PhysicalActivityLevel() {
   const navigation = useNavigation();
   const [selectedLevel, setSelectedLevel] = useState(null);
   const [alertVisible, setAlertVisible] = useState(false);
 
+
   useEffect(() => {
-    // Retrieve the stored activity level when the component mounts
-    const getStoredLevel = async () => {
+    const fetchStoredLevel = async () => {
       try {
-        const storedLevel = await AsyncStorage.getItem('selectedLevel');
-        if (storedLevel) {
-          setSelectedLevel(storedLevel);
+        const auth = getAuth();
+        const firestore = getFirestore();
+        const user = auth.currentUser;
+
+        if (user) {
+          const userRef = doc(firestore, 'users', user.uid);
+          const docSnap = await getDoc(userRef);
+
+          if (docSnap.exists()) {
+            const userData = docSnap.data();
+            if (userData.selectedLevel) {
+              setSelectedLevel(userData.selectedLevel);
+            }
+          }
+        } else {
+          Alert.alert('Error', 'User not authenticated.');
         }
       } catch (error) {
-        console.error('Failed to fetch the level from storage:', error);
+        console.error('Failed to fetch the level from Firestore:', error);
       }
     };
 
-    getStoredLevel();
+    fetchStoredLevel();
   }, []);
 
   const handleLevelSelection = async (level) => {
     setSelectedLevel(level);
     try {
-      await AsyncStorage.setItem('selectedLevel', level);
+      const auth = getAuth();
+      const firestore = getFirestore();
+      const user = auth.currentUser;
+
+      if (user) {
+        const userRef = doc(firestore, 'users', user.uid);
+        await setDoc(userRef, { selectedLevel: level, setupCompleted: true }, { merge: true });
+      } else {
+        Alert.alert('Error', 'User not authenticated.');
+      }
     } catch (error) {
-      console.error('Failed to save the level to storage:', error);
+      Alert.alert('Error', 'Failed to update physical activity level.');
     }
   };
+  
 
   const handleContinue = () => {
     if (selectedLevel) {
@@ -85,6 +109,7 @@ export default function PhysicalActivityLevel() {
     </View>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
