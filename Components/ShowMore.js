@@ -1,36 +1,69 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import { View, Text, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
 import { Swipeable } from 'react-native-gesture-handler';
 import { Ionicons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
+import { doc, updateDoc, collection, query, getDocs, where } from 'firebase/firestore';
+import { firestore, auth } from './firebaseConfig';
 
 const MyPlanScreen = () => {
+  const navigation = useNavigation();
+  const [pillData, setPillData] = useState([]);
   const [pillStatus, setPillStatus] = useState({});
-  const [expandedPillId, setExpandedPillId] = useState(null); 
+  const [expandedPillId, setExpandedPillId] = useState(null);
   const [warningMessage, setWarningMessage] = useState('');
-
   const swipeableRefs = useRef({});
+  const startTime = new Date().setHours(0, 0, 0, 0);
+  const endTime = new Date().setHours(23, 59, 59, 999);
 
-  const pillData = [
-    { id: '1', name: 'Oxycodone', time: '10:00 AM', duration: '30 days', pillsPerDay: 1, timing: 'Before eating' },
-    { id: '2', name: 'Naloxone', time: '04:00 PM', duration: '30 days', pillsPerDay: 1, timing: 'After eating' },
-    { id: '3', name: '5-HTP', time: '10:00 PM', duration: '30 days', pillsPerDay: 2, timing: 'While eating', warning: 'You have two ampoules left' },
-  ];
+  
+  useFocusEffect(
+    React.useCallback(() => {
+      fetchPillData();  
+    }, [])
+  );
+  
 
   useEffect(() => {
-    updateWarningMessage();
-  }, [pillStatus]);
+    updateWarningMessage(pillData);
+  }, [pillStatus, pillData]);
 
-  const handleMarkTaken = (id) => {
-    setPillStatus(prevState => ({ ...prevState, [id]: 'taken' }));
-    if (swipeableRefs.current[id]) {
-      swipeableRefs.current[id].close();
+  const fetchPillData = async () => {
+    try {
+      const user = auth.currentUser;
+      if (!user) throw new Error('User not authenticated');
+
+      const userId = user.uid;
+      const q = query(collection(firestore, 'plans'), where('userId', '==', userId));
+      const querySnapshot = await getDocs(q);
+      const data = querySnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      setPillData(data);
+      updateWarningMessage(data);
+    } catch (error) {
+      console.error('Error fetching pill data:', error);
     }
   };
 
-  const handleMarkMissed = (id) => {
-    setPillStatus(prevState => ({ ...prevState, [id]: 'missed' }));
-    if (swipeableRefs.current[id]) {
-      swipeableRefs.current[id].close();
+  const handleMarkStatus = async (id, status) => {
+    try {
+      setPillStatus(prevState => ({ ...prevState, [id]: status }));
+      
+      const pillDocRef = doc(firestore, 'plans', id);
+      await updateDoc(pillDocRef, { status });
+
+      setPillData(prevData => prevData.filter(pill => pill.id !== id));
+
+      if (swipeableRefs.current[id]) {
+        swipeableRefs.current[id].close();
+      }
+      
+    } catch (error) {
+      console.error(`Error updating pill status to ${status}:`, error);
     }
   };
 
@@ -38,18 +71,47 @@ const MyPlanScreen = () => {
     setExpandedPillId(expandedPillId === id ? null : id);
   };
 
-  const updateWarningMessage = () => {
-    const pendingPills = pillData.filter(item => !pillStatus[item.id] || pillStatus[item.id] === 'missed');
+  const updateWarningMessage = (data) => {
+    const pendingPills = data.filter(item => !pillStatus[item.id] || pillStatus[item.id] === 'missed');
     const remainingPills = pendingPills.length;
 
-    if (remainingPills > 0) {
-      setWarningMessage(`You have ${remainingPills} more pills to take today.`);
-    } else {
-      setWarningMessage('You have no pills left to take for today.');
-    }
+    setWarningMessage(remainingPills > 0
+      ? `You have ${remainingPills} more pills to take today.`
+      : 'You have no pills left to take for today.'
+    );
+  };
+
+  const filterPillsByTimeOfDay = (startTime, endTime) => {
+    return pillData.filter(item => {
+      if (!item.notifications || item.notifications.length === 0) {
+        return false;
+      }
+
+      return item.notifications.some(notification => {
+        if (!notification.time) {
+          return false;
+        }
+
+        const [timeStr, period] = notification.time.split(' ');
+        const [hour, minute] = timeStr.split(':').map(Number);
+        let notificationHour = hour;
+        if (period === 'PM' && hour < 12) notificationHour += 12;
+        if (period === 'AM' && hour === 12) notificationHour = 0;
+
+        const notificationTime = new Date();
+        notificationTime.setHours(notificationHour, minute, 0, 0);
+        const notificationTimestamp = notificationTime.getTime();
+
+        return notificationTimestamp >= startTime && notificationTimestamp < endTime;
+      });
+    });
   };
 
   const renderPill = ({ item }) => {
+    if (!item.pillsName || !item.notifications) {
+      return null;
+    }
+
     const isExpanded = expandedPillId === item.id;
 
     return (
@@ -57,12 +119,12 @@ const MyPlanScreen = () => {
         <Swipeable
           ref={(ref) => { swipeableRefs.current[item.id] = ref; }}
           renderLeftActions={() => (
-            <TouchableOpacity style={styles.leftAction} onPress={() => handleMarkTaken(item.id)}>
+            <TouchableOpacity style={styles.leftAction} onPress={() => handleMarkStatus(item.id, 'taken')}>
               <Ionicons name="checkmark" size={24} color="white" />
             </TouchableOpacity>
           )}
           renderRightActions={() => (
-            <TouchableOpacity style={styles.rightAction} onPress={() => handleMarkMissed(item.id)}>
+            <TouchableOpacity style={styles.rightAction} onPress={() => handleMarkStatus(item.id, 'missed')}>
               <Ionicons name="trash" size={24} color="white" />
             </TouchableOpacity>
           )}
@@ -78,8 +140,8 @@ const MyPlanScreen = () => {
             <View style={styles.pillInfo}>
               <Ionicons name="medkit-outline" size={20} color="white" style={styles.pillIcon} />
               <View>
-                <Text style={styles.pillName}>{item.name}</Text>
-                <Text style={styles.pillDetails}>{item.time}</Text>
+                <Text style={styles.pillName}>{item.pillsName}</Text>
+                <Text style={styles.pillDetails}>{item.notifications.map(notification => notification.time).join(', ')}</Text>
                 {pillStatus[item.id] === 'taken' && (
                   <Text style={styles.pillMessageT}>You took your pill!</Text>
                 )}
@@ -93,10 +155,9 @@ const MyPlanScreen = () => {
 
           {isExpanded && (
             <View style={styles.expandedContent}>
-              <Text style={styles.expandedText}>Duration: {item.duration}</Text>
-              <Text style={styles.expandedText}>Pills per day: {item.pillsPerDay}</Text>
-              <Text style={styles.expandedText}>Timing: {item.timing}</Text>
-               
+              <Text style={styles.expandedText}>Duration: {item.duration} {item.durationUnit}</Text>
+              <Text style={styles.expandedText}>Amount: {item.amount}</Text>
+              <Text style={styles.expandedText}>Food: {item.foodPillsButton}</Text>
             </View>
           )}
         </Swipeable>
@@ -116,7 +177,6 @@ const MyPlanScreen = () => {
           <Ionicons name="chevron-down" size={16} color="white" />
         </TouchableOpacity>
       </View>
-
       <View style={styles.planProgressContainer}>
         <View>
           <Text style={styles.planTitle}>Your plan </Text>
@@ -128,16 +188,17 @@ const MyPlanScreen = () => {
         </View>
       </View>
 
-      <FlatList
-        data={pillData}
+      <FlatList 
+        data={filterPillsByTimeOfDay(startTime, endTime)}
         renderItem={renderPill}
-        keyExtractor={(item) => item.id}
-        ListHeaderComponent={<Text style={styles.sectionTitle}>Morning</Text>}
+        keyExtractor={item => item.id}
       />
 
-      <View style={styles.warningContainerBottom}>
-        <Text style={styles.warningText}>{warningMessage}</Text>
-      </View>
+      {warningMessage && (
+        <View style={styles.warningContainer}>
+          <Text style={styles.warningText}>{warningMessage}</Text>
+        </View>
+      )}
     </View>
   );
 };

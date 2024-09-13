@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Modal, Button, ImageBackground } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Modal, Button, ImageBackground, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
+import { getAuth } from 'firebase/auth';
+import { getFirestore, doc, setDoc } from 'firebase/firestore';
 
 const AdjustWater = () => {
   const [waterIntakeGoal, setWaterIntakeGoal] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
   const navigation = useNavigation();
+  const auth = getAuth();
+  const firestore = getFirestore();
 
   useEffect(() => {
     const loadSettings = async () => {
@@ -26,15 +30,22 @@ const AdjustWater = () => {
     try {
       await AsyncStorage.setItem('waterIntakeGoal', goal);
       setWaterIntakeGoal(goal);
-      setModalVisible(false);
-      navigation.navigate('WaterIntake', { goal });
+
+      const user = auth.currentUser;
+      if (user) {
+        const userRef = doc(firestore, 'users', user.uid);
+        await setDoc(userRef, { waterIntakeGoal: goal }, { merge: true });
+
+        console.log('Selected Goal:', goal);
+        setModalVisible(false);
+        navigation.navigate('Home', { goal });
+      } else {
+        Alert.alert('Error', 'User not authenticated.');
+      }
     } catch (error) {
       console.error('Failed to save settings:', error);
+      Alert.alert('Error', 'Failed to save the goal. Please try again.');
     }
-  };
-
-  const showModal = () => {
-    setModalVisible(true);
   };
 
   return (
@@ -44,8 +55,10 @@ const AdjustWater = () => {
     >
       <View style={styles.container}>
         <Text style={styles.header}>Water Goal</Text>
-        <TouchableOpacity onPress={showModal} style={styles.button}>
-          <Text style={styles.buttonText}>{waterIntakeGoal ? `${waterIntakeGoal} liters` : 'Select Goal'}</Text>
+        <TouchableOpacity onPress={() => setModalVisible(true)} style={styles.button}>
+          <Text style={styles.buttonText}>
+            {waterIntakeGoal ? `${waterIntakeGoal} liters` : 'Select Goal'}
+          </Text>
         </TouchableOpacity>
 
         <Modal
@@ -91,6 +104,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 20,
+    color: '#fff',
   },
   button: {
     backgroundColor: '#fff',

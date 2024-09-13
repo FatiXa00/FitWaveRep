@@ -124,9 +124,8 @@ export default class HowOld extends React.Component {
       const user = auth.currentUser;
 
       if (user) {
-        const userRef = doc(firestore, 'users', user.uid); // Reference to the user's document
+        const userRef = doc(firestore, 'users', user.uid); 
 
-        // Update Firestore with the selected age
         await setDoc(userRef, { age: selectedAge }, { merge: true });
 
         console.log('Selected Age:', selectedAge);

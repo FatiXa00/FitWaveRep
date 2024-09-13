@@ -6,7 +6,7 @@ import { Picker } from '@react-native-picker/picker';
 import { GestureHandlerRootView, Swipeable } from 'react-native-gesture-handler';
 import { FontAwesome } from '@expo/vector-icons';  
 import { collection, addDoc,getFirestore, getDocs } from 'firebase/firestore';
-import { auth, firestore } from './firebaseConfig'; // Ensure paths are correct
+import { auth, firestore } from './firebaseConfig'; 
 
 export default function AddPlanScreen() {
   const [pillsName, setPillsName] = useState('');
@@ -17,43 +17,48 @@ export default function AddPlanScreen() {
   const [isAmountModalVisible, setIsAmountModalVisible] = useState(false);
   const [isDurationModalVisible, setIsDurationModalVisible] = useState(false);
   const navigation = useNavigation();
+  
 
   const Notif = () => {
     navigation.navigate('Notif');
   };
-  const addPlan = async () => {
-    if (!pillsName || !selectedFoodPillsButton) {
-      alert('Please fill out all required fields.');
-      return;
-    }
   
-    try {
-      const firestore = getFirestore();
-      const planData = {
-        pillsName: pillsName,
-        amount: amount,
-        duration: duration,
-        durationUnit: durationUnit,
-        foodPillsButton: selectedFoodPillsButton,
-        notifications: notifications,
-      };
-  
-      console.log('Adding document with data:', planData);
-  
-      const docRef = await addDoc(collection(firestore, 'plans'), planData);
-      console.log('Document written with ID:', docRef.id);
-  
-      navigation.navigate('Home');
-    } catch (error) {
-      console.error('Error adding document:', error);
-      let errorMessage = 'Failed to add plan.';
-      if (error.code) {
-        errorMessage = `Error code: ${error.code}. ${error.message}`;
-      }
-      alert(errorMessage);
-    }
-  };
-  
+const addPlan = async () => {
+  if (!pillsName || !selectedFoodPillsButton) {
+    alert('Please fill out all required fields.');
+    return;
+  }
+
+  const user = auth.currentUser;
+  if (!user) {
+    alert('User is not authenticated.');
+    return;
+  }
+
+  try {
+    const planData = {
+      pillsName,
+      amount,
+      duration,
+      durationUnit,
+      foodPillsButton: selectedFoodPillsButton,
+      notifications,
+      userId: user.uid,
+    };
+
+    console.log('Adding document with data:', planData);
+
+    const docRef = await addDoc(collection(firestore, 'plans'), planData);
+    console.log('Document written with ID:', docRef.id);
+
+    navigation.navigate('Home');
+  } catch (error) {
+    console.error('Error adding document:', error);
+    alert(`Error: ${error.message}`);
+  }
+};
+
+
 
   const renderNumberItem = ({ item }) => (
     <TouchableOpacity
@@ -136,8 +141,17 @@ export default function AddPlanScreen() {
       };
       const handleConfirm = () => {
         const time = `${hours[hour]}:${minutes[minute] < 10 ? `0${minutes[minute]}` : minutes[minute]} ${periods[period]}`;
-        addOrUpdateNotification(time);
-        setIsTimePickerVisible(false); 
+        if (editingNotificationId) {
+          setNotifications(notifications.map(notification =>
+            notification.id === editingNotificationId
+              ? { ...notification, time }
+              : notification
+          ));
+        } else {
+          setNotifications([...notifications, { id: Date.now().toString(), time }]);
+        }
+        setEditingNotificationId(null);
+        setIsTimePickerVisible(false);
       };
       const handleNotificationPress = (id, time) => {
         const [notificationHour, notificationMinute, notificationPeriod] = time.split(/[: ]/);
@@ -168,7 +182,7 @@ export default function AddPlanScreen() {
       );
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.backButton}>
+      <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
         <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
       </TouchableOpacity>
 
@@ -231,7 +245,7 @@ export default function AddPlanScreen() {
                 style={styles.doneButton}
                 onPress={() => setIsAmountModalVisible(false)}
               >
-                <Text style={styles.doneButtonText}onPress={addPlan}>Done</Text>
+                <Text style={styles.doneButtonText}>Done</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -368,7 +382,7 @@ export default function AddPlanScreen() {
       </Modal>
     </GestureHandlerRootView>
 
-      <TouchableOpacity style={styles.doneButton} onPress={() => {navigation.navigate('Home');}}>
+      <TouchableOpacity style={styles.doneButton} onPress={addPlan}>
         <Text style={styles.doneButtonText}>Done</Text>
       </TouchableOpacity>
     </View>

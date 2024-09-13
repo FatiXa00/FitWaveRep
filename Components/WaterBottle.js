@@ -1,19 +1,35 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getAuth } from 'firebase/auth';
+import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
 
 const WaterBottle = () => {
-  const totalSections = 6; 
-  const [waterLevel, setWaterLevel] = useState(0); 
-  const [waterIntakeGoal, setWaterIntakeGoal] = useState(2); 
+  const totalSections = 6;
+  const [waterLevel, setWaterLevel] = useState(0);
+  const [waterIntakeGoal, setWaterIntakeGoal] = useState(2); // Default goal
 
   useEffect(() => {
     const loadSettings = async () => {
       try {
-        const savedGoal = await AsyncStorage.getItem('waterIntakeGoal');
-        if (savedGoal !== null) {
-          setWaterIntakeGoal(parseFloat(savedGoal));
+        const auth = getAuth();
+        const firestore = getFirestore();
+        const user = auth.currentUser;
+
+        if (user) {
+          const userRef = doc(firestore, 'users', user.uid);
+          const docSnap = await getDoc(userRef);
+
+          if (docSnap.exists()) {
+            const userData = docSnap.data();
+            if (userData.waterIntakeGoal) {
+              setWaterIntakeGoal(userData.waterIntakeGoal);
+            }
+          } else {
+            console.log('No such document!');
+          }
+        } else {
+          Alert.alert('Error', 'User not authenticated.');
         }
       } catch (error) {
         console.error('Failed to load settings:', error);
@@ -23,16 +39,39 @@ const WaterBottle = () => {
   }, []);
 
   const addWater = () => {
-    setWaterLevel((prev) => Math.min(prev + 0.5, waterIntakeGoal)); 
+    setWaterLevel((prev) => Math.min(prev + 0.5, waterIntakeGoal));
   };
 
   const removeWater = () => {
-    setWaterLevel((prev) => Math.max(prev - 0.5, 0)); 
+    setWaterLevel((prev) => Math.max(prev - 0.5, 0));
+  };
+
+  const saveGoalToFirestore = async (goal) => {
+    try {
+      const auth = getAuth();
+      const firestore = getFirestore();
+      const user = auth.currentUser;
+
+      if (user) {
+        const userRef = doc(firestore, 'users', user.uid);
+        await setDoc(userRef, { waterIntakeGoal: goal }, { merge: true });
+      } else {
+        Alert.alert('Error', 'User not authenticated.');
+      }
+    } catch (error) {
+      console.error('Failed to save settings:', error);
+      Alert.alert('Error', 'Failed to save the water intake goal. Please try again.');
+    }
+  };
+
+  const handleGoalChange = (newGoal) => {
+    setWaterIntakeGoal(newGoal);
+    saveGoalToFirestore(newGoal);
   };
 
   const renderBottleSections = () => {
     const sections = [];
-    for (let i = totalSections - 1; i >= 0; i--) { 
+    for (let i = totalSections - 1; i >= 0; i--) {
       sections.push(
         <View
           key={i}

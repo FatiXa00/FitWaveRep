@@ -14,8 +14,6 @@ import Icon from 'react-native-vector-icons/MaterialIcons';
 import Popover from 'react-native-popover-menu';
 import RNPopover from 'react-native-popover-menu';
 
-
-
 const NutritionHome = () => {
 
   const route = useRoute();
@@ -117,16 +115,7 @@ const NutritionHome = () => {
               <Icon name="fitness-center" size={20} color="#FD6639" /> Track Meals
             </Text>
           </MenuOption>
-          <MenuOption onSelect={() => alert('Edit')}>
-            <Text style={styles.menuText}>
-              <Icon name="" size={20} color="#FD6639" /> option
-            </Text>
-          </MenuOption>
-          <MenuOption onSelect={() => alert('Delete')}>
-            <Text style={styles.menuText}>
-              <Icon name="" size={20} color="#FD6639" /> option
-            </Text>
-          </MenuOption>
+    
         </MenuOptions>
       </Menu>
       </View>

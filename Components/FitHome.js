@@ -1,17 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { View, Text, Image, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { FontAwesome5, FontAwesome } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
+import { auth, firestore } from './firebaseConfig'; 
+import { doc, getDoc } from 'firebase/firestore'; 
 
 
 export default function FitHome() {
   const [showAllExercises, setShowAllExercises] = useState(false);
   const navigation = useNavigation();
+  const [fullName, setFullName] = useState('');
+
 
   const handleNavigation = (screen) => {
     navigation.navigate(screen);
   };
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const user = auth.currentUser;
+      if (user) {
+        try {
+          const userDocRef = doc(firestore, 'users', user.uid);
+          const userDoc = await getDoc(userDocRef);
+          if (userDoc.exists()) {
+            const userData = userDoc.data();
+            setFullName(userData.fullName || '');
+          }
+        } catch (error) {
+          Alert.alert('Error', 'Failed to load user data');
+        }
+      }
+    };
+    fetchUserData();
+  }, []);
 
   const allExercises = [
     "Push Ups", "Running", "Yoga Pose", "Squats", "Plank", "Lunges", "Burpees",
@@ -25,10 +48,9 @@ export default function FitHome() {
 
   return (
     <View style={styles.container}>
-      {/* Header */}
       <View style={styles.header}>
         <View style={styles.headerContainer}>
-          <Text style={styles.greeting}>Hi, Fati</Text>
+          <Text style={styles.greeting}>Hi, {fullName}</Text>
           <Text style={styles.subGreeting}>What do you Workout today?</Text>
         </View>
         <View style={styles.iconRow}>
@@ -47,7 +69,7 @@ export default function FitHome() {
       <View style={styles.startContainer}>
         <View style={styles.textContainer}>
           <Text style={styles.startText}>Start practicing {'\n'} your workout!</Text>
-          <TouchableOpacity style={styles.startButton}>
+          <TouchableOpacity style={styles.startButton}onPress={() => handleNavigation('WorkoutScreen')}>
             <Text style={styles.startButtonText}>Start</Text>
             <Icon name="arrow-right" size={16} color="#fff" style={styles.arrowIcon} />
           </TouchableOpacity>
@@ -71,7 +93,7 @@ export default function FitHome() {
         <CategoryItem name="Yoga" icon="spa" />
         <CategoryItem name="Swimming" icon="swimmer" />
         <CategoryItem name="Cycling" icon="bicycle" />
-        <CategoryItem name="Boxing" icon="boxing-glove" />
+        <CategoryItem name="Boxing" icon="fist-raised" />
         <CategoryItem name="Tennis" icon="table-tennis" />
         <CategoryItem name="Football" icon="football-ball" />
         <CategoryItem name="Basketball" icon="basketball-ball" />
