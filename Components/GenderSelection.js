@@ -10,7 +10,6 @@ export default function GenderSelection() {
   const [selectedGender, setSelectedGender] = useState(null);
   const [alertVisible, setAlertVisible] = useState(false);
 
-  // Initialize Firebase services
   const auth = getAuth();
   const firestore = getFirestore();
 
@@ -23,10 +22,8 @@ export default function GenderSelection() {
       const user = auth.currentUser;
 
       if (user) {
-        const userRef = doc(firestore, 'users', user.uid); // Reference to the user's document
-
+        const userRef = doc(firestore, 'users', user.uid); 
         try {
-          // Update Firestore with the selected gender
           await setDoc(userRef, { gender: selectedGender }, { merge: true });
 
           console.log('Selected gender:', selectedGender);

@@ -87,7 +87,7 @@ const NutritionInfo = () => {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView style={styles.container}contentContainerStyle={{ paddingBottom: 100 }}>
       {foodItem && nutrients && (
         <View style={styles.content}>
           <Text style={styles.foodName}>{foodItem.label}</Text>
@@ -117,12 +117,12 @@ const NutritionInfo = () => {
               style={styles.picker}
               onValueChange={(itemValue) => setMeasurementType(itemValue)}
             >
-              <Picker.Item label="Grams (g)" value="grams" />
-              <Picker.Item label="Milliliters (ml)" value="milliliters" />
-              <Picker.Item label="Cups" value="cups" />
-              <Picker.Item label="Ounces (oz)" value="ounces" />
-              <Picker.Item label="Tablespoons (tbsp)" value="tablespoons" />
-              <Picker.Item label="Teaspoons (tsp)" value="teaspoons" />
+              <Picker.Item label="Grams (g)" value="grams" color='white' />
+              <Picker.Item label="Milliliters (ml)" value="milliliters" color='white'/>
+              <Picker.Item label="Cups" value="cups" color='white'/>
+              <Picker.Item label="Ounces (oz)" value="ounces" color='white'/>
+              <Picker.Item label="Tablespoons (tbsp)" value="tablespoons" color='white'/>
+              <Picker.Item label="Teaspoons (tsp)" value="teaspoons" color='white' />
             </Picker>
           </View>
 
@@ -143,6 +143,7 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
+    top:40,
   },
   foodName: {
     fontSize: 22,
@@ -184,19 +185,22 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: 'center',
   },
+  label :{
+    color:'white',
+  },
   pickerContainer: {
     backgroundColor: '#222435',
     borderRadius: 10,
     marginVertical: 10,
   },
   pickerLabel: {
-    color: '#A1A1A1',
+    color: 'white',
     paddingHorizontal: 10,
     paddingTop: 10,
     fontSize: 14,
   },
   picker: {
-    color: '#fff',
+    color: 'white',
   },
   addButton: {
     backgroundColor: '#FD6639',

@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
   row: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    marginBottom: 15, // Space between rows
+    marginBottom: 15, 
   },
   iconButton: {
     alignItems: 'center',

@@ -57,7 +57,7 @@ const Calendar = ({ onDateChange, selectedDate = new Date() }) => {
                 key={day}
                 style={[
                   styles.day,
-                  day === selectedDay && styles.selectedDay, // Highlight the selected day
+                  day === selectedDay && styles.selectedDay, 
                 ]}
                 onPress={() => handleDayPress(day)}
               >
@@ -92,11 +92,11 @@ const styles = StyleSheet.create({
   },
   calendar: {
     flexDirection: 'column',
-    minWidth: screenWidth, // Ensure it covers the screen width
+    minWidth: screenWidth, 
   },
   row: {
     flexDirection: 'row',
-    flexWrap: 'wrap', // Ensure days wrap to new lines
+    flexWrap: 'wrap',
     justifyContent: 'space-between',
   },
   day: {
@@ -123,11 +123,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   selectedDay: {
-    backgroundColor: '#FD6639', // Highlight background color
-    borderColor: '#333', // Darker border for the selected day
+    backgroundColor: '#FD6639',
+    borderColor: '#333', 
   },
   selectedDayText: {
-    color: '#ffffff', // Change text color for selected day
+    color: '#ffffff', 
   },
 });
 

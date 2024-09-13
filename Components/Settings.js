@@ -3,7 +3,7 @@ import { View, Text, Image, TouchableOpacity, Modal, StyleSheet, Alert } from 'r
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import * as ImagePicker from 'expo-image-picker';
 import { useNavigation } from '@react-navigation/native';
-import { auth, firestore } from './firebaseConfig'; // Ensure paths are correct
+import { auth, firestore } from './firebaseConfig';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 
 export default function Settings() {
@@ -94,12 +94,12 @@ export default function Settings() {
         <Text style={styles.profileName}>{fullName}</Text>
       </View>
       <View style={styles.menuSection}>
-        <MenuItem icon="user" label="Profile" />
-        <MenuItem icon="heart" label="Favorite" />
-        <MenuItem icon="credit-card" label="Payment Method" />
-        <MenuItem icon="lock" label="Privacy Policy" />
-        <MenuItem icon="cog" label="Settings" />
-        <MenuItem icon="question-circle" label="Help" />
+        <MenuItem icon="user" label="Profile" onPress={() => navigation.navigate('Profile')}/>
+        <MenuItem icon="heart" label="Favorite" onPress={() => navigation.navigate('Favorite')}/>
+        <MenuItem icon="credit-card" label="Payment Method" onPress={() => navigation.navigate('PaymentMethod')}/>
+        <MenuItem icon="lock" label="Privacy Policy" onPress={() => navigation.navigate('PrivacyPolicy')}/>
+        <MenuItem icon="cog" label="Settings" onPress={() => navigation.navigate("SettingsPage")} />
+        <MenuItem icon="question-circle" label="Help" onPress={() => navigation.navigate('Help')} />
         <MenuItem icon="sign-out-alt" label="Logout" onPress={showLogoutConfirm} />
       </View>
       <Modal

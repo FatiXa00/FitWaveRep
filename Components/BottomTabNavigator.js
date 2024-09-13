@@ -12,9 +12,7 @@ import CreateAccount from './CreateAccount';
 import NutritionHome from './NutritionHome';
 import AppoitmentHome from './AppointmentHome';
 import Medicine from './Medecine';
-
 import AddModal from './AddModal';
-import Menu from './Menu';
 
 const Tab = createBottomTabNavigator();
 

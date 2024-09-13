@@ -12,7 +12,7 @@ import GoalCalories from './GoalCalories';
 import ActivityProgress from './ActivityProgress'; 
 import WaterBottle from './WaterBottle'; 
 import { auth, firestore } from './firebaseConfig'; 
-import { doc, getDoc } from 'firebase/firestore'; 
+import { doc, getDoc } from 'firebase/firestore';
 
 
 const { width } = Dimensions.get('window');
@@ -25,6 +25,7 @@ const Home = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const navigation = useNavigation();
   const [fullName, setFullName] = useState('');
+  const [waterIntakeGoal, setWaterIntakeGoal] = useState(1.4); // Add state for water intake goal
 
 
   useEffect(() => {
@@ -37,6 +38,9 @@ const Home = () => {
           if (userDoc.exists()) {
             const userData = userDoc.data();
             setFullName(userData.fullName || '');
+            if (userData.waterIntakeGoal) {
+              setWaterIntakeGoal(userData.waterIntakeGoal);
+            }
           }
         } catch (error) {
           Alert.alert('Error', 'Failed to load user data');

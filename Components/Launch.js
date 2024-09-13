@@ -6,13 +6,13 @@ import { getAuth } from 'firebase/auth';
 
 export default function Launch() {
   const navigation = useNavigation();
-
+/*
   useEffect(() => {
     const timer = setTimeout(() => {
       navigation.navigate('OnBoarding1');
-    }, 3000); // 3 seconds delay
+    }, 3000); 
     return () => clearTimeout(timer);
-  }, [navigation]);
+  }, [navigation]);*/
 
   const handlePress = () => {
     navigation.navigate('OnBoarding1');
