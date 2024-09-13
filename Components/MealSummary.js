@@ -8,15 +8,19 @@ const MealSummary = () => {
   const [mealItems, setMealItems] = useState([]);
   const [mealName, setMealName] = useState('');
   const [expandedItemId, setExpandedItemId] = useState(null);
+  const [editingItem, setEditingItem] = useState(null); // State to hold the item being edited
+  const [editedQuantity, setEditedQuantity] = useState('');
+  const [editedMeasurementType, setEditedMeasurementType] = useState('grams');
   const navigation = useNavigation();
 
   const handleAddMealItem = (item) => {
-    setMealItems([...mealItems, item]);
+    const updatedItems = [...mealItems, item];
+    setMealItems(updatedItems);
   };
 
   const handleNavigateToSearch = () => {
     if (mealName.trim() === '') {
-      Alert.alert('Required', 'Please enter a meal name.');
+      Alert.alert('Required', 'Please enter a meal name.'); 
     } else {
       navigation.navigate('FoodSearch', { handleAddMealItem });
     }
@@ -33,11 +37,40 @@ const MealSummary = () => {
   };
 
   const handleDelete = (itemToDelete) => {
-    setMealItems(mealItems.filter(item => item.fdcId !== itemToDelete.fdcId));
+    const updatedItems = mealItems.filter(item => item.fdcId !== itemToDelete.fdcId);
+    setMealItems(updatedItems);
   };
 
   const toggleExpand = (itemId) => {
     setExpandedItemId(expandedItemId === itemId ? null : itemId);
+  };
+
+  const startEditing = (item) => {
+    setEditingItem(item);
+    setEditedQuantity(item.quantity.toString());
+    setEditedMeasurementType(item.measurementType);
+  };
+
+  const saveEdit = () => {
+    if (!editedQuantity) {
+      Alert.alert('Required', 'Please enter a quantity.');
+      return;
+    }
+
+    const updatedItems = mealItems.map(item =>
+      item.fdcId === editingItem.fdcId
+        ? {
+            ...item,
+            quantity: parseFloat(editedQuantity),
+            measurementType: editedMeasurementType,
+          }
+        : item
+    );
+
+    setMealItems(updatedItems);
+    setEditingItem(null);
+    setEditedQuantity('');
+    setEditedMeasurementType('grams');
   };
 
   const renderItem = ({ item }) => (
@@ -52,16 +85,20 @@ const MealSummary = () => {
       <View style={styles.itemContainer}>
         <TouchableOpacity onPress={() => toggleExpand(item.fdcId)}>
           <View style={styles.itemHeader}>
-            <Text style={styles.itemName}>{item.description}</Text>
+            <Text style={styles.itemName}>
+              {item.description} - {item.quantity} {item.measurementType}
+            </Text>
+            <TouchableOpacity onPress={() => startEditing(item)}>
+              <Ionicons name="create-outline" size={20} color="gray" />
+            </TouchableOpacity>
             <AntDesign name="down" size={20} color="gray" style={styles.arrowIcon} />
-
           </View>
         </TouchableOpacity>
         {expandedItemId === item.fdcId && (
           <View style={styles.nutrientList}>
             {item.foodNutrients.map(nutrient => (
               <Text key={nutrient.nutrientName} style={styles.nutrientText}>
-                {nutrient.nutrientName}: {nutrient.value} {nutrient.unitName}
+                {nutrient.nutrientName}: {nutrient.value} {nutrient.unitName ? nutrient.unitName : 'unit'}
               </Text>
             ))}
           </View>
@@ -111,6 +148,28 @@ const MealSummary = () => {
           keyExtractor={(item) => item.fdcId.toString()}
         />
       </View>
+
+      {editingItem && (
+        <View style={styles.editContainer}>
+          <Text style={styles.editTitle}>Edit Item</Text>
+          <TextInput
+            style={styles.editInput}
+            placeholder="Quantity"
+            keyboardType="numeric"
+            value={editedQuantity}
+            onChangeText={setEditedQuantity}
+          />
+          <TextInput
+            style={styles.editInput}
+            placeholder="Measurement Type"
+            value={editedMeasurementType}
+            onChangeText={setEditedMeasurementType}
+          />
+          <TouchableOpacity style={styles.saveButton} onPress={saveEdit}>
+            <Text style={styles.saveButtonText}>Save</Text>
+          </TouchableOpacity>
+        </View>
+      )}
 
       <TouchableOpacity style={styles.nextButton} onPress={handleNext}>
         <Text style={styles.nextButtonText}>Next</Text>
@@ -200,7 +259,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FF4D4D',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop:5,
+    marginTop: 5,
     width: 80,
     height: 35,
     borderRadius: 10,
@@ -228,6 +287,36 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
-});
+  editContainer: {
+    marginTop: 20,
+    padding: 10,
+    backgroundColor: '#222435',
+    borderRadius: 10,
+  },
+  editTitle: {
+    color: '#FFF',
+    fontSize: 18,
+    marginBottom: 10,
+  },
+  editInput: {
+    backgroundColor: '#333',
+    borderRadius: 10,
+    color: '#FFF',
+    fontSize: 16,
+    padding: 10,
+    marginBottom: 10,
+  },
+  saveButton: {
+    backgroundColor: '#FD6639',
+    paddingVertical: 12,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  saveButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+}); 
 
 export default MealSummary;

@@ -47,12 +47,13 @@ import NutritionalSummary from './Components/NutritionalSummary';
 import SplashScreen from './Components/SplashScreen';
 import Ruler from './Components/Ruler';
 import Medicine from './Components/Medecine';
+import NutritionalData from './Components/NutritionData';
 
 const Stack = createStackNavigator();
 
 export default function App() {
 
-  return (
+  return ( 
     <MenuProvider>
       <NavigationContainer>
         <Stack.Navigator initialRouteName="Launch">
@@ -94,6 +95,8 @@ export default function App() {
           <Stack.Screen name="RecipeDetailPage" component={RecipeDetailPage} options={{ headerShown: false }} />
           <Stack.Screen name="MealTracker" component={MealTracker} options={{ headerShown: false }} />
           <Stack.Screen name="NutritionalSummary" component={NutritionalSummary} options={{ headerShown: false }} />
+          <Stack.Screen name="NutritionData" component={NutritionalData} options={{ headerShown: false }} />
+
         </Stack.Navigator>
       <StatusBar style="auto" />
     </NavigationContainer>

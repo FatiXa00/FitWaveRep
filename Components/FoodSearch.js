@@ -6,31 +6,47 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 
 const FoodSearch = () => {
   const [query, setQuery] = useState('');
-  const [results, setResults] = useState([]);
+  const [results, setResults] = useState([]); 
   const navigation = useNavigation();
   const route = useRoute();
   const { handleAddMealItem } = route.params || {};
 
   const searchFood = async () => {
     try {
-      const response = await axios.get('https://api.nal.usda.gov/fdc/v1/foods/search', {
+      const response = await axios.get('https://api.edamam.com/api/food-database/v2/parser', {
         params: {
-          query: query,
-          api_key: 'veVaIqWcTQBfUokzpUrZZhBE70tpkCk1uMNB1OsV' 
+          app_id: 'da101ed7',
+          app_key: '6d9fb233c862a3f4354f742f91ff815d',
+          ingr: query,
+          nutritionType: 'logging',
         },
       });
-      setResults(response.data.foods);
+      setResults(response.data.hints.map(hint => ({
+        ...hint.food,
+        foodId: hint.food.foodId || Math.random().toString() // Ensure foodId is defined
+      })));
     } catch (error) {
       console.error('Error fetching food data:', error);
     }
   };
 
   const addToMeal = (item) => {
-    if (handleAddMealItem) {
-      handleAddMealItem(item); 
-      navigation.goBack(); 
-    }
+    navigation.navigate('NutritionData', {
+      foodItem: item,
+      handleAddMealItem,
+    });
   };
+
+  const renderItem = ({ item }) => (
+    <TouchableOpacity onPress={() => addToMeal(item)}>
+      <View style={styles.resultContainer}>
+        <View style={styles.itemContainer}>
+          <Text style={styles.itemName}>{item.label}</Text>
+          <Text style={styles.itemAmount}>{item.nutrients.ENERC_KCAL} kcal</Text>
+        </View>
+      </View>
+    </TouchableOpacity>
+  );
 
   return (
     <View style={styles.container}>
@@ -66,17 +82,8 @@ const FoodSearch = () => {
       </View>
       <FlatList
         data={results}
-        renderItem={({ item }) => (
-          <TouchableOpacity onPress={() => addToMeal(item)}>
-            <View style={styles.resultContainer}>
-              <View style={styles.itemContainer}>
-                <Text style={styles.itemName}>{item.description}</Text>
-                <Text style={styles.itemAmount}>{item.foodNutrients[0]?.value} {item.foodNutrients[0]?.unitName}</Text>
-              </View>
-            </View>
-          </TouchableOpacity>
-        )}
-        keyExtractor={(item) => item.fdcId.toString()}
+        renderItem={renderItem}
+        keyExtractor={(item) => item.foodId ? item.foodId.toString() : Math.random().toString()} // Fallback key
       />
     </View>
   );
@@ -166,14 +173,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#222435',
     top:18,
     borderRadius:8,
-
   },
   itemContainer: {
     paddingVertical: 15,
     paddingHorizontal: 10,
     borderBottomWidth: 1,
     borderBottomColor: '#333',
-
   },
   itemName: {
     color: '#fff',
