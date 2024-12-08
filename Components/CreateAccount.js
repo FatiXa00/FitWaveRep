@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image,Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { auth } from './firebaseConfig'; // Assurez-vous que le chemin est correct
+import { auth } from './firebaseConfig'; 
 import { getFirestore, doc, setDoc } from 'firebase/firestore';
 
 

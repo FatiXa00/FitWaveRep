@@ -81,8 +81,8 @@ const NutritionInfo = () => {
         quantity: parseFloat(quantity) || 0,
         measurementType,
       });
-      // Navigate to Meal Summary page after adding the meal item
-      navigation.navigate('MealSummary'); // Change 'MealSummaryPage' to your actual route name
+    
+      navigation.navigate('MealSummary'); 
     }
   };
 

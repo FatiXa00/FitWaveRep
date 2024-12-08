@@ -1,5 +1,7 @@
 {
   "expo": {
+    "newArchEnabled": true,
+
     "plugins": [
       [
         "expo-camera",

@@ -54,7 +54,6 @@ import Home from './Components/Home';
 import WaterIntake from './Components/WaterIntake';
 
 
-
 const Stack = createStackNavigator();
 
 export default function App() {
