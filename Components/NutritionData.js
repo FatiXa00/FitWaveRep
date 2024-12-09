@@ -80,6 +80,7 @@ const NutritionInfo = () => {
         quantity: parseFloat(quantity) || 0,
         measurementType,
       });
+    
       navigation.navigate('MealSummary'); 
     }
   };
