@@ -1,4 +1,3 @@
-// RecipeDetailPage.js
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
 

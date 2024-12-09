@@ -8,7 +8,7 @@ const NutritionInfo = () => {
   const route = useRoute();
   const { foodItem, handleAddMealItem } = route.params || {};
   const [quantity, setQuantity] = useState('');
-  const [measurementType, setMeasurementType] = useState('grams'); // Default measurement type
+  const [measurementType, setMeasurementType] = useState('grams');
   const [nutrients, setNutrients] = useState(null);
   const navigation = useNavigation();
 
@@ -36,14 +36,13 @@ const NutritionInfo = () => {
     }
   };
 
-  // Conversion factors for different measurement types
   const measurementConversions = {
-    grams: 1, // base 100g
-    milliliters: 1, // assuming density of water (1g = 1ml)
-    cups: 237, // 1 cup = 237g for water-like substances (will differ for other foods)
-    ounces: 28.35, // 1 ounce = 28.35g
-    tablespoons: 15, // 1 tablespoon = 15g
-    teaspoons: 5, // 1 teaspoon = 5g
+    grams: 1, 
+    milliliters: 1,
+    cups: 237, 
+    ounces: 28.35, 
+    tablespoons: 15, 
+    teaspoons: 5, 
   };
 
   const calculateNutrients = (nutrients) => {
@@ -81,8 +80,7 @@ const NutritionInfo = () => {
         quantity: parseFloat(quantity) || 0,
         measurementType,
       });
-      // Navigate to Meal Summary page after adding the meal item
-      navigation.navigate('MealSummary'); // Change 'MealSummaryPage' to your actual route name
+      navigation.navigate('MealSummary'); 
     }
   };
 
@@ -106,9 +104,11 @@ const NutritionInfo = () => {
             style={styles.quantityInput}
             keyboardType="numeric"
             placeholder="Enter Quantity"
+            placeholderTextColor="grey"  
             value={quantity}
             onChangeText={(value) => setQuantity(value)}
           />
+
 
           <View style={styles.pickerContainer}>
             <Text style={styles.pickerLabel}>Choose Measurement</Text>
@@ -177,7 +177,7 @@ const styles = StyleSheet.create({
   },
   quantityInput: {
     backgroundColor: '#222435',
-    color: '#fff',
+    color: 'white',
     borderRadius: 10,
     paddingHorizontal: 10,
     paddingVertical: 8,

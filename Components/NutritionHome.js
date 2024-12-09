@@ -11,8 +11,7 @@ import PieChart from './PieChart';
 import MealItem from './MealItem'; 
 import { Menu, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-menu';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import Popover from 'react-native-popover-menu';
-import RNPopover from 'react-native-popover-menu';
+
 
 const NutritionHome = () => {
 

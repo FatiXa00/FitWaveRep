@@ -129,9 +129,8 @@ export default function SelectWeight() {
       const user = auth.currentUser;
   
       if (user) {
-        const userRef = doc(firestore, 'users', user.uid); // Reference to the user's document
+        const userRef = doc(firestore, 'users', user.uid); 
   
-        // Update Firestore with the selected weight
         await setDoc(userRef, { weight: selectedWeight }, { merge: true });
   
         console.log('Selected Weight:', selectedWeight);

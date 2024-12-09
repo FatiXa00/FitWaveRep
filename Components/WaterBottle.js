@@ -7,7 +7,7 @@ import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore';
 const WaterBottle = () => {
   const totalSections = 6;
   const [waterLevel, setWaterLevel] = useState(0);
-  const [waterIntakeGoal, setWaterIntakeGoal] = useState(2); // Default goal
+  const [waterIntakeGoal, setWaterIntakeGoal] = useState(2); 
 
   useEffect(() => {
     const loadSettings = async () => {

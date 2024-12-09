@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import ForgottenPassword from './ForgottenPassword';
-import SetPassword from './SetPassword';
+
 
 export default function CreateDoctor() {
   const navigation = useNavigation();

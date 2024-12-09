@@ -1,4 +1,4 @@
-import { Camera, CameraType, FlashMode } from 'expo-camera/legacy';
+import { Camera, CameraType, FlashMode } from 'expo-camera';
 import { useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';

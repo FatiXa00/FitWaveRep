@@ -23,7 +23,7 @@ const FoodSearch = () => {
       });
       setResults(response.data.hints.map(hint => ({
         ...hint.food,
-        foodId: hint.food.foodId || Math.random().toString() // Ensure foodId is defined
+        foodId: hint.food.foodId || Math.random().toString() 
       })));
     } catch (error) {
       console.error('Error fetching food data:', error);
@@ -83,7 +83,7 @@ const FoodSearch = () => {
       <FlatList
         data={results}
         renderItem={renderItem}
-        keyExtractor={(item) => item.foodId ? item.foodId.toString() : Math.random().toString()} // Fallback key
+        keyExtractor={(item) => item.foodId ? item.foodId.toString() : Math.random().toString()} 
       />
     </View>
   );

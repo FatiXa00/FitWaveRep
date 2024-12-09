@@ -18,7 +18,7 @@ export default function Goal() {
         const user = auth.currentUser;
 
         if (user) {
-          const userRef = doc(firestore, 'users', user.uid); // Reference to the user's document
+          const userRef = doc(firestore, 'users', user.uid); 
           const docSnap = await getDoc(userRef);
 
           if (docSnap.exists()) {

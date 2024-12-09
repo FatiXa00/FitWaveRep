@@ -57,7 +57,6 @@ const CalorieTracker = () => {
                 </View>
             </View>
 
-            {/* Daily Meals */}
             <View style={styles.mealsContainer}>
                 {mealData.map((meal, index) => (
                     <MealItem

@@ -1,4 +1,3 @@
-// RecipeListPage.js
 import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, TouchableOpacity, TextInput, StyleSheet, Image } from 'react-native';
 
