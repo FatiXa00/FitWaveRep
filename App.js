@@ -52,7 +52,8 @@ import Help from './Components/Help';
 import WorkoutScreen from './Components/WorkoutScreen';
 import Home from './Components/Home';
 import WaterIntake from './Components/WaterIntake';
-
+import ChatBot from './Components/ChatBot';
+import FloatingChatButton from './Components/FloatingChatButton';
 
 const Stack = createStackNavigator();
 
@@ -109,6 +110,7 @@ export default function App() {
           <Stack.Screen name="WorkoutScreen" component={WorkoutScreen} options={{ headerShown: false }} />
           <Stack.Screen name="MyHome" component={Home}  options={{ headerShown: false }} />
           <Stack.Screen name="WaterIntake" component={WaterIntake} options={{ headerShown: false }} />
+          <Stack.Screen name="chatbot" component={ChatBot} options={{ headerShown: false }} />
 
         </Stack.Navigator>
       <StatusBar style="auto" />

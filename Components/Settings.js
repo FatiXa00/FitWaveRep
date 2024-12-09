@@ -94,7 +94,7 @@ export default function Settings() {
         <Text style={styles.profileName}>{fullName}</Text>
       </View>
       <View style={styles.menuSection}>
-        <MenuItem icon="user" label="Profile" onPress={() => navigation.navigate('Profile')}/>
+        <MenuItem icon="user" label="Profile" onPress={() => navigation.navigate('chatbot')}/>
         <MenuItem icon="heart" label="Favorite" onPress={() => navigation.navigate('Favorite')}/>
         <MenuItem icon="credit-card" label="Payment Method" onPress={() => navigation.navigate('PaymentMethod')}/>
         <MenuItem icon="lock" label="Privacy Policy" onPress={() => navigation.navigate('PrivacyPolicy')}/>

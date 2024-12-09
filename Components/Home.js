@@ -13,7 +13,7 @@ import ActivityProgress from './ActivityProgress';
 import WaterBottle from './WaterBottle'; 
 import { auth, firestore } from './firebaseConfig'; 
 import { doc, getDoc } from 'firebase/firestore';
-
+import FloatingChatButton from './FloatingChatButton';
 
 const { width } = Dimensions.get('window');
 
@@ -26,7 +26,6 @@ const Home = () => {
   const navigation = useNavigation();
   const [fullName, setFullName] = useState('');
   const [waterIntakeGoal, setWaterIntakeGoal] = useState(1.4); // Add state for water intake goal
-
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -133,124 +132,126 @@ const Home = () => {
   };
 
   return (
-    <ScrollView style={styles.container}contentContainerStyle={{ paddingBottom: 200 }}>
-      <StatusBar barStyle="light-content" />
-      <View style={styles.header}>
-        <View style={styles.dateContainer}>
-          <Text style={styles.dayText}>{dayName}</Text>
-          <Text style={styles.dateText}>{`${date} ${monthName}`}</Text>
-        </View>
-        <View style={styles.iconRow}>
+    <View style={styles.container}>
+      <ScrollView style={styles.scrollView} contentContainerStyle={{ paddingBottom: 200 }}>
+        <StatusBar barStyle="light-content" />
+        <View style={styles.header}>
+          <View style={styles.dateContainer}>
+            <Text style={styles.dayText}>{dayName}</Text>
+            <Text style={styles.dateText}>{`${date} ${monthName}`}</Text>
+          </View>
+          <View style={styles.iconRow}>
         
-          <TouchableOpacity onPress={() => setModalVisible(true)}>
-            <FontAwesome5 name="calendar-alt" size={22} color="#FD6639" style={styles.icon} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => setGoalCaloriesVisible(true)}  >
-            <FontAwesome5 name="fire" size={22} color="#FD6639" style={styles.icon} />
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <FontAwesome name="bell" size={22} color="#FD6639" style={styles.icon}/>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => handleNavigation('Settings')}>
-            <FontAwesome5 name="user-circle" size={22} color="#FD6639" style={styles.icon} />
-          </TouchableOpacity>
+            <TouchableOpacity onPress={() => setModalVisible(true)}>
+              <FontAwesome5 name="calendar-alt" size={22} color="#FD6639" style={styles.icon} />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => setGoalCaloriesVisible(true)}  >
+              <FontAwesome5 name="fire" size={22} color="#FD6639" style={styles.icon} />
+            </TouchableOpacity>
+            <TouchableOpacity>
+              <FontAwesome name="bell" size={22} color="#FD6639" style={styles.icon}/>
+
+            </TouchableOpacity>
+            <TouchableOpacity onPress={() => handleNavigation('Settings')}>
+              <FontAwesome5 name="user-circle" size={22} color="#FD6639" style={styles.icon} />
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
 
-      <View style={styles.greetingContainer}>
-        <Text style={styles.greetingText}>Hi, {fullName}</Text>
-        <Text style={styles.subText}>It's time to challenge your limits...</Text>
-      </View>
+        <View style={styles.greetingContainer}>
+          <Text style={styles.greetingText}>Hi, {fullName}</Text>
+          <Text style={styles.subText}>It's time to challenge your limits...</Text>
+        </View>
 
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        contentContainerStyle={styles.dateSelector}
-      >
-        <Calendar
-          onDateChange={handleDateChange}
-          selectedDate={selectedDate}
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.dateSelector}
+        >
+          <Calendar
+            onDateChange={handleDateChange}
+            selectedDate={selectedDate}
+          />
+        </ScrollView>
+
+        <View style={styles.paginationContainer}>
+          <FlatList
+            data={pages}
+            keyExtractor={(item) => item.id}
+            horizontal
+            pagingEnabled
+            showsHorizontalScrollIndicator={false}
+            renderItem={({ item }) => (
+              <View style={{ width, flex: 1 }}>
+                {item.component}
+              </View>
+            )}
+            onScroll={onScroll}
+            onViewableItemsChanged={onViewableItemsChanged}
+            viewabilityConfig={viewabilityConfig}
+          />
+
+          <View style={styles.pagination}>
+          {pages.map((_, index) => (
+              <TouchableOpacity
+              key={index}
+              style={[styles.dot, currentPage === index && styles.activeDot]}
+              onPress={() => {
+                  scrollX.flattenOffset();
+                  scrollX.setValue(index * width);
+              }}
+              />
+          ))}
+          </View>
+
+        </View>
+
+        <View>
+          <ActivityProgress
+            caloriesBurned={450}
+            steps={8000}
+            distance={5}
+          />
+          <WaterBottle />
+
+        </View>
+
+        <View style={styles.currentStatusContainer}>
+          <Text style={styles.currentStatusTitle}>Current Status</Text>
+          <MyBarChart />
+        </View>
+
+        <Modal
+          visible={modalVisible}
+          animationType="fade"
+          transparent={true}
+          onRequestClose={() => setModalVisible(false)}
+        >
+          <View style={styles.modalBackground}>
+          <View style={styles.modalContainer}>
+            <FullScreenCalendar
+              onDayPress={handleFullScreenDateChange}
+              markedDates={{
+                [selectedDate.toISOString().split('T')[0]]: { selected: true, selectedColor: '#FD6639' },
+              }}
+            />
+            <TouchableOpacity
+              onPress={() => setModalVisible(false)}
+              style={styles.closeButton}
+            >
+              <Text style={styles.closeButtonText}>Close</Text>
+            </TouchableOpacity>
+          </View>
+          </View>
+        </Modal>
+
+        <GoalCalories
+          visible={goalCaloriesVisible}
+          onClose={() => setGoalCaloriesVisible(false)}
         />
       </ScrollView>
-
-      <View style={styles.paginationContainer}>
-        <FlatList
-          data={pages}
-          keyExtractor={(item) => item.id}
-          horizontal
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}
-          renderItem={({ item }) => (
-            <View style={{ width, flex: 1 }}>
-              {item.component}
-            </View>
-          )}
-          onScroll={onScroll}
-          onViewableItemsChanged={onViewableItemsChanged}
-          viewabilityConfig={viewabilityConfig}
-        />
-
-        <View style={styles.pagination}>
-        {pages.map((_, index) => (
-            <TouchableOpacity
-            key={index}
-            style={[styles.dot, currentPage === index && styles.activeDot]}
-            onPress={() => {
-                scrollX.flattenOffset();
-                scrollX.setValue(index * width);
-            }}
-            />
-        ))}
-        </View>
-
-      </View>
-
-      <View>
-        <ActivityProgress
-          caloriesBurned={450}
-          steps={8000}
-          distance={5}
-        />
-        <WaterBottle />
-
-      </View>
-
-      <View style={styles.currentStatusContainer}>
-        <Text style={styles.currentStatusTitle}>Current Status</Text>
-        <MyBarChart />
-      </View>
-
-      <Modal
-        visible={modalVisible}
-        animationType="fade"
-        transparent={true}
-        onRequestClose={() => setModalVisible(false)}
-      >
-        <View style={styles.modalBackground}>
-        <View style={styles.modalContainer}>
-          <FullScreenCalendar
-            onDayPress={handleFullScreenDateChange}
-            markedDates={{
-              [selectedDate.toISOString().split('T')[0]]: { selected: true, selectedColor: '#FD6639' },
-            }}
-          />
-          <TouchableOpacity
-            onPress={() => setModalVisible(false)}
-            style={styles.closeButton}
-          >
-            <Text style={styles.closeButtonText}>Close</Text>
-          </TouchableOpacity>
-        </View>
-        </View>
-      </Modal>
-
-
-      <GoalCalories
-        visible={goalCaloriesVisible}
-        onClose={() => setGoalCaloriesVisible(false)}
-      />
-      
-    </ScrollView>
+      <FloatingChatButton />
+    </View>
   );
 };
 
@@ -261,6 +262,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#141824',
     paddingBottom: 16,
     
+  },
+  scrollView: {
+    flex: 1,
   },
   header: {
     flexDirection: 'row',
@@ -356,6 +360,7 @@ waterIntakeValue: {
   color: '#FD6639',
   fontSize: 20,
 },
+
 
   circlesContainer: {
     marginVertical: 16,
