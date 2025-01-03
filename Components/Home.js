@@ -310,64 +310,59 @@ const styles = StyleSheet.create({
   },
   paginationContainer: {
     marginVertical: 16,
-    bottom:20,
+    bottom: 20,
   },
   pageContainer: {
     marginVertical: 16,
     padding: 16,
     backgroundColor: '#222435',
     borderRadius: 16,
-    width:350, 
-    right:28,
- },
- pageNContainer:{
+    width: 350,
+    right: 28
+  },
+  pageNContainer: {
     marginVertical: 16,
     padding: 16,
     backgroundColor: '#222435',
     borderRadius: 16,
-    width:360, 
-    right:60,
-    flex:1,
- },
-
- activityProgressContainer: {
-  backgroundColor: '#222435',
-  padding: 16,
-  borderRadius: 12,
-  alignItems: 'center',
-  marginVertical: 16,
-  marginHorizontal: 8,
-  width: '90%',
-},
-
-
-waterIntakeContainer: {
-  backgroundColor: '#222435', 
-  padding: 16,
-  borderRadius: 12,
-  alignItems: 'center',
-  marginVertical: 16,
-  marginHorizontal: 8,
-  width: '40%',
-},
-waterIntakeLabel: {
-  color: 'white',
-  fontSize: 16,
-  fontWeight: 'bold',
-  marginBottom: 8,
-},
-waterIntakeValue: {
-  color: '#FD6639',
-  fontSize: 20,
-},
-
-
+    width: 360,
+    right: 60,
+    flex: 1,
+  },
+  activityProgressContainer: {
+    backgroundColor: '#222435',
+    padding: 16,
+    borderRadius: 12,
+    alignItems: 'center',
+    marginVertical: 16,
+    marginHorizontal: 8,
+    width: '90%',
+  },
+  waterIntakeContainer: {
+    backgroundColor: '#222435', 
+    padding: 16,
+    borderRadius: 12,
+    alignItems: 'center',
+    marginVertical: 16,
+    marginHorizontal: 8,
+    width: '40%',
+  },
+  waterIntakeLabel: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: 'bold',
+    marginBottom: 8,
+  },
+  waterIntakeValue: {
+    color: '#FD6639',
+    fontSize: 20,
+  },
   circlesContainer: {
     marginVertical: 16,
     padding: 16,
     backgroundColor: '#222435',
     borderRadius: 16,
-    width:360,
+    width: 360,
   },
   circleRow: {
     flexDirection: 'row',
@@ -385,8 +380,8 @@ waterIntakeValue: {
     padding: 16,
     backgroundColor: '#222435',
     borderRadius: 16,  
-    bottom:25,
-},
+    bottom: 25,
+  },
   currentStatusTitle: {
     color: '#ffffff',
     fontSize: 18,
@@ -414,7 +409,6 @@ waterIntakeValue: {
     color: '#FD6639',
     fontSize: 16,
   },
-  
   pagination: {
     flexDirection: 'row',
     justifyContent: 'center',
@@ -431,5 +425,9 @@ waterIntakeValue: {
     backgroundColor: '#FD6639',
   },
 });
+
+Home.navigationOptions = {
+  gestureEnabled: false,
+};
 
 export default Home;

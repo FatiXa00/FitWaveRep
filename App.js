@@ -80,7 +80,7 @@ export default function App() {
           <Stack.Screen name="HowOld" component={HowOld} options={{ headerShown: false }} />
           <Stack.Screen name="WeightPage" component={SelectWeight} options={{ headerShown: false }} />
           <Stack.Screen name="HeightSelection" component={SelectHeight} options={{ headerShown: false }} />
-          <Stack.Screen name="Home" component={BottomTabNavigator} options={{ headerShown: false }} />
+          <Stack.Screen name="Home" component={BottomTabNavigator} options={{ gestureEnabled: false, headerShown: false }} />
           <Stack.Screen name="Main" component={BottomTabNavigator} options={{ headerShown: false }} />
           <Stack.Screen name="AddModal" component={AddModal} options={{ headerShown: false }} />
           <Stack.Screen name="Settings" component={Settings} options={{ headerShown: false }} />

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useRef } from 'react';
 import {
   Animated,
   PanResponder,
@@ -13,7 +13,7 @@ import { useNavigation } from '@react-navigation/native';
 
 const FloatingChatButton = () => {
   const navigation = useNavigation();
-  const position = useRef(new Animated.ValueXY()).current;
+  const position = useRef(new Animated.ValueXY({ x: 20, y: Dimensions.get('window').height - 150 })).current; // Default position
   const screenWidth = Dimensions.get('window').width;
   const screenHeight = Dimensions.get('window').height;
 
@@ -24,17 +24,28 @@ const FloatingChatButton = () => {
       onPanResponderGrant: () => {
         position.setOffset({
           x: position.x._value,
-          y: position.y._value
+          y: position.y._value,
         });
+        position.setValue({ x: 0, y: 0 });
       },
       onPanResponderMove: (_, gesture) => {
-        const newX = gesture.dx;
-        const newY = gesture.dy;
-        position.setValue({ x: newX, y: newY });
+        position.setValue({ x: gesture.dx, y: gesture.dy });
       },
-      onPanResponderRelease: () => {
+      onPanResponderRelease: (_, gesture) => {
         position.flattenOffset();
-      }
+
+        // Snapping logic
+        const targetX = gesture.moveX < screenWidth / 2 ? 20 : screenWidth - 80; // Snap to left or right
+        const targetY = Math.min(
+          Math.max(position.y._value, 20), // Prevent going off-screen at the top
+          screenHeight - 80 // Prevent going off-screen at the bottom
+        );
+
+        Animated.spring(position, {
+          toValue: { x: targetX - 30, y: targetY },
+          useNativeDriver: false,
+        }).start();
+      },
     })
   ).current;
 
@@ -47,16 +58,13 @@ const FloatingChatButton = () => {
       style={[
         styles.container,
         {
-          transform: position.getTranslateTransform()
-        }
+          transform: position.getTranslateTransform(),
+        },
       ]}
       {...panResponder.panHandlers}
     >
-      <TouchableOpacity
-        style={styles.button}
-        onPress={handlePress}
-      >
-        <Image 
+      <TouchableOpacity style={styles.button} onPress={handlePress}>
+        <Image
           source={require('../assets/images/robot.png')}
           style={styles.robotImage}
         />
@@ -71,9 +79,6 @@ const FloatingChatButton = () => {
 const styles = StyleSheet.create({
   container: {
     position: 'absolute',
-    right: 20,
-    bottom: 100,
-    zIndex: 999,
   },
   button: {
     width: 60,
@@ -95,9 +100,6 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     resizeMode: 'contain',
-    borderRadius: 20,
-    color: '#222435',
-
   },
   badge: {
     position: 'absolute',

@@ -7,6 +7,9 @@ import {
   ScrollView,
   StyleSheet,
   SafeAreaView,
+  PanResponder,
+  Animated,
+  Dimensions,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -21,91 +24,32 @@ const ChatBot = () => {
   const [inputMessage, setInputMessage] = useState('');
   const scrollViewRef = useRef();
 
-  const quickOptions = [
-    'Book me a visit in a gym',
-    'Show me other sports facilities around',
-    'Show me other options',
-  ];
+  const screenWidth = Dimensions.get('window').width;
 
-  const facilitiesExample = {
-    name: 'BodyWorks on Nadwiślańska 12 street',
-    distance: '250 meters',
-    price: '30 zł/one entrance all day',
-    facilities: ['Gym', 'SPA', 'Pool'],
-  };
+  const pan = useRef(new Animated.ValueXY()).current;
 
-  const sendMessage = (text) => {
-    const newMessage = {
-      id: messages.length + 1,
-      text,
-      isBot: false,
-    };
+  const panResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => true,
+      onPanResponderMove: Animated.event([null, { dx: pan.x, dy: pan.y }], {
+        useNativeDriver: false,
+      }),
+      onPanResponderRelease: (_, gestureState) => {
+        const { moveX } = gestureState;
 
-    setMessages((prev) => [...prev, newMessage]);
-    setInputMessage('');
-
-    // Simulate bot response
-    setTimeout(() => {
-      let botResponse;
-      if (text.toLowerCase().includes('facilities') || text.toLowerCase().includes('sports')) {
-        botResponse = {
-          id: messages.length + 2,
-          text: 'Ok, how about these?',
-          isBot: true,
-        };
-        setMessages((prev) => [...prev, botResponse]);
-        
-        // Add facility information as a special message type
-        botResponse = {
-          id: messages.length + 3,
-          type: 'facility',
-          facility: facilitiesExample,
-          isBot: true,
-        };
-      } else {
-        botResponse = {
-          id: messages.length + 2,
-          text: 'I can help you with that! Would you like to see some options?',
-          isBot: true,
-        };
-      }
-      setMessages((prev) => [...prev, botResponse]);
-    }, 1000);
-  };
-
-  const renderMessage = (message) => {
-    if (message.type === 'facility') {
-      return (
-        <View style={styles.facilityContainer}>
-          <Text style={styles.facilityName}>{message.facility.name}</Text>
-          <View style={styles.facilityDetails}>
-            <Text style={styles.facilityText}>{message.facility.distance} • {message.facility.price}</Text>
-          </View>
-          <View style={styles.facilitiesRow}>
-            {message.facility.facilities.map((facility, index) => (
-              <View key={index} style={styles.facilityTag}>
-                <Text style={styles.facilityTagText}>{facility}</Text>
-              </View>
-            ))}
-          </View>
-        </View>
-      );
-    }
-
-    return (
-      <View
-        style={[
-          styles.messageBubble,
-          message.isBot ? styles.botMessage : styles.userMessage,
-        ]}
-      >
-        <Text style={styles.messageText}>{message.text}</Text>
-      </View>
-    );
-  };
+        // Snap the bubble back to the nearest side
+        const targetX = moveX < screenWidth / 2 ? 0 : screenWidth - 80; // 80 is the bubble size
+        Animated.spring(pan, {
+          toValue: { x: targetX, y: gestureState.moveY < 0 ? 0 : pan.y._value },
+          useNativeDriver: false,
+        }).start();
+      },
+    })
+  ).current;
 
   return (
     <SafeAreaView style={styles.container}>
+      {/* Chat Header */}
       <View style={styles.header}>
         <TouchableOpacity style={styles.backButton}>
           <Ionicons name="chevron-back" size={24} color="#fff" />
@@ -127,6 +71,7 @@ const ChatBot = () => {
         </TouchableOpacity>
       </View>
 
+      {/* Chat Messages */}
       <ScrollView
         style={styles.messagesContainer}
         ref={scrollViewRef}
@@ -136,23 +81,35 @@ const ChatBot = () => {
       >
         {messages.map((message) => (
           <View key={message.id} style={styles.messageWrapper}>
-            {renderMessage(message)}
+            <View
+              style={[
+                styles.messageBubble,
+                message.isBot ? styles.botMessage : styles.userMessage,
+              ]}
+            >
+              <Text style={styles.messageText}>{message.text}</Text>
+            </View>
           </View>
         ))}
       </ScrollView>
 
-      <View style={styles.quickOptionsContainer}>
-        {quickOptions.map((option, index) => (
-          <TouchableOpacity
-            key={index}
-            style={styles.quickOption}
-            onPress={() => sendMessage(option)}
-          >
-            <Text style={styles.quickOptionText}>{option}</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
+      {/* Draggable Chat Bubble */}
+      <Animated.View
+        {...panResponder.panHandlers}
+        style={[
+          styles.chatBubble,
+          {
+            transform: [
+              { translateX: pan.x },
+              { translateY: Animated.add(pan.y, new Animated.Value(0)) },
+            ],
+          },
+        ]}
+      >
+        <Ionicons name="chatbubbles" size={32} color="#fff" />
+      </Animated.View>
 
+      {/* Input Area */}
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
@@ -161,14 +118,7 @@ const ChatBot = () => {
           value={inputMessage}
           onChangeText={setInputMessage}
         />
-        <TouchableOpacity
-          style={styles.sendButton}
-          onPress={() => {
-            if (inputMessage.trim()) {
-              sendMessage(inputMessage);
-            }
-          }}
-        >
+        <TouchableOpacity style={styles.sendButton}>
           <Ionicons name="send" size={24} color="#fff" />
         </TouchableOpacity>
       </View>
@@ -255,54 +205,17 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontSize: 16,
   },
-  facilityContainer: {
-    backgroundColor: '#333',
-    padding: 16,
-    borderRadius: 12,
-    marginBottom: 8,
-  },
-  facilityName: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 4,
-  },
-  facilityDetails: {
-    marginBottom: 8,
-  },
-  facilityText: {
-    color: '#888',
-    fontSize: 14,
-  },
-  facilitiesRow: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: 8,
-  },
-  facilityTag: {
-    backgroundColor: '#1A1A1A',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 16,
-  },
-  facilityTagText: {
-    color: '#fff',
-    fontSize: 14,
-  },
-  quickOptionsContainer: {
-    padding: 16,
-    gap: 8,
-  },
-  quickOption: {
-    backgroundColor: '#333',
-    padding: 12,
-    borderRadius: 20,
-    marginBottom: 8,
-  },
-  quickOptionText: {
-    color: '#FF5733',
-    fontSize: 14,
-    textAlign: 'center',
+  chatBubble: {
+    width: 80,
+    height: 80,
+    position: 'absolute',
+    bottom: 80,
+    left: 16,
+    borderRadius: 40,
+    backgroundColor: '#FF5733',
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 5,
   },
   inputContainer: {
     flexDirection: 'row',
