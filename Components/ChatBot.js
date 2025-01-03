@@ -27,7 +27,7 @@ const ChatBot = () => {
     const [messages, setMessages] = useState([
         {
             id: Date.now().toString(),
-            text: "Hello, I'm WaveBot! 👋 I'm your AI fitness assistant powered by Gemini. How can I help you today?",
+            text: "Hello, I'm WaveBot. How can I help you today?",
             isBot: true,
         },
     ]);
@@ -118,7 +118,7 @@ const ChatBot = () => {
                 temperature: 0.7,
                 topK: 1,
                 topP: 1,
-                maxOutputTokens: 2048,
+                maxOutputTokens: 1048,
             },
         });
     };
@@ -182,7 +182,7 @@ const ChatBot = () => {
       if (text.toLowerCase().includes('facilities') || text.toLowerCase().includes('sports')) {
           botResponse = {
               id: Date.now().toString(),
-              text: 'Ok, how about these?',
+              text: 'Here are some options:',
               isBot: true,
                 createdAt: new Date()
           };
@@ -233,7 +233,7 @@ const ChatBot = () => {
       console.error('Error sending message:', error);
       const errorMessage = {
           id: Date.now().toString(),
-          text: "I apologize, but I'm having trouble responding right now. Please try again.",
+          text: "I'm having trouble responding right now. Please try again.",
           isBot: true,
            createdAt: new Date()
       };
@@ -254,7 +254,7 @@ const ChatBot = () => {
 const clearHistory = async () => {
     setMessages([{
       id: Date.now().toString(),
-      text: "Hello, I'm WaveBot! 👋 I'm your AI fitness assistant powered by Gemini. How can I help you today?",
+      text: "Hello, I'm WaveBot. How can I help you today?",
       isBot: true,
         createdAt: new Date()
   },]);
