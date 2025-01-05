@@ -111,7 +111,8 @@ export default function App() {
           <Stack.Screen name="MyHome" component={Home}  options={{ headerShown: false }} />
           <Stack.Screen name="WaterIntake" component={WaterIntake} options={{ headerShown: false }} />
           <Stack.Screen name="chatbot" component={ChatBot} options={{ headerShown: false }} />
-
+          <Stack.Screen name="Chat" component={ChatBot} />
+          <Stack.Screen name="FloatingChatButton" component={FloatingChatButton} />
         </Stack.Navigator>
       <StatusBar style="auto" />
     </NavigationContainer>
