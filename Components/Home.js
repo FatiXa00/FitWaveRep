@@ -428,6 +428,7 @@ const styles = StyleSheet.create({
 
 Home.navigationOptions = {
   gestureEnabled: false,
+  headerShown: false,
 };
 
 export default Home;

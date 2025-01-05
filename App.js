@@ -64,10 +64,10 @@ export default function App() {
       <NavigationContainer>
         <Stack.Navigator initialRouteName="Launch">
           <Stack.Screen name="Launch" component={Launch} options={{ headerShown: false }} />
-          <Stack.Screen name="OnBoarding1" component={Onboarding1} options={{ headerShown: false }} />
-          <Stack.Screen name="OnBoarding2" component={Onboarding2} options={{ headerShown: false }} />
-          <Stack.Screen name="OnBoarding3" component={Onboarding3} options={{ headerShown: false }} />
-          <Stack.Screen name="Logging" component={Logging} options={{ headerShown: false }} />
+          <Stack.Screen name="OnBoarding1" component={Onboarding1} options={{gestureEnabled: false, headerShown: false }} />
+          <Stack.Screen name="OnBoarding2" component={Onboarding2} options={{gestureEnabled: false, headerShown: false }} />
+          <Stack.Screen name="OnBoarding3" component={Onboarding3} options={{gestureEnabled: false, headerShown: false }} />
+          <Stack.Screen name="Logging" component={Logging} options={{gestureEnabled: false, headerShown: false }} />
           <Stack.Screen name="CreateAccount" component={CreateAccount} options={{ headerShown: false }} />
           <Stack.Screen name="CreateDoctor" component={CreateDoctor} options={{ headerShown: false }} />
           <Stack.Screen name="CreateDoctor2" component={CreateDoctor2} options={{ headerShown: false }} />

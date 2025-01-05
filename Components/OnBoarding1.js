@@ -1,13 +1,18 @@
 import React from 'react';
-import { View, Image, Text, StyleSheet, ImageBackground, TouchableOpacity,Dimensions } from 'react-native';
+import { View, Image, Text, StyleSheet, ImageBackground, TouchableOpacity, Dimensions } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
+
 const { width } = Dimensions.get('window'); 
+
+// Définir les options de navigation
 
 
 export default function Onboarding1() {
   const navigation = useNavigation();
-
+Onboarding1.navigationOptions = {
+  gestureEnabled: false,
+};
   const handleButtonPress = () => {
     navigation.navigate('OnBoarding2');
   };
@@ -21,7 +26,6 @@ export default function Onboarding1() {
         <View style={styles.content}>
           <Image source={require('../assets/icons/IconBoarding1.png')} style={styles.icon} />
           <Text style={styles.subtitle}>Start Your Fitness Adventure</Text>
-
         </View>
       
         <TouchableOpacity style={styles.button} onPress={handleButtonPress}>

@@ -11,7 +11,7 @@ import PieChart from './PieChart';
 import MealItem from './MealItem'; 
 import { Menu, MenuOptions, MenuOption, MenuTrigger } from 'react-native-popup-menu';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-
+import FloatingChatButton from './FloatingChatButton';
 
 const NutritionHome = () => {
 
@@ -85,11 +85,12 @@ const NutritionHome = () => {
   };
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 200 }}>
-   <View style={styles.header}>
-        <TouchableOpacity style={styles.iconButton} onPress={() => setShowCalendarModal(true)}>
-          <Text><AntDesign name="calendar" size={24} color="white" /></Text>
-        </TouchableOpacity>
+    <View style={styles.container}>
+      <ScrollView style={styles.container} contentContainerStyle={{ paddingBottom: 200 }}>
+       <View style={styles.header}>
+          <TouchableOpacity style={styles.iconButton} onPress={() => setShowCalendarModal(true)}>
+           <Text><AntDesign name="calendar" size={24} color="white" /></Text>
+          </TouchableOpacity>
 
         <Text style={styles.dateText}>{formatDate(date)}</Text>
 
@@ -189,16 +190,19 @@ const NutritionHome = () => {
           </View>
         </View>
       </Modal>
-    </ScrollView>
-  );
+      </ScrollView>
+  
+      <FloatingChatButton />
+    </View>
+    );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
+    paddingHorizontal: 16,
     backgroundColor: '#141824',
-    padding: 30,
-
+    paddingBottom: 16,
   },
   header: {
     flexDirection: 'row',
